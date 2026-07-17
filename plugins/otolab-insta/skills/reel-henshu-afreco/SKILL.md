@@ -23,6 +23,8 @@ version: 2.0.0
 > **ブラウザ版（claude.ai）・Chat/Coworkモード・サンドボックス/クラウドセッションでは動作しない**（`~/` 以下が見えず「サンドボックス環境にツールが無い」となる）。「サンドボックス」という表示が出たら、Codeモードかターミナルで開き直すこと。
 >
 > **動作環境**: **Mac（Apple Silicon M1〜M4）と Windows の両対応**。文字起こしは Mac=mlx-whisper／Windows=faster-whisper を自動で切り替える。※**Windows対応は初回テスト段階**（詰まったら報告してもらう前提）。Intel Mac は非対応。
+>
+> **⚠️ Windowsで使うときは「Windows Terminal」の `claude` コマンドで動かすこと。** Claudeデスクトップアプリの「Code」タブでは動かないことをテストで確認済み（ターミナル版ならOK）。
 
 ---
 
