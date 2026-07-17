@@ -178,7 +178,7 @@ select:mcp__claude-in-chrome__tabs_context_mcp,mcp__claude-in-chrome__navigate,m
 - 尺と文字数
 - 移植時の注意（固有の題材・ギャグ・固有名詞の丸写し禁止）
 
-機械可読なプレーンMarkdownで書く（報告書セクション4・5と同じ内容）。書き方の見本は競合分析側 `~/Documents/Claude/Projects/競合アカウント分析/kanako_vlog_20260710/style_profile.md` を参考にしてよい。
+機械可読なプレーンMarkdownで書く（報告書セクション4・5と同じ内容）。書き方の見本は競合分析側 `~/Documents/Claude/Projects/競合アカウント分析/〔参考アカウント〕_20260710/style_profile.md` を参考にしてよい。
 
 ## STEP 6：HTML報告書の生成
 

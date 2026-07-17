@@ -53,6 +53,8 @@ REPLACEMENTS = [
     ("eekanji_kenji", "〔アカウント例〕"),
     ("eekanji", "〔アカウント例〕"),
     ("desse", "〔アカウント例〕"),
+    ("kanako_vlog", "〔参考アカウント〕"),
+    ("kanako", "〔参考アカウント〕"),
     ("かなこ", "〔発信者例〕"),
     # 大阪弁Vlogの参考話者（名前だけ伏せる。台本本文は残す）
     ("華月", "〔話者名〕"),
@@ -67,7 +69,7 @@ REPLACEMENTS = [
 # 一般化後に「残っていたら人の確認が要る」語。1つでも残れば commit を止める。
 # （REPLACEMENTSで拾い切れなかった新しい変種を検知する番人）
 REVIEW_TERMS = [
-    "otolabo", "おとばな", "OTOGIBANASHI", "華月", "kiiiiiii",
+    "otolabo", "おとばな", "OTOGIBANASHI", "華月", "kiiiiiii", "kanako",
     "/Users/miyabekenji", "eekanji", "desse",
 ]
 
