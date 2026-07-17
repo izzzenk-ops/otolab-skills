@@ -16,13 +16,13 @@ version: 2.0.0
 ~/reel-henshu-afreco/scripts/
 ```
 
-実行には必ず `~/reel-henshu-afreco/venv/bin/python3` を使うこと（システムpython3ではjanome/mlx_whisperが入っていないため動かない）。
+実行には必ず venv の python を使うこと（システムのpythonではjanome/文字起こしエンジンが入っておらず動かない）。**Mac**: `~/reel-henshu-afreco/venv/bin/python3` ／ **Windows**: `%USERPROFILE%\reel-henshu-afreco\venv\Scripts\python.exe`。
 
 > **⚠️ ローカルMacに触れる Claude Code 環境で実行すること**
 > このスキルはローカルMac内のファイル（`~/reel-henshu-afreco`）を操作し、ffmpeg・Whisperをローカル実行する。次のいずれかで動く：**①ターミナルの `claude` コマンド**、または **②Claudeデスクトップアプリの「Code」モード（ローカルフォルダを開いた状態）**。
 > **ブラウザ版（claude.ai）・Chat/Coworkモード・サンドボックス/クラウドセッションでは動作しない**（`~/` 以下が見えず「サンドボックス環境にツールが無い」となる）。「サンドボックス」という表示が出たら、Codeモードかターミナルで開き直すこと。
 >
-> **動作環境**: 現状 **Apple Silicon (M1〜M4) の Mac 向け**。動画処理のコード自体は Windows にも対応済み（faster-whisper）だが、このスキルの**自動セットアップ（Homebrew / install.sh）が Mac 向け**のため、当面は Mac で使う。Windows での自動フローは準備中。
+> **動作環境**: **Mac（Apple Silicon M1〜M4）と Windows の両対応**。文字起こしは Mac=mlx-whisper／Windows=faster-whisper を自動で切り替える。※**Windows対応は初回テスト段階**（詰まったら報告してもらう前提）。Intel Mac は非対応。
 
 ---
 
@@ -85,7 +85,26 @@ ls ~/reel-henshu-afreco/scripts/build_shorts.py
 
 **存在する場合** → セットアップ済み。STEP 1 へ進む。
 
-**存在しない場合** → 以下を順に実行してセットアップする。
+**存在しない場合** → **OSに応じて**セットアップする。
+
+#### 【Windows の場合】（PowerShellで実行）
+
+1. 前提ソフトを確認：`python --version` と `git --version`。
+   - `python` が無い → 案内: `winget install -e --id Python.Python.3.12`（入れたらPowerShellを開き直す）
+   - `git` が無い → 案内: `winget install -e --id Git.Git`（同上）
+2. 取得＋セットアップ：
+   ```powershell
+   git clone https://github.com/izzzenk-ops/reel-henshu-afreco.git $env:USERPROFILE\reel-henshu-afreco
+   cd $env:USERPROFILE\reel-henshu-afreco
+   powershell -ExecutionPolicy Bypass -File .\install.ps1
+   ```
+   `install.ps1` が行うこと：ffmpeg導入（winget）・venv作成・依存（faster-whisper等）・config.json生成。
+   - **ffmpegを入れた直後はPATH反映のため、一度PowerShellを開き直して install.ps1 を再実行**が要ることがある（その旨ユーザーに伝える）。
+3. 以降のSTEPでpythonを使うときは `%USERPROFILE%\reel-henshu-afreco\venv\Scripts\python.exe` を使う（パス区切りは `\`）。
+
+セットアップが終わったら STEP 1 へ進む。
+
+#### 【Mac（Apple Silicon）の場合】
 
 まず前提ソフト（Homebrew・git）があるか確認する：
 
@@ -103,7 +122,7 @@ git clone https://github.com/izzzenk-ops/reel-henshu-afreco.git ~/reel-henshu-af
 cd ~/reel-henshu-afreco && ./install.sh
 ```
 
-`install.sh` が行うこと：ffmpeg導入（未導入時）・venv作成・依存パッケージ（mlx-whisper / Pillow / janome）インストール・config.json生成・start.sh生成。**初回は依存パッケージのダウンロードで数分かかる**（ユーザーに待つよう伝える）。
+`install.sh` が行うこと：ffmpeg導入（未導入時）・venv作成・依存パッケージ（Mac=mlx-whisper／Windows=faster-whisper ＋ Pillow / janome）インストール・config.json生成・start.sh生成。**初回は依存パッケージのダウンロードで数分かかる**（ユーザーに待つよう伝える）。
 
 > **効果音を使う場合**: `~/reel-henshu-afreco/config.json` の `sound_dir` を効果音フォルダのパスに書き換える（既定は同梱の空フォルダ `~/reel-henshu-afreco/sounds`）。効果音を使わなければ変更不要。
 
