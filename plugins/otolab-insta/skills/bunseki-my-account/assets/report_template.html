@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+  自分のアカウント分析報告書テンプレート（bunseki-my-account）
+  使い方: このファイルをコピーして各セクションの中身を実データで書き換える。
+  CSS・レイアウト構造は変えない（毎回同じ見た目になることが価値）。
+  画像は report.html から見た相対パス（reels/<ID>.jpg）で参照する。
+  [[...]] はプレースホルダ。カードやリスト項目は必要な数だけ複製する。
+  このスキルの主役は「次に何をやるか」。⑤冒頭文5案／⑥テーマ／⑦台本構成／⑧次の10本 を厚く書く。
+-->
+<title>[[アカウント名]] 自己分析レポート</title>
+<style>
+  :root {
+    --ink: #3f4a5a; --sub: #8b93a3; --line: #f0e8dd; --bg: #f7f3ec; --card: #ffffff;
+    --accent: #ec8080; --accent-deep: #e06c6c; --accent-soft: #fdecec;
+    --blue: #6b9bd2; --blue-deep: #5b8ac4; --blue-soft: #e8f1fb;
+    --gold: #d9822b; --gold-soft: #fdf1e3;
+    --green: #57a773; --green-soft: #e9f6ee;
+    --red: #d9534f; --red-soft: #fbecec;
+    --grad: linear-gradient(135deg, #f19a9a, #f4b183);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Maru Gothic ProN", "Zen Maru Gothic", "Hiragino Sans", "Yu Gothic", sans-serif;
+    background: var(--bg); color: var(--ink); line-height: 1.8; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ヘッダー */
+  .report-head { background: var(--card); border: 1px solid var(--line); border-radius: 24px;
+    padding: 36px 40px; margin-bottom: 28px; position: relative; overflow: hidden; }
+  .report-head::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: var(--grad); }
+  .report-head .label { font-size: 12px; letter-spacing: 2px; color: var(--accent-deep); font-weight: 700; }
+  .report-head h1 { font-size: 30px; margin: 6px 0 2px; font-weight: 800; }
+  .report-head .username { font-size: 15px; color: var(--sub); }
+  .head-stats { display: flex; gap: 28px; margin-top: 20px; flex-wrap: wrap; }
+  .head-stats div b { font-size: 22px; display: block; color: var(--accent-deep); }
+  .head-stats div span { font-size: 12px; color: var(--sub); }
+  .verdict { margin-top: 18px; background: var(--accent-soft); border-radius: 14px;
+    padding: 14px 18px; font-size: 14.5px; font-weight: 700; color: var(--ink); }
+
+  /* セクション共通 */
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 24px;
+    padding: 28px 32px; margin-bottom: 24px; }
+  h2 { font-size: 19px; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; font-weight: 800; }
+  h2 .num { background: var(--accent); color: #fff; font-size: 12px; width: 26px; height: 26px;
+    border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sec-sub { font-size: 12.5px; color: var(--sub); margin-bottom: 18px; }
+  h3 { font-size: 15px; margin: 18px 0 8px; font-weight: 800; }
+  .note { font-size: 11.5px; color: var(--sub); margin-top: 10px; }
+  footer { text-align: center; font-size: 11.5px; color: var(--sub); margin-top: 30px; }
+
+  /* KPIダッシュボード */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .kpi { background: var(--blue-soft); border-radius: 16px; padding: 14px 16px; }
+  .kpi b { font-size: 21px; display: block; color: var(--blue-deep); }
+  .kpi span { font-size: 11.5px; color: var(--sub); }
+
+  /* 診断マトリクス（リーチ×維持率 4象限） */
+  .matrix { position: relative; margin: 20px 0 6px; }
+  .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 190px 190px;
+    gap: 4px; border-radius: 16px; overflow: hidden; }
+  .quad { padding: 14px; position: relative; }
+  .quad .qlabel { font-size: 11.5px; font-weight: 800; opacity: .8; }
+  .quad .qact { font-size: 11px; margin-top: 2px; }
+  .q1 { background: var(--green-soft); }   /* 高リーチ×高維持＝勝ちパターン */
+  .q2 { background: var(--gold-soft); }     /* 低リーチ×高維持＝中身◎届いてない→再投稿 */
+  .q3 { background: var(--blue-soft); }      /* 高リーチ×低維持＝フック◎中身×→構成直す */
+  .q4 { background: var(--red-soft); }       /* 低リーチ×低維持＝テーマから見直し */
+  .chip { display: inline-block; background: #fff; border: 1px solid var(--line);
+    border-radius: 999px; padding: 3px 10px; font-size: 11px; margin: 3px 3px 0 0; font-weight: 700; }
+  .axis { font-size: 10.5px; color: var(--sub); text-align: center; margin-top: 6px; }
+
+  /* リールカード（伸びた投稿の解剖） */
+  .reel-card { display: grid; grid-template-columns: 130px 1fr; gap: 20px;
+    border: 1px solid var(--line); background: #fffdfa; border-radius: 18px; padding: 18px; margin-bottom: 16px; }
+  .reel-card .cover { position: relative; }
+  .reel-card .cover img { width: 130px; aspect-ratio: 9/16; object-fit: cover; border-radius: 12px; display: block; }
+  .reel-card .rank { position: absolute; top: -8px; left: -8px; background: var(--grad); color: #fff;
+    font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .badge { font-size: 11.5px; padding: 2px 10px; border-radius: 999px; font-weight: 700; }
+  .badge.views { background: var(--gold-soft); color: var(--gold); }
+  .badge.ext { background: var(--green-soft); color: var(--green); }
+  .badge.save { background: var(--blue-soft); color: var(--blue-deep); }
+  .badge.ret { background: var(--accent-soft); color: var(--accent-deep); }
+  .reel-card h4 { font-size: 15px; margin-bottom: 6px; font-weight: 800; }
+  .hook { background: var(--bg); border-left: 4px solid var(--accent); border-radius: 0 12px 12px 0;
+    padding: 8px 12px; font-size: 13px; margin: 8px 0; color: var(--ink); }
+  .hook .tag { font-size: 10.5px; color: var(--accent-deep); font-weight: 700; display: block; }
+  .flow { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; font-size: 12px; }
+  .flow span { background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; }
+  .flow span::after { content: " →"; color: var(--accent); }
+  .flow span:last-child::after { content: ""; }
+  .why { font-size: 13px; color: var(--sub); } .why b { color: var(--ink); }
+  /* ソース内訳バー */
+  .src { margin: 8px 0; font-size: 11.5px; }
+  .src .row { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+  .src .row i { font-style: normal; width: 74px; color: var(--sub); }
+  .src .bar { height: 8px; background: var(--blue); border-radius: 999px; }
+
+  /* 伸びなかった投稿の原因診断 */
+  .diag { border: 1px solid var(--line); border-left: 5px solid var(--red);
+    background: #fffdfa; border-radius: 0 14px 14px 0; padding: 14px 18px; margin-bottom: 12px; }
+  .diag h4 { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+  .diag .cause { font-size: 13px; color: var(--red); font-weight: 700; }
+  .diag .fix { font-size: 13px; margin-top: 4px; } .diag .fix b { color: var(--green); }
+  .diag .nums { font-size: 11px; color: var(--sub); margin-top: 4px; }
+
+  /* 提案リスト（冒頭文5案・テーマ） */
+  .prop-list { list-style: none; counter-reset: pr; }
+  .prop-list li { counter-increment: pr; padding: 14px 16px 14px 52px; position: relative;
+    background: var(--accent-soft); border-radius: 16px; margin-bottom: 10px; font-size: 14px; }
+  .prop-list li::before { content: counter(pr); position: absolute; left: 14px; top: 12px;
+    width: 26px; height: 26px; border-radius: 50%; background: var(--grad); color: #fff;
+    font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+  .prop-list li .tag { font-size: 10.5px; color: var(--accent-deep); font-weight: 700; display: block; }
+  .prop-list.theme li { background: var(--blue-soft); }
+  .prop-list.theme li::before { background: var(--blue); }
+
+  /* 台本テンプレート */
+  .script-template { background: #fbf4ea; border: 1px solid var(--line); color: var(--ink);
+    border-radius: 16px; padding: 20px 24px; font-size: 13.5px; white-space: pre-line; line-height: 2; }
+  .script-template b { color: var(--accent-deep); }
+  .rule-list { list-style: none; }
+  .rule-list li { padding: 10px 14px; margin-bottom: 8px; background: var(--blue-soft); border-radius: 14px; font-size: 13.5px; }
+  .rule-list li b { color: var(--blue-deep); }
+
+  /* 次に作る10本リスト（主役の締め） */
+  .plan-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; font-size: 13px; }
+  .plan-table th { text-align: left; font-size: 11px; color: var(--sub); padding: 0 12px; }
+  .plan-table td { background: #fffdfa; border: 1px solid var(--line); padding: 12px 12px; vertical-align: top; }
+  .plan-table tr td:first-child { border-radius: 14px 0 0 14px; font-weight: 800; color: var(--accent-deep);
+    width: 34px; text-align: center; }
+  .plan-table tr td:last-child { border-radius: 0 14px 14px 0; }
+  .plan-table .th-theme { font-weight: 800; }
+  .plan-table .th-hook { color: var(--ink); }
+  .plan-table .meta { font-size: 11px; color: var(--sub); }
+
+  /* 文字起こし折りたたみ */
+  .tr-toggle { margin-top: 8px; border: none; cursor: pointer; font-family: inherit;
+    background: var(--accent-soft); color: var(--accent-deep); font-size: 12px; font-weight: 700;
+    padding: 6px 14px; border-radius: 999px; }
+  .tr-toggle:hover { background: #fbdede; }
+  .tr-body { margin-top: 8px; }
+  .tr-actions { display: flex; gap: 6px; margin-bottom: 6px; }
+  .tr-actions button { border: none; cursor: pointer; font-family: inherit;
+    background: var(--blue-soft); color: var(--blue-deep); font-size: 11.5px; font-weight: 700;
+    padding: 4px 12px; border-radius: 999px; }
+  .tr-actions button:hover { background: #d8e8f9; }
+  .tr-text { background: var(--bg); border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px 14px; font-size: 12.5px; line-height: 1.9; color: var(--ink); white-space: pre-wrap;
+    word-break: break-word; max-height: 280px; overflow-y: auto; font-family: inherit; margin: 0; }
+
+  /* 台本作成ボタン */
+  .mk-btn { margin-top: 14px; border: none; cursor: pointer; font-family: inherit; background: var(--grad);
+    color: #fff; font-size: 13.5px; font-weight: 700; padding: 10px 22px; border-radius: 999px; }
+  .mk-btn:active { opacity: .8; }
+
+  @media (max-width: 720px) {
+    .matrix-grid { grid-template-rows: 160px 160px; }
+    .reel-card { grid-template-columns: 100px 1fr; }
+    .reel-card .cover img { width: 100px; }
+  }
+  @media print { body { background: #fff; } section { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ヘッダー：アカウント概要（アカウント全体録画より） -->
+  <div class="report-head">
+    <div class="label">MY ACCOUNT ANALYSIS</div>
+    <h1>[[アカウント表示名]]</h1>
+    <div class="username">@[[ユーザー名]]｜分析日: [[YYYY/MM/DD]]｜対象: 直近[[N]]投稿（伸びた[[X]]＋伸びなかった[[Y]]）</div>
+    <div class="head-stats">
+      <div><b>[[フォロワー数]]</b><span>フォロワー</span></div>
+      <div><b>[[30日リーチ]]</b><span>30日リーチ</span></div>
+      <div><b>[[プロフアクセス]]</b><span>プロフィールアクセス</span></div>
+      <div><b>[[リンクタップ]]</b><span>リンクタップ</span></div>
+    </div>
+    <div class="verdict">🎯 結論: [[このアカウントの「次にやるべき一手」を1〜2文で。例：外部リーチが伸びるのは自己開示×逆張り冒頭。次はこの型で週◯本、◯時台に出す]]</div>
+  </div>
+
+  <!-- 1. 30日サマリー（脇役・アクション補強用） -->
+  <section>
+    <h2><span class="num">1</span>アカウント全体の今（直近30日）</h2>
+    <div class="sec-sub">アカウント全体録画より。②〜⑧のアクションを補強する背景データ</div>
+    <div class="kpi-grid">
+      <div class="kpi"><b>[[リーチ数]]</b><span>リーチしたアカウント</span></div>
+      <div class="kpi"><b>[[外部比率]]</b><span>うちフォロワー外</span></div>
+      <div class="kpi"><b>[[最もアクティブな時間帯]]</b><span>投稿すべき時間帯</span></div>
+      <div class="kpi"><b>[[主要な層]]</b><span>刺さっている層</span></div>
+    </div>
+    <p class="note">[[全体データから読み取れる運用示唆を1〜2文。例：リールが外部リーチの主力。ストーリーズはフォロワー内で強い＝役割分担ができている]]</p>
+  </section>
+
+  <!-- 2. 診断マトリクス：リーチ×維持率の4象限 -->
+  <section>
+    <h2><span class="num">2</span>診断マトリクス｜投稿ごとに“引くレバー”を特定</h2>
+    <div class="sec-sub">横軸=リーチ（届いた量）／縦軸=冒頭維持率（フックの強さ）。象限で次の一手が決まる</div>
+    <div class="matrix">
+      <div class="axis">↑ 維持率 高い（フックが効いている）</div>
+      <div class="matrix-grid">
+        <div class="quad q2">
+          <div class="qlabel">中身◎なのに届いてない</div>
+          <div class="qact">→ 作り直して<b>再投稿・宣伝</b></div>
+          [[該当投稿をchipで。例：<span class="chip">継続4年目の投稿</span>]]
+        </div>
+        <div class="quad q1">
+          <div class="qlabel">勝ちパターン 🏆</div>
+          <div class="qact">→ この型を<b>増やす・シリーズ化</b></div>
+          [[該当投稿chip]]
+        </div>
+        <div class="quad q4">
+          <div class="qlabel">テーマから弱い</div>
+          <div class="qact">→ <b>テーマ自体を見直す</b></div>
+          [[該当投稿chip]]
+        </div>
+        <div class="quad q3">
+          <div class="qlabel">フック◎中身が薄い</div>
+          <div class="qact">→ <b>展開・オチを作り直す</b></div>
+          [[該当投稿chip]]
+        </div>
+      </div>
+      <div class="axis">リーチ 低い ←　　　　　→ リーチ 高い（外部に広がった）</div>
+    </div>
+    <p class="note">[[マトリクス全体の所見を1〜2文。どの象限に偏っているか＝今アカウントに一番効くレバーは何か]]</p>
+  </section>
+
+  <!-- 3. 伸びた投稿の解剖 -->
+  <section>
+    <h2><span class="num">3</span>伸びた投稿の解剖｜なぜ届いたか</h2>
+    <div class="sec-sub">裏側数値（外部リーチ・維持率・保存率・流入ソース）×中身（冒頭・構成）</div>
+
+    <!-- ▼このカードを伸びた投稿の数だけ複製 -->
+    <div class="reel-card">
+      <div class="cover"><span class="rank">#1</span><img src="reels/[[リールID]].jpg" alt="" loading="lazy"></div>
+      <div>
+        <div class="badges">
+          <span class="badge views">▶ [[203.8万]]</span>
+          <span class="badge ext">外部 [[97.6%]]</span>
+          <span class="badge save">保存率 [[0.14%]]</span>
+          <span class="badge ret">冒頭維持 [[38%]]</span>
+        </div>
+        <h4>[[この投稿の内容を1行で]]</h4>
+        <div class="hook"><span class="tag">冒頭フック（0〜3秒／文字起こし）</span>[[冒頭をそのまま引用]]</div>
+        <div class="flow"><span>[[フックの型]]</span><span>[[展開1]]</span><span>[[展開2]]</span><span>[[オチ/CTA]]</span></div>
+        <div class="src">
+          <div class="row"><i>フィード</i><div class="bar" style="width:[[76]]%"></div><span>[[76.6%]]</span></div>
+          <div class="row"><i>発見・その他</i><div class="bar" style="width:[[23]]%"></div><span>[[23.4%]]</span></div>
+        </div>
+        <p class="why"><b>届いた理由:</b> [[冒頭の型×テーマ×維持率がどう噛み合って外部リーチが出たか、1〜2文で断定]]</p>
+        <div class="tr-box">
+          <button class="tr-toggle" onclick="trToggle(this)">📝 文字起こしを見る</button>
+          <div class="tr-body" hidden>
+            <div class="tr-actions">
+              <button onclick="trCopy(this)">📋 コピー</button>
+              <button onclick="trDownload(this, '[[ユーザー名]]_[[リールID]]')">⬇ .txt保存</button>
+            </div>
+            <pre class="tr-text">[[文字起こし全文（HTMLエスケープ済み・末尾の幻覚繰り返しは除去）]]</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ▲複製ここまで -->
+  </section>
+
+  <!-- 4. 伸びなかった投稿の原因診断 -->
+  <section>
+    <h2><span class="num">4</span>伸びなかった原因診断｜すぐ直せる形で</h2>
+    <div class="sec-sub">コケた投稿ごとに「なぜ伸びなかったか」を断定→直し方をセットで</div>
+
+    <!-- ▼このブロックをコケた投稿の数だけ複製 -->
+    <div class="diag">
+      <h4>[[投稿の内容を1行で]]</h4>
+      <div class="cause">✕ 原因: [[1行で断定。例：冒頭3秒で維持率62%→32%に急落＝フックが弱い／リーチは出たが保存0.3%＝価値提示が無い]]</div>
+      <div class="fix">✓ 直し方: <b>[[具体的にどう直すか。例：冒頭を結論先出しに変える／◯◯という一言を頭に足す]]</b></div>
+      <div class="nums">数値: 閲覧[[◯]] ／ 外部[[◯%]] ／ 冒頭維持[[◯%]] ／ 保存率[[◯%]]</div>
+    </div>
+    <!-- ▲複製ここまで -->
+  </section>
+
+  <!-- 5. 冒頭文の提案 ×5（主役） -->
+  <section>
+    <h2><span class="num">5</span>次に使える冒頭文 5案</h2>
+    <div class="sec-sub">伸びた投稿の冒頭パターンを抽出→そのまま撮れる文言で</div>
+    <ol class="prop-list">
+      <li><span class="tag">[[型：自己開示 など]]</span>[[そのまま言える冒頭文]]</li>
+      <li><span class="tag">[[型：逆張り など]]</span>[[冒頭文]]</li>
+      <li><span class="tag">[[型：数字 など]]</span>[[冒頭文]]</li>
+      <li><span class="tag">[[型：悩み提起 など]]</span>[[冒頭文]]</li>
+      <li><span class="tag">[[型：結論先出し など]]</span>[[冒頭文]]</li>
+    </ol>
+    <p class="note">[[なぜこの型が効くのか、データ根拠を1文。例：外部リーチ上位3本はすべて自己開示×逆張りで始まっていた]]</p>
+  </section>
+
+  <!-- 6. テーマ提案 -->
+  <section>
+    <h2><span class="num">6</span>次に当てにいくテーマ</h2>
+    <div class="sec-sub">保存率・外部リーチが跳ねたテーマの共通項から</div>
+    <ol class="prop-list theme">
+      <li><b>[[テーマ名]]</b>｜[[なぜ当たると考えるか＋どの投稿が根拠か]]</li>
+      <!-- 3〜5個 -->
+    </ol>
+  </section>
+
+  <!-- 7. 台本構成テンプレート -->
+  <section>
+    <h2><span class="num">7</span>あなたの勝ち構成テンプレート</h2>
+    <div class="sec-sub">伸びた投稿[[N]]本の文字起こしから抽出した「自分の型」。次回そのまま埋めて使う</div>
+    <div class="script-template">
+<b>【フック 0〜3秒】</b>[[どんな1文で始めるか＋実例]]
+<b>【展開】</b>[[何ブロックで、どう積むか]]
+<b>【オチ/締め】</b>[[どう終わるか＋CTA]]
+    </div>
+    <h3>文体・尺のルール</h3>
+    <ul class="rule-list">
+      <li><b>口調・語尾:</b> [[実例つき]]</li>
+      <li><b>尺と文字数:</b> [[維持率が保てた尺。例：20〜30秒／◯文字前後]]</li>
+      <li><b>サムネ（カバー）の型:</b> [[伸びた投稿のカバー文字量・配色・構図の共通ルール]]</li>
+    </ul>
+  </section>
+
+  <!-- 8. 次に作る10本リスト（締めの主役） -->
+  <section>
+    <h2><span class="num">8</span>次に作る10本｜そのまま撮れる企画リスト</h2>
+    <div class="sec-sub">テーマ×冒頭文×尺×サムネ方針をセットに。上から順に撮ればいい状態にした</div>
+    <table class="plan-table">
+      <thead><tr><th></th><th>テーマ</th><th>冒頭文（そのまま言う）</th><th>尺 / サムネ方針</th></tr></thead>
+      <tbody>
+        <!-- ▼この行を10本分。上ほど今すぐ効く順 -->
+        <tr>
+          <td>1</td>
+          <td class="th-theme">[[テーマ]]</td>
+          <td class="th-hook">[[冒頭文]]</td>
+          <td class="meta">[[◯秒 / カバー：◯◯]]</td>
+        </tr>
+        <!-- ▲複製ここまで -->
+      </tbody>
+    </table>
+    <button class="mk-btn" data-prompt="この分析を基に台本を作って（daihon-copy-makeスキル）。参考: [[出力フォルダのフルパス]] の style_profile.md と伸びた投稿の文字起こしを読んで、自分の勝ち構成で作成。作りたいテーマ: " onclick="mkPrompt(this)">🎬 この構成で台本を作る（起動プロンプトをコピー）</button>
+  </section>
+
+  <footer>
+    Generated by bunseki-my-account skill ｜ データ: [[YYYY/MM/DD]] ｜
+    確認できなかった項目: [[スキップ・推定・インサイトデータ無しの投稿などを正直に／なければ「なし」]]<br>
+    収集した動画・画像は自己分析目的のローカル保存です。
+  </footer>
+</div>
+<script>
+function mkPrompt(btn) {
+  const text = btn.dataset.prompt;
+  (async () => {
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; } catch (e) {
+      const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select();
+      ok = document.execCommand('copy'); t.remove();
+    }
+    btn.textContent = ok ? '✅ コピーしました。新しいセッションに貼り付けてください' : 'コピー失敗。手動でコピーしてください';
+    setTimeout(() => { btn.textContent = '🎬 この構成で台本を作る（起動プロンプトをコピー）'; }, 3000);
+  })();
+}
+function trToggle(btn) {
+  const body = btn.nextElementSibling; const opening = body.hidden; body.hidden = !opening;
+  btn.textContent = opening ? '📝 文字起こしを閉じる' : '📝 文字起こしを見る';
+}
+async function trCopy(btn) {
+  const el = btn.closest('.tr-body').querySelector('.tr-text'); let ok = false;
+  try { await navigator.clipboard.writeText(el.textContent); ok = true; } catch (e) {
+    const range = document.createRange(); range.selectNodeContents(el);
+    const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    ok = document.execCommand('copy'); sel.removeAllRanges();
+  }
+  btn.textContent = ok ? '✅ コピーしました' : '選択済み → Cmd+C';
+  setTimeout(() => { btn.textContent = '📋 コピー'; }, 1800);
+}
+function trDownload(btn, name) {
+  const text = btn.closest('.tr-body').querySelector('.tr-text').textContent;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], {type: 'text/plain;charset=utf-8'}));
+  a.download = name + '.txt'; a.click(); URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

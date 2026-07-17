@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+  リール1本 徹底解剖 報告書テンプレート（bunseki-reel）
+  使い方: このファイルをコピーして [[...]] を実データで置換し report.html として保存する。
+  CSS・レイアウト構造は変えない（毎回同じ見た目になることが価値）。
+  画像は report.html から見た相対パス（reels/<ID>.jpg, frames/f_xx.xs.jpg）で参照。
+  該当しないセクション（例: テロップ型でナレーションが無い等）は中身を実態に合わせて書き換える。
+-->
+<title>[[リール一言要約]]｜リール分析</title>
+<style>
+  :root {
+    --ink: #3f4a5a; --sub: #8b93a3; --line: #f0e8dd; --bg: #f7f3ec; --card: #ffffff;
+    --accent: #ec8080; --accent-deep: #e06c6c; --accent-soft: #fdecec;
+    --blue: #6b9bd2; --blue-deep: #5b8ac4; --blue-soft: #e8f1fb;
+    --gold: #d9822b; --gold-soft: #fdf1e3;
+    --green: #57a773; --green-soft: #e9f6ee;
+    --psy: #8b7fd0; --psy-soft: #efecfb;   /* 視聴者心理＝推定は紫で事実と区別 */
+    --grad: linear-gradient(135deg, #f19a9a, #f4b183);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Maru Gothic ProN", "Zen Maru Gothic", "Hiragino Sans", "Yu Gothic", sans-serif;
+    background: var(--bg); color: var(--ink); line-height: 1.8; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ヘッダー */
+  .report-head { background: var(--card); border: 1px solid var(--line);
+    border-radius: 24px; padding: 36px 40px; margin-bottom: 28px; position: relative; overflow: hidden; }
+  .report-head::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: var(--grad); }
+  .head-grid { display: grid; grid-template-columns: 1fr 200px; gap: 32px; align-items: start; }
+  .label { font-size: 12px; letter-spacing: 2px; color: var(--accent-deep); font-weight: 700; }
+  .report-head h1 { font-size: 27px; margin: 6px 0 2px; font-weight: 800; line-height: 1.5; }
+  .username { font-size: 14px; color: var(--sub); }
+  .head-stats { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+  .head-stats div b { font-size: 22px; display: block; color: var(--accent-deep); }
+  .head-stats div span { font-size: 12px; color: var(--sub); }
+  .bio, .caption-box { margin-top: 16px; font-size: 13.5px; color: var(--ink); white-space: pre-line;
+    background: var(--bg); border-left: 4px solid var(--accent-soft); padding: 12px 14px; border-radius: 0 12px 12px 0; }
+  .caption-box .tag { font-size: 10.5px; color: var(--accent-deep); font-weight: 700; display: block; margin-bottom: 4px; }
+  .head-cover img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 16px; border: 1px solid var(--line); display: block; }
+  .head-cover .cap { font-size: 10.5px; color: var(--sub); text-align: center; margin-top: 6px; }
+  .mk-btn { margin-top: 16px; border: none; cursor: pointer; font-family: inherit; background: var(--grad);
+    color: #fff; font-size: 13.5px; font-weight: 700; padding: 11px 22px; border-radius: 999px; }
+  .mk-btn:active { opacity: .8; }
+
+  /* セクション共通 */
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 28px 32px; margin-bottom: 24px; }
+  h2 { font-size: 19px; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; font-weight: 800; }
+  h2 .num { background: var(--accent); color: #fff; font-size: 12px; width: 26px; height: 26px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sec-sub { font-size: 12.5px; color: var(--sub); margin-bottom: 18px; }
+  h3 { font-size: 15px; margin: 18px 0 8px; font-weight: 800; }
+
+  /* KPI */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+  .kpi { background: var(--blue-soft); border-radius: 16px; padding: 14px 16px; }
+  .kpi b { font-size: 20px; display: block; color: var(--blue-deep); }
+  .kpi span { font-size: 11.5px; color: var(--sub); }
+  .note { font-size: 12.5px; color: var(--sub); margin-top: 12px; }
+  .note b { color: var(--ink); }
+
+  /* フック（サムネ＋冒頭フレーム） */
+  .hook-grid { display: grid; grid-template-columns: 150px 1fr; gap: 22px; align-items: start; }
+  .hook-grid .cover img { width: 150px; aspect-ratio: 9/16; object-fit: cover; border-radius: 12px; display: block; }
+  .hook-quote { background: var(--bg); border-left: 4px solid var(--accent); border-radius: 0 12px 12px 0;
+    padding: 10px 14px; font-size: 14px; margin: 10px 0; font-weight: 700; }
+  .hook-quote .tag { font-size: 10.5px; color: var(--accent-deep); font-weight: 700; display: block; }
+  .rule-list { list-style: none; }
+  .rule-list li { padding: 10px 14px; margin-bottom: 8px; background: var(--blue-soft); border-radius: 14px; font-size: 13.5px; }
+  .rule-list li b { color: var(--blue-deep); }
+
+  /* 構成タイムライン */
+  .timeline { list-style: none; position: relative; margin-top: 6px; }
+  .timeline li { position: relative; padding: 0 0 18px 92px; }
+  .timeline li::before { content: ""; position: absolute; left: 70px; top: 4px; bottom: -4px; width: 2px; background: var(--line); }
+  .timeline li:last-child::before { display: none; }
+  .timeline .t { position: absolute; left: 0; top: 0; width: 58px; text-align: right; font-size: 12px; font-weight: 800; color: var(--accent-deep); }
+  .timeline .dot { position: absolute; left: 65px; top: 3px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; }
+  .timeline .blk { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; }
+  .timeline .blk b { font-size: 14px; }
+  .timeline .blk p { font-size: 12.5px; color: var(--sub); margin-top: 2px; }
+  .timeline .blk .say { font-size: 12.5px; color: var(--ink); margin-top: 4px; }
+  .psy { background: var(--psy-soft); border-radius: 8px; padding: 5px 10px; margin-top: 5px; font-size: 12px; color: #5f5590; }
+  .psy .tag { font-weight: 700; font-size: 10px; color: var(--psy); display: block; }
+
+  /* 視聴者心理の設計図 */
+  .arc { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0 14px; font-size: 12.5px; }
+  .arc span { background: var(--psy-soft); color: #5f5590; border-radius: 999px; padding: 5px 14px; font-weight: 700; }
+  .arc span::after { content: " →"; color: var(--psy); }
+  .arc span:last-child::after { content: ""; }
+  .fk-list { list-style: none; }
+  .fk-list li { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+  .fk-set, .fk-pay { border-radius: 12px; padding: 8px 12px; font-size: 12.5px; }
+  .fk-set { background: var(--gold-soft); } .fk-set b { color: var(--gold); }
+  .fk-pay { background: var(--green-soft); } .fk-pay b { color: var(--green); }
+
+  /* 台本テンプレート */
+  .script-template { background: #fbf4ea; border: 1px solid var(--line); color: var(--ink);
+    border-radius: 16px; padding: 20px 24px; font-size: 13.5px; white-space: pre-line; line-height: 2; }
+  .script-template b { color: var(--accent-deep); }
+
+  /* コメント */
+  .cmt { background: var(--green-soft); border-radius: 14px; padding: 10px 14px; margin-bottom: 8px; font-size: 13px; }
+  .cmt .u { font-weight: 700; color: var(--green); font-size: 12px; }
+
+  /* ポイント/活かし方 */
+  .point-list { list-style: none; counter-reset: pt; }
+  .point-list li { counter-increment: pt; padding: 14px 16px 14px 52px; position: relative;
+    background: var(--blue-soft); border-radius: 16px; margin-bottom: 10px; font-size: 13.5px; }
+  .point-list li::before { content: counter(pt); position: absolute; left: 14px; top: 14px; width: 26px; height: 26px;
+    border-radius: 50%; background: var(--blue); color: #fff; font-weight: 700; font-size: 13px;
+    display: flex; align-items: center; justify-content: center; }
+  .point-list li b { display: block; font-size: 14.5px; margin-bottom: 2px; }
+  .action-list li { background: var(--accent-soft); }
+  .action-list li::before { background: var(--grad); }
+
+  /* 文字起こし折りたたみ */
+  .tr-toggle { margin-top: 8px; border: none; cursor: pointer; font-family: inherit; background: var(--accent-soft);
+    color: var(--accent-deep); font-size: 12.5px; font-weight: 700; padding: 7px 16px; border-radius: 999px; }
+  .tr-toggle:hover { background: #fbdede; }
+  .tr-body { margin-top: 10px; }
+  .tr-actions { display: flex; gap: 6px; margin-bottom: 6px; }
+  .tr-actions button { border: none; cursor: pointer; font-family: inherit; background: var(--blue-soft);
+    color: var(--blue-deep); font-size: 11.5px; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
+  .tr-actions button:hover { background: #d8e8f9; }
+  .tr-text { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+    font-size: 12.5px; line-height: 1.9; color: var(--ink); white-space: pre-wrap; word-break: break-word;
+    max-height: 320px; overflow-y: auto; font-family: inherit; margin: 0; }
+
+  /* フレームストリップ */
+  .frame-strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin: 12px 0; }
+  .frame-strip figure { margin: 0; }
+  .frame-strip img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 8px; display: block; }
+  .frame-strip figcaption { font-size: 10px; color: var(--sub); text-align: center; margin-top: 3px; }
+
+  footer { text-align: center; font-size: 11.5px; color: var(--sub); margin-top: 30px; }
+
+  @media (max-width: 720px) {
+    .head-grid { grid-template-columns: 1fr; }
+    .hook-grid { grid-template-columns: 110px 1fr; }
+    .hook-grid .cover img { width: 110px; }
+    .frame-strip { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media print { body { background: #fff; } section { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ヘッダー -->
+  <div class="report-head">
+    <div class="head-grid">
+      <div>
+        <div class="label">INSTAGRAM REEL 徹底解剖</div>
+        <h1>[[この1本を一言で（例: 海外バズ動画→AIツール実演でコメント誘導）]]</h1>
+        <div class="username">@[[ユーザー名]]（[[表示名]]）｜投稿: [[YYYY/MM/DD]]｜分析: [[YYYY/MM/DD]]</div>
+        <div class="head-stats">
+          <div><b>[[いいね数]]</b><span>いいね</span></div>
+          <div><b>[[コメント数]]</b><span>コメント</span></div>
+          <div><b>[[尺]]秒</b><span>尺</span></div>
+          <div><b>[[形式]]</b><span>形式（ナレーション/テロップ/両方）</span></div>
+        </div>
+        <div class="caption-box"><span class="tag">キャプション</span>[[キャプション全文]]</div>
+        <!-- 🎬 引き継ぎ: data-prompt のパスは実際の出力フォルダに置き換える -->
+        <button class="mk-btn" data-prompt="この分析を基に台本を作って（daihon-copy-makeスキル）。参考: [[出力フォルダのフルパス]] の style_profile.md と data/transcript.txt を読んで、この1本の型で作成。今日の出来事/入れたい文言: " onclick="mkPrompt(this)">🎬 この型で台本を作る（起動プロンプトをコピー）</button>
+      </div>
+      <div class="head-cover">
+        <img src="[[リールID]].jpg" alt="カバー">
+        <div class="cap">カバー（最初の場面）</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. 数字とポジション -->
+  <section>
+    <h2><span class="num">1</span>数字とこの1本のポジション</h2>
+    <div class="sec-sub">エンゲージメントと、この投稿が狙っているゴール</div>
+    <div class="kpi-grid">
+      <div class="kpi"><b>[[いいね]]</b><span>いいね</span></div>
+      <div class="kpi"><b>[[コメント]]</b><span>コメント</span></div>
+      <div class="kpi"><b>[[保存/再生など取れた指標]]</b><span>[[指標名]]</span></div>
+      <div class="kpi"><b>[[コメント率など]]</b><span>[[算出した比率]]</span></div>
+    </div>
+    <p class="note">[[この投稿の目的は何か（認知/保存/コメント誘導→DM/販売導線 等）。数字から読み取れる強み・弱みを2〜3文。再生数が非表示なら「再生数非表示」と明記]]</p>
+  </section>
+
+  <!-- 2. 冒頭フック＆サムネ設計 -->
+  <section>
+    <h2><span class="num">2</span>冒頭フック＆サムネ設計（スクロールを止める仕掛け）</h2>
+    <div class="sec-sub">最初の2〜3秒で何を見せ、何を言っているか</div>
+    <div class="hook-grid">
+      <div class="cover"><img src="[[リールID]].jpg" alt="最初の場面"></div>
+      <div>
+        <div class="hook-quote"><span class="tag">画（最初の場面）</span>[[冒頭に映っているもの・固定テロップ帯の文言をそのまま]]</div>
+        <div class="hook-quote"><span class="tag">音（冒頭ナレーション/効果音）</span>[[冒頭の声を引用。無ければ「BGMのみ（引きで見せる）」]]</div>
+        <ul class="rule-list">
+          <li><b>止める仕掛け:</b> [[違和感/数字/強い動き/断定 など、なぜ指が止まるか]]</li>
+          <li><b>サムネ文字:</b> [[固定帯の文字数・色・強調（黄色ハイライト等）・配置]]</li>
+          <li><b>引きの作り方:</b> [[結論を先送りする言い回し・「〜した結果」型 等]]</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 構成マップ -->
+  <section>
+    <h2><span class="num">3</span>構成マップ（秒配分）</h2>
+    <div class="sec-sub">動画を時系列で起こした設計図</div>
+    <ul class="timeline">
+      <!-- ▼このブロックを構成の数だけ複製 -->
+      <li>
+        <span class="t">[[0-10s]]</span><span class="dot"></span>
+        <div class="blk">
+          <b>[[ブロック名（例: フック=海外バズ映像）]]</b>
+          <p>[[画/演出の説明]]</p>
+          <div class="say">[[このブロックのナレーション/テロップを引用]]</div>
+          <div class="psy"><span class="tag">視聴者心理（推定）</span>[[具体トリガー（画面/言葉の何が）→視聴者に「〜（主語つきの具体的な言葉）」という疑問を抱かせる/と思わせる（意図動詞で締める）→次にどうするか。抽象語・指示語で終わらせない]]</div>
+        </div>
+      </li>
+      <!-- ▲複製ここまで -->
+    </ul>
+    <p class="note">[[尺配分の特徴。例: 前半◯秒を引きに使い、後半◯秒で本題→CTA。フックが尺の何%か]]</p>
+  </section>
+
+  <!-- 4. 視聴者心理の設計図 -->
+  <section>
+    <h2><span class="num">4</span>視聴者心理の設計図（伏線・回収・感情の流れ）</h2>
+    <div class="sec-sub">各瞬間で視聴者に何が起きるか＝<b>効果ベース</b>（制作者の内心ではなく視聴者側の反応の<b>推定</b>）。<b>抽象語で書かず、視聴者の頭に浮かぶ実際の言葉「〜」を引用し、自分の台本に置き換えられる粒度で書く</b></div>
+    <h3>感情の流れ</h3>
+    <div class="arc">
+      <!-- 弧を3〜5個。例: 引き → 緊張 → 納得 → 欲しくなる -->
+      <span>[[感情1]]</span><span>[[感情2]]</span><span>[[感情3]]</span>
+    </div>
+    <h3>伏線 → 回収マップ</h3>
+    <ul class="fk-list">
+      <!-- ▼仕込み(未回収の疑問/違和感)と、その回収先をペアで。数だけ複製。具体トリガー＋視聴者の言葉「〜」で書く -->
+      <li>
+        <div class="fk-set"><b>仕込み [[0-3s]]</b><br>[[画面/言葉の"何が" → 視聴者に「〜（主語つき）？」という疑問を抱かせる（具体的に）]]</div>
+        <div class="fk-pay"><b>回収 [[35s]]</b><br>[[どの言葉/場面でその「〜？」を解消するか（具体的に）]]</div>
+      </li>
+      <!-- ▲複製ここまで -->
+    </ul>
+    <h3>使われている心理レバー（実行ベース）</h3>
+    <ul class="rule-list">
+      <!-- ▼この1本で効いている再現可能な仕掛けを、具体ワードつきで2〜4個。ユーザーが自分の題材に移植できる形で -->
+      <li><b>[[レバー名（例: 際どい話題で引っ張る）]]:</b> [[この動画での具体例を引用「〜」→視聴者に何が起きるか→自分の題材ならどう置き換えるか]]</li>
+      <!-- ▲複製ここまで -->
+    </ul>
+    <h3>CTA直前の心理</h3>
+    <p class="note">[[コメント/フォローに誘導する直前、視聴者の頭にある実際の言葉「〜」を書く（例:「自分にもできそう」「私も同じ経験ある、書きたい」）。なぜその心理がCTAに繋がるか＝移植可能なメカニズムまで。推定と明示]]</p>
+  </section>
+
+  <!-- 5. 台本・テロップ全文＋型 -->
+  <section>
+    <h2><span class="num">5</span>台本・テロップ全文とこの1本の「型」</h2>
+    <div class="sec-sub">話している内容と画面のテロップから書き起こし</div>
+    <div class="script-template">
+<b>【フック】</b>[[どう始まるか＋実例引用]]
+<b>【展開】</b>[[何ブロックで、どう進むか。転換点]]
+<b>【オチ/CTA】</b>[[どう締めるか＋実例引用]]
+    </div>
+    <h3>文体・言い回しの特徴</h3>
+    <ul class="rule-list">
+      <li><b>口調・語尾:</b> [[実例つき]]</li>
+      <li><b>キーワード/頻出表現:</b> [[]]</li>
+      <li><b>尺と文字数:</b> [[◯秒・約◯文字・テンポ]]</li>
+    </ul>
+    <!-- 文字起こし全文（HTMLエスケープ済み。句点で改行を入れて読みやすく） -->
+    <div class="tr-box">
+      <button class="tr-toggle" onclick="trToggle(this)">📝 文字起こし全文を見る</button>
+      <div class="tr-body" hidden>
+        <div class="tr-actions">
+          <button onclick="trCopy(this)">📋 コピー</button>
+          <button onclick="trDownload(this, '[[ユーザー名]]_[[リールID]]')">⬇ .txt保存</button>
+        </div>
+        <pre class="tr-text">[[文字起こし全文（HTMLエスケープ済み）]]</pre>
+      </div>
+    </div>
+    <p class="note">[[必要なら補足を平易な言葉で（例: 聞き取りにくい数語は前後から補正）。※Whisper/segments.json/フレーム等の内部・技術用語は本文に一切書かない]]</p>
+  </section>
+
+  <!-- 6. 演出・CTA・収益導線 -->
+  <section>
+    <h2><span class="num">6</span>演出・テロップ・CTA / 収益導線</h2>
+    <div class="sec-sub">どう見せ、どこへ誘導しているか</div>
+    <div class="frame-strip">
+      <!-- 代表フレームを6枚。frames/f_xx.xs.jpg をタイムスタンプ順に -->
+      <figure><img src="frames/[[f_00.6s]].jpg" alt=""><figcaption>[[0.6s]]</figcaption></figure>
+    </div>
+    <ul class="rule-list">
+      <li><b>テロップ演出:</b> [[出し方・強調・位置・量]]</li>
+      <li><b>画の作り方:</b> [[素材/顔出し/画面録画などの組み合わせ]]</li>
+      <li><b>CTA・収益導線:</b> [[最後にどこへ誘導するか。コメント誘導→自動DM/リンク/フォロー等の仕組み]]</li>
+    </ul>
+  </section>
+
+  <!-- 7. コメント欄の反応 -->
+  <section>
+    <h2><span class="num">7</span>コメント欄の反応</h2>
+    <div class="sec-sub">視聴者が実際に何を書いているか</div>
+    <!-- ▼代表コメントを複製 -->
+    <div class="cmt"><span class="u">@[[ユーザー]]</span>：[[コメント本文]]</div>
+    <!-- ▲複製ここまで -->
+    <p class="note">[[コメントの傾向。CTAワードを書き込む誘導が機能しているか、質問/称賛/批判の比率など。コメントが取れなければ「コメント取得できず」と明記]]</p>
+  </section>
+
+  <!-- 8. あなたのアカウントへの活かし方 -->
+  <section>
+    <h2><span class="num">8</span>あなたのリールに活かすなら</h2>
+    <div class="sec-sub">自分の題材に置き換えて使う具体アクション</div>
+    <ol class="point-list action-list">
+      <li><b>[[アクション見出し]]</b>[[この1本の何を、自分の題材でどう再現するか。具体的に]]</li>
+      <!-- 4〜6個。フック／サムネ文字／構成の秒配分／CTAの型／演出 をカバー -->
+    </ol>
+    <p class="note">⚠ 固有の題材・言い回しの丸パクリではなく「構造」を移植すること。[[この1本ならではの注意]]</p>
+  </section>
+
+  <footer>
+    リール1本分析レポート ｜ 対象: <a href="[[リールURL]]">[[リールURL]]</a> ｜ 作成: [[YYYY/MM/DD]]<br>
+    [[確認できなかった項目を平易に。例: 再生数はInstagram上で非表示／なければこの行は消す]]<br>
+    収集した動画・画像は研究目的のローカル保存です。無断転載はしないでください。
+  </footer>
+</div>
+<script>
+function mkPrompt(btn) {
+  const text = btn.dataset.prompt;
+  (async () => {
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; } catch (e) {
+      const t = document.createElement('textarea'); t.value = text;
+      document.body.appendChild(t); t.select(); ok = document.execCommand('copy'); t.remove();
+    }
+    btn.textContent = ok ? '✅ コピーしました。Claude Codeに貼り付けてください' : 'コピー失敗。手動でコピーしてください';
+    setTimeout(() => { btn.textContent = '🎬 この型で台本を作る（起動プロンプトをコピー）'; }, 3000);
+  })();
+}
+function trToggle(btn) {
+  const body = btn.nextElementSibling; const opening = body.hidden;
+  body.hidden = !opening; btn.textContent = opening ? '📝 文字起こしを閉じる' : '📝 文字起こし全文を見る';
+}
+async function trCopy(btn) {
+  const el = btn.closest('.tr-body').querySelector('.tr-text');
+  let ok = false;
+  try { await navigator.clipboard.writeText(el.textContent); ok = true; } catch (e) {
+    const range = document.createRange(); range.selectNodeContents(el);
+    const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    ok = document.execCommand('copy'); sel.removeAllRanges();
+  }
+  btn.textContent = ok ? '✅ コピーしました' : '選択済み → Cmd+C';
+  setTimeout(() => { btn.textContent = '📋 コピー'; }, 1800);
+}
+function trDownload(btn, name) {
+  const text = btn.closest('.tr-body').querySelector('.tr-text').textContent;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], {type: 'text/plain;charset=utf-8'}));
+  a.download = name + '.txt'; a.click(); URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

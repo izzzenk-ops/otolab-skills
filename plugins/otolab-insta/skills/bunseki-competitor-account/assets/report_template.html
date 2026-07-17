@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+  参考アカウント分析報告書テンプレート
+  使い方: このファイルをコピーして各セクションの中身を実データで書き換える。
+  CSS・レイアウト構造は変えない（毎回同じ見た目の報告書になることが価値）。
+  画像は report.html から見た相対パス（thumbs/xxx.jpg, reels/xxx.jpg）で参照する。
+  [[...]] はプレースホルダ。カードやリスト項目は必要な数だけ複製する。
+-->
+<title>[[アカウント名]] 分析報告書</title>
+<style>
+  :root {
+    --ink: #3f4a5a;        /* チャコールネイビー（本文） */
+    --sub: #8b93a3;
+    --line: #f0e8dd;
+    --bg: #f7f3ec;         /* クリーム背景 */
+    --card: #ffffff;
+    --accent: #ec8080;     /* サーモンピンク */
+    --accent-deep: #e06c6c;
+    --accent-soft: #fdecec;
+    --blue: #6b9bd2;       /* パステルブルー */
+    --blue-deep: #5b8ac4;
+    --blue-soft: #e8f1fb;
+    --gold: #d9822b;
+    --gold-soft: #fdf1e3;
+    --green: #57a773;
+    --green-soft: #e9f6ee;
+    --grad: linear-gradient(135deg, #f19a9a, #f4b183);  /* ピンク→オレンジ */
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Maru Gothic ProN", "Zen Maru Gothic", "Hiragino Sans", "Yu Gothic", sans-serif;
+    background: var(--bg); color: var(--ink); line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ヘッダー */
+  .report-head {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 24px; padding: 36px 40px; margin-bottom: 28px;
+    position: relative; overflow: hidden;
+  }
+  .report-head::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 8px;
+    background: var(--grad);
+  }
+  .report-head .label {
+    font-size: 12px; letter-spacing: 2px; color: var(--accent-deep); font-weight: 700;
+  }
+  .report-head h1 { font-size: 30px; margin: 6px 0 2px; font-weight: 800; }
+  .report-head .username { font-size: 15px; color: var(--sub); }
+  .report-head .bio {
+    margin-top: 14px; font-size: 13.5px; color: var(--sub); white-space: pre-line;
+    border-left: 4px solid var(--accent-soft); padding-left: 14px;
+  }
+  .head-stats { display: flex; gap: 28px; margin-top: 20px; flex-wrap: wrap; }
+  .head-stats div b { font-size: 22px; display: block; color: var(--accent-deep); }
+  .head-stats div span { font-size: 12px; color: var(--sub); }
+  .concept-line {
+    margin-top: 18px; background: var(--accent-soft); border-radius: 14px;
+    padding: 12px 16px; font-size: 14.5px; font-weight: 700; color: var(--ink);
+  }
+
+  /* セクション共通 */
+  section { background: var(--card); border: 1px solid var(--line);
+    border-radius: 24px; padding: 28px 32px; margin-bottom: 24px; }
+  h2 { font-size: 19px; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; font-weight: 800; }
+  h2 .num {
+    background: var(--accent); color: #fff; font-size: 12px; width: 26px; height: 26px;
+    border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-sub { font-size: 12.5px; color: var(--sub); margin-bottom: 18px; }
+  h3 { font-size: 15px; margin: 18px 0 8px; font-weight: 800; }
+
+  /* KPIダッシュボード */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .kpi { background: var(--blue-soft); border-radius: 16px; padding: 14px 16px; }
+  .kpi b { font-size: 21px; display: block; color: var(--blue-deep); }
+  .kpi span { font-size: 11.5px; color: var(--sub); }
+
+  /* サムネイルギャラリー */
+  .thumb-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin: 14px 0; }
+  .thumb-grid img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 10px; }
+  .rule-list { list-style: none; }
+  .rule-list li {
+    padding: 10px 14px; margin-bottom: 8px; background: var(--blue-soft);
+    border-radius: 14px; font-size: 13.5px;
+  }
+  .rule-list li b { color: var(--blue-deep); }
+
+  /* リールカード */
+  .reel-card {
+    display: grid; grid-template-columns: 150px 1fr; gap: 20px;
+    border: 1px solid var(--line); background: #fffdfa;
+    border-radius: 18px; padding: 18px; margin-bottom: 16px;
+  }
+  .reel-card .cover { position: relative; }
+  .reel-card .cover img {
+    width: 150px; aspect-ratio: 9/16; object-fit: cover; border-radius: 12px; display: block;
+  }
+  .reel-card .rank {
+    position: absolute; top: -8px; left: -8px; background: var(--grad); color: #fff;
+    font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+  }
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .badge { font-size: 11.5px; padding: 2px 10px; border-radius: 999px; font-weight: 700; }
+  .badge.views { background: var(--gold-soft); color: var(--gold); }
+  .badge.mult { background: var(--green-soft); color: var(--green); }
+  .badge.type { background: var(--accent-soft); color: var(--accent-deep); }
+  .reel-card h4 { font-size: 15px; margin-bottom: 6px; font-weight: 800; }
+  .hook {
+    background: var(--bg); border-left: 4px solid var(--accent); border-radius: 0 12px 12px 0;
+    padding: 8px 12px; font-size: 13px; margin: 8px 0; color: var(--ink);
+  }
+  .hook .tag { font-size: 10.5px; color: var(--accent-deep); font-weight: 700; display: block; }
+  .flow { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; font-size: 12px; }
+  .flow span { background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; }
+  .flow span::after { content: " →"; color: var(--accent); }
+  .flow span:last-child::after { content: ""; }
+  .why { font-size: 13px; color: var(--sub); }
+  .why b { color: var(--ink); }
+
+  /* 台本テンプレート */
+  .script-template {
+    background: #fbf4ea; border: 1px solid var(--line); color: var(--ink);
+    border-radius: 16px; padding: 20px 24px;
+    font-size: 13.5px; white-space: pre-line; line-height: 2;
+  }
+  .script-template b { color: var(--accent-deep); }
+
+  /* 総合分析・活かし方 */
+  .point-list { list-style: none; counter-reset: pt; }
+  .point-list li {
+    counter-increment: pt; padding: 14px 16px 14px 52px; position: relative;
+    background: var(--blue-soft); border: none;
+    border-radius: 16px; margin-bottom: 10px; font-size: 13.5px;
+  }
+  .point-list li::before {
+    content: counter(pt); position: absolute; left: 14px; top: 14px;
+    width: 26px; height: 26px; border-radius: 50%; background: var(--blue); color: #fff;
+    font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center;
+  }
+  .point-list li b { display: block; font-size: 14.5px; margin-bottom: 2px; }
+  .action-list li { background: var(--accent-soft); }
+  .action-list li::before { background: var(--grad); }
+
+  .note { font-size: 11.5px; color: var(--sub); margin-top: 10px; }
+  footer { text-align: center; font-size: 11.5px; color: var(--sub); margin-top: 30px; }
+
+
+  /* 文字起こし折りたたみ */
+  .tr-toggle {
+    margin-top: 8px; border: none; cursor: pointer; font-family: inherit;
+    background: var(--accent-soft); color: var(--accent-deep);
+    font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 999px;
+  }
+  .tr-toggle:hover { background: #fbdede; }
+  .tr-body { margin-top: 8px; }
+  .tr-actions { display: flex; gap: 6px; margin-bottom: 6px; }
+  .tr-actions button {
+    border: none; cursor: pointer; font-family: inherit;
+    background: var(--blue-soft); color: var(--blue-deep);
+    font-size: 11.5px; font-weight: 700; padding: 4px 12px; border-radius: 999px;
+  }
+  .tr-actions button:hover { background: #d8e8f9; }
+  .tr-text {
+    background: var(--bg); border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px 14px; font-size: 12.5px; line-height: 1.9; color: var(--ink);
+    white-space: pre-wrap; word-break: break-word; max-height: 280px; overflow-y: auto;
+    font-family: inherit; margin: 0;
+  }
+
+
+
+  .head-grid { display: grid; grid-template-columns: 1fr 320px; gap: 28px; align-items: start; }
+  .head-shot img {
+    width: 100%; display: block; border-radius: 16px; border: 1px solid var(--line);
+  }
+  .head-shot .cap { font-size: 10.5px; color: var(--sub); text-align: center; margin-top: 6px; }
+  @media (max-width: 720px) { .head-grid { grid-template-columns: 1fr; } }
+
+  /* 台本作成ボタン */
+  .mk-btn {
+    margin-top: 14px; border: none; cursor: pointer; font-family: inherit;
+    background: var(--grad); color: #fff;
+    font-size: 13.5px; font-weight: 700; padding: 10px 22px; border-radius: 999px;
+  }
+  .mk-btn:active { opacity: .8; }
+
+  @media (max-width: 720px) {
+    .thumb-grid { grid-template-columns: repeat(3, 1fr); }
+    .reel-card { grid-template-columns: 100px 1fr; }
+    .reel-card .cover img { width: 100px; }
+  }
+  @media print {
+    body { background: #fff; }
+    section { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ヘッダー：アカウント概要 -->
+  <div class="report-head">
+    <div class="head-grid">
+    <div class="head-main">
+    <div class="label">INSTAGRAM ACCOUNT RESEARCH</div>
+    <h1>[[アカウント表示名]]</h1>
+    <div class="username">@[[ユーザー名]]｜分析日: [[YYYY/MM/DD]]</div>
+    <div class="head-stats">
+      <div><b>[[フォロワー数]]</b><span>フォロワー</span></div>
+      <div><b>[[投稿数]]</b><span>投稿</span></div>
+      <div><b>[[リール本数]]</b><span>収集リール</span></div>
+      <div><b>[[文字起こし本数]]</b><span>文字起こし</span></div>
+    </div>
+    <div class="bio">[[bio全文をそのまま]]</div>
+    <div class="concept-line">コンセプトを一言で: [[誰に×何を×どうやって、を1文で]]</div>
+    <!-- 起動プロンプトのパスは実際の出力フォルダに置き換える -->
+    <button class="mk-btn" data-prompt="この台本を参考に台本を作って（daihon-copy-makeスキル）。参考分析: [[出力フォルダのフルパス]] の style_profile.md と文字起こしを読んで、[[アカウント名]]の型で作成。今日の出来事: " onclick="mkPrompt(this)">🎬 この分析で台本を作る（起動プロンプトをコピー）</button>
+    </div>
+    <div class="head-shot">
+      <!-- STEP 1で保存したプロフィールのスクショ。撮れなかった場合はhead-shotごと削除してよい -->
+      <img src="data/profile.png" alt="プロフィールのスクリーンショット">
+      <div class="cap">プロフィール（[[YYYY/MM/DD]]時点）</div>
+    </div>
+    </div>
+  </div>
+
+  <!-- 1. 数字ダッシュボード -->
+  <section>
+    <h2><span class="num">1</span>数字で見るこのアカウント</h2>
+    <div class="sec-sub">収集した全リール[[N]]本の再生数データより</div>
+    <div class="kpi-grid">
+      <div class="kpi"><b>[[中央値]]</b><span>再生数 中央値（平常値）</span></div>
+      <div class="kpi"><b>[[平均]]</b><span>再生数 平均</span></div>
+      <div class="kpi"><b>[[最高]]</b><span>最高再生数</span></div>
+      <div class="kpi"><b>[[◯倍]]</b><span>最高再生÷フォロワー数</span></div>
+      <div class="kpi"><b>[[◯本]]</b><span>中央値の3倍超え（バズ本数）</span></div>
+    </div>
+    <p class="note">[[数字から読み取れることを2〜3文。例：平常値に対してバズが突出しているのか、全体的に底上げされているのか]]</p>
+  </section>
+
+  <!-- 2. サムネイル設計 -->
+  <section>
+    <h2><span class="num">2</span>サムネイル設計の法則</h2>
+    <div class="sec-sub">グリッド俯瞰＋伸びた投稿のサムネ比較から抽出</div>
+    <div class="thumb-grid">
+      <!-- グリッド順に18〜24枚。選定リールは reels/<ID>.jpg、選定外は thumbs/NNN_<ID>.jpg -->
+      <img src="thumbs/[[000_ID]].jpg" alt="" loading="lazy">
+    </div>
+    <ul class="rule-list">
+      <li><b>文字:</b> [[文字数の目安・フォント・縁取り・配置の法則]]</li>
+      <li><b>配色:</b> [[基調色・文字色・統一ルール]]</li>
+      <li><b>構図:</b> [[人物の写り方・表情・背景の傾向]]</li>
+      <li><b>コピーの型:</b> [[数字型/ベネフィット型/違和感型など、実例を引用しつつ]]</li>
+    </ul>
+  </section>
+
+  <!-- 3. 伸びているリールTOP10 -->
+  <section>
+    <h2><span class="num">3</span>伸びているリール TOP[[10]]</h2>
+    <div class="sec-sub">再生数順。フックは文字起こしの冒頭をそのまま引用</div>
+
+    <!-- ▼このカードを本数分複製 -->
+    <div class="reel-card">
+      <div class="cover">
+        <span class="rank">#1</span>
+        <img src="reels/[[リールID]].jpg" alt="" loading="lazy">
+      </div>
+      <div>
+        <div class="badges">
+          <span class="badge views">▶ [[12.3万]]回</span>
+          <span class="badge mult">平常値の[[◯.◯]]倍</span>
+          <span class="badge type">[[テーマ分類]]</span>
+        </div>
+        <h4>[[この動画の内容を1行で]]</h4>
+        <div class="hook"><span class="tag">冒頭フック（0〜3秒）</span>[[文字起こし冒頭をそのまま引用]]</div>
+        <div class="flow"><span>[[フックの型]]</span><span>[[展開1]]</span><span>[[展開2]]</span><span>[[オチ/CTA]]</span></div>
+        <p class="why"><b>伸びた理由:</b> [[サムネ×フック×テーマの掛け算でなぜ再生されたか、1〜2文]]</p>
+        <!-- 文字起こしがあるリールには必ずこのブロックを付ける（全文をHTMLエスケープし、句点「。」ごとに改行を入れて埋め込む。末尾の幻覚繰り返しは除去） -->
+        <div class="tr-box">
+          <button class="tr-toggle" onclick="trToggle(this)">📝 文字起こしを見る</button>
+          <div class="tr-body" hidden>
+            <div class="tr-actions">
+              <button onclick="trCopy(this)">📋 コピー</button>
+              <button onclick="trDownload(this, '[[ユーザー名]]_[[リールID]]')">⬇ .txt保存</button>
+            </div>
+            <pre class="tr-text">[[文字起こし全文（HTMLエスケープ済み）]]</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ▲複製ここまで -->
+  </section>
+
+  <!-- 4. 最新5本 = 現在の運用スタイル -->
+  <section>
+    <h2><span class="num">4</span>最新5本に見る「今の運用」</h2>
+    <div class="sec-sub">直近の投稿スタイルとバズ回との違い</div>
+    <!-- 上と同じ reel-card を5枚（rankは「最新」表記でOK） -->
+    <p class="note">[[最新投稿とバズ投稿の違い・変化があれば指摘。例：最近は尺を短くしている、シリーズ化を始めた等]]</p>
+  </section>
+
+  <!-- 5. 台本の共通構成 -->
+  <section>
+    <h2><span class="num">5</span>台本の共通構成テンプレート</h2>
+    <div class="sec-sub">文字起こし[[N]]本から抽出した「この人の型」</div>
+    <div class="script-template">
+<b>【フック 0〜3秒】</b>[[どういう1文で始まるか＋実例]]
+<b>【展開】</b>[[何ブロックで、どう進むか]]
+<b>【オチ/締め】</b>[[どう終わるか＋実例]]
+    </div>
+    <h3>文体の特徴</h3>
+    <ul class="rule-list">
+      <li><b>口調・語尾:</b> [[実例つきで]]</li>
+      <li><b>1文の長さ・テンポ:</b> [[]]</li>
+      <li><b>頻出フレーズ:</b> [[]]</li>
+      <li><b>尺と文字数:</b> [[平均◯秒・◯文字]]</li>
+    </ul>
+  </section>
+
+  <!-- 6. なぜ伸びているのか -->
+  <section>
+    <h2><span class="num">6</span>なぜこのアカウントは伸びているのか</h2>
+    <div class="sec-sub">ここまでの分析の結論</div>
+    <ol class="point-list">
+      <li><b>[[理由の見出し]]</b>[[根拠となるデータ・実例を添えて2〜3文]]</li>
+      <!-- 3〜5個 -->
+    </ol>
+  </section>
+
+  <!-- 7. あなたのアカウントへの活かし方 -->
+  <section>
+    <h2><span class="num">7</span>あなたのアカウントに活かすなら</h2>
+    <div class="sec-sub">[[ユーザーのアカウント/目的]]を前提にした具体アクション</div>
+    <ol class="point-list action-list">
+      <li><b>[[明日からできるアクション]]</b>[[何をどう真似るか、具体的に]]</li>
+      <!-- 4〜6個。サムネ／フック／台本構成（展開ブロック・オチの型）／企画選定／数値の見方の5観点を必ずカバーする -->
+    </ol>
+    <p class="note">⚠ そのままコピーではなく「構造」を移植すること。[[丸パクリ回避の注意点があれば]]</p>
+  </section>
+
+  <footer>
+    Generated by bunseki-competitor-account skill ｜ データ収集: [[YYYY/MM/DD]] ｜
+    確認できなかった項目: [[スキップ・推定した項目を正直に記載／なければ「なし」]]<br>
+    収集した動画・画像は研究目的のローカル保存です。無断転載はしないでください。
+  </footer>
+</div>
+<script>
+function mkPrompt(btn) {
+  const text = btn.dataset.prompt;
+  (async () => {
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; } catch (e) {
+      const t = document.createElement('textarea');
+      t.value = text; document.body.appendChild(t); t.select();
+      ok = document.execCommand('copy'); t.remove();
+    }
+    btn.textContent = ok ? '✅ コピーしました。新しいセッションに貼り付けてください' : 'コピー失敗。手動でコピーしてください';
+    setTimeout(() => { btn.textContent = '🎬 この分析で台本を作る（起動プロンプトをコピー）'; }, 3000);
+  })();
+}
+function trToggle(btn) {
+  const body = btn.nextElementSibling;
+  const opening = body.hidden;
+  body.hidden = !opening;
+  btn.textContent = opening ? '📝 文字起こしを閉じる' : '📝 文字起こしを見る';
+}
+async function trCopy(btn) {
+  const el = btn.closest('.tr-body').querySelector('.tr-text');
+  let ok = false;
+  try { await navigator.clipboard.writeText(el.textContent); ok = true; } catch (e) {
+    const range = document.createRange(); range.selectNodeContents(el);
+    const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    ok = document.execCommand('copy'); sel.removeAllRanges();
+  }
+  btn.textContent = ok ? '✅ コピーしました' : '選択済み → Cmd+C';
+  setTimeout(() => { btn.textContent = '📋 コピー'; }, 1800);
+}
+function trDownload(btn, name) {
+  const text = btn.closest('.tr-body').querySelector('.tr-text').textContent;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], {type: 'text/plain;charset=utf-8'}));
+  a.download = name + '.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

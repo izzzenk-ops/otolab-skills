@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "otolab-skills",
+  "description": "おとラボのスキル集 — インスタスクール「オトラボ」受講生向けのClaude Codeスキル配布用マーケットプレイス",
+  "owner": {
+    "name": "オトラボ"
+  },
+  "plugins": [
+    {
+      "name": "otolab-insta",
+      "description": "Instagram運用スキル6点セット：リール1本徹底分析（bunseki-reel）／競合アカウント分析（bunseki-competitor-account）／自分のアカウント分析（bunseki-my-account）／アカウントコンセプト設計（insta-concept-design）／参考台本からの台本作成（daihon-copy-make）／ギャップ1日Vlog台本作成（daihon-kyaba-vlog）",
+      "source": "./plugins/otolab-insta",
+      "category": "productivity"
+    }
+  ]
+}
