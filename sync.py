@@ -32,6 +32,7 @@ DEST = REPO / "plugins" / "otolab-insta" / "skills"
 SKILLS = [
     "bunseki-reel", "bunseki-competitor-account", "bunseki-my-account",
     "insta-concept-design", "daihon-copy-make", "daihon-kyaba-vlog",
+    "concept-brush-up",
 ]
 
 # 受講生向けの一般化（before → after）。順序どおり適用。上ほど先。
@@ -88,7 +89,9 @@ def copy_skill(name):
     if dst.exists():
         shutil.rmtree(dst)
     shutil.copytree(src, dst, ignore=shutil.ignore_patterns(
-        "__pycache__", "*.pyc", ".DS_Store"))
+        "__pycache__", "*.pyc", ".DS_Store",
+        # 他社記事（SAKIYOMI 50コンセプト）の要約は公開リポジトリに含めない
+        "50-concepts-list.md", "evals"))
     return True
 
 
