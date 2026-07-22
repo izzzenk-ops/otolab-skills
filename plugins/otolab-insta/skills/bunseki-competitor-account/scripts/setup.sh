@@ -67,6 +67,10 @@ VENV="$HOME/telop-tool/venv"
 VPY="$VENV/bin/python3"
 if [ -x "$VPY" ] && "$VPY" -c "import mlx_whisper" >/dev/null 2>&1; then
   ok "mlx_whisper 導入済み ($VENV)"
+  # プロフィール切り出しで使う pillow を既存venvにも補う
+  if ! "$VPY" -c "import PIL" >/dev/null 2>&1; then
+    info "pillow を追加中…"; "$VPY" -m pip install --quiet pillow >/dev/null 2>&1 && ok "pillow を入れました"
+  fi
 else
   info "venv を作成し mlx-whisper をインストール中（初回は数分かかります）…"
   PY3="$(command -v python3 || true)"
@@ -78,7 +82,7 @@ else
   else
     mkdir -p "$HOME/telop-tool"
     "$PY3" -m venv "$VENV" \
-      && "$VPY" -m pip install --quiet --upgrade pip mlx-whisper \
+      && "$VPY" -m pip install --quiet --upgrade pip mlx-whisper pillow \
       && "$VPY" -c "import mlx_whisper" >/dev/null 2>&1 \
       && ok "mlx_whisper を入れました ($VENV)" \
       || { warn "mlx-whisper のインストールに失敗しました"; FAIL=1; }

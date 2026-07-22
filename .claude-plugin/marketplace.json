@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "otolab-insta",
-      "description": "Instagram運用・動画編集スキル9点セット：リール1本徹底分析（bunseki-reel）／競合アカウント分析（bunseki-competitor-account）／自分のアカウント分析（bunseki-my-account）／アカウントコンセプト設計（insta-concept-design）／コンセプト磨き上げ（concept-brush-up）／参考台本からの台本作成（daihon-copy-make）／ギャップ1日Vlog台本作成（daihon-kyaba-vlog）／アフレコ動画自動編集（reel-henshu-afreco）／映画風Vlog台本作成（daihon-eiga-vlog）",
+      "description": "Instagram運用・動画編集スキル10点セット：リール1本徹底分析（bunseki-reel）／競合アカウント分析（bunseki-competitor-account）／自分のアカウント分析（bunseki-my-account）／アカウントコンセプト設計（insta-concept-design）／コンセプト磨き上げ（concept-brush-up）／参考台本からの台本作成（daihon-copy-make）／ギャップ1日Vlog台本作成（daihon-kyaba-vlog）／台本の辛口添削（daihon-tensaku）／アフレコ動画自動編集（reel-henshu-afreco）／映画風Vlog台本作成（daihon-eiga-vlog）",
       "source": "./plugins/otolab-insta",
       "category": "productivity"
     }

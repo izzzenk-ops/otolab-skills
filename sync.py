@@ -32,7 +32,7 @@ DEST = REPO / "plugins" / "otolab-insta" / "skills"
 SKILLS = [
     "bunseki-reel", "bunseki-competitor-account", "bunseki-my-account",
     "insta-concept-design", "daihon-copy-make", "daihon-kyaba-vlog",
-    "concept-brush-up",
+    "concept-brush-up", "daihon-tensaku",
 ]
 
 # 受講生向けの一般化（before → after）。順序どおり適用。上ほど先。
@@ -44,6 +44,7 @@ REPLACEMENTS = [
     ("eekanji-kenji-script", "〔発信者専用の台本スキル〕"),
     ("desse-reel-script", "〔発信者専用の台本スキル〕"),
     ("daihon-otobana", "〔発信者専用の台本スキル〕"),
+    ("otobana", "〔アカウント例〕"),
     ("daihon-eiga-vlog", "〔発信者専用の台本スキル〕"),
     # 個人・ブランド名 → 一般語
     ("THE OTOGIBANASHI SUPPLY", "〔ブランド名〕"),
@@ -71,7 +72,7 @@ REPLACEMENTS = [
 # （REPLACEMENTSで拾い切れなかった新しい変種を検知する番人）
 REVIEW_TERMS = [
     "otolabo", "おとばな", "OTOGIBANASHI", "華月", "kiiiiiii", "kanako",
-    "/Users/miyabekenji", "eekanji", "desse",
+    "/Users/miyabekenji", "eekanji", "desse", "otobana",
 ]
 
 TEXT_EXTS = {".md", ".html", ".json", ".py", ".sh", ".txt", ".ps1"}
