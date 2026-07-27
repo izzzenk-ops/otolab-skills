@@ -73,6 +73,8 @@ REPLACEMENTS = [
 REVIEW_TERMS = [
     "otolabo", "おとばな", "OTOGIBANASHI", "華月", "kiiiiiii", "kanako",
     "/Users/miyabekenji", "eekanji", "desse", "otobana",
+    # 他社ブランド名（受講生向けに出さない。concept-brush-up由来）
+    "SAKIYOMI", "先読み",
 ]
 
 TEXT_EXTS = {".md", ".html", ".json", ".py", ".sh", ".txt", ".ps1"}
