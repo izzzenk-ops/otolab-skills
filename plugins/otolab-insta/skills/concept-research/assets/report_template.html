@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{対象者名}}さんのコンセプトリサーチ報告書</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FDFCFA;
+    --white: #FFFFFF;
+    --ink: #4A4A5A;
+    --ink-soft: #8A8A9A;
+    --coral: #FF9E9E;
+    --coral-light: #FFF0F0;
+    --blue: #7EB8E6;
+    --blue-light: #EAF4FC;
+    --yellow: #FFE39E;
+    --yellow-light: #FFF9E8;
+    --green: #8FCFA8;
+    --green-light: #EDF8F1;
+    --radius: 20px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.8;
+    padding: 40px 20px 80px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* ヘッダー */
+  .hero {
+    background: linear-gradient(135deg, var(--coral-light), var(--blue-light));
+    border-radius: var(--radius);
+    padding: 40px 36px;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .hero .pill {
+    display: inline-block;
+    background: var(--white);
+    color: var(--coral);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 6px 18px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .hero h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+  .hero .sub { color: var(--ink-soft); font-size: 14px; }
+
+  /* 汎用カード */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 28px 30px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(74,74,90,0.06);
+  }
+  .card h2 {
+    font-size: 18px; font-weight: 800;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .card h2 .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--coral); flex-shrink: 0; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .summary-item { background: var(--blue-light); border-radius: 14px; padding: 14px 16px; font-size: 14px; }
+  .summary-item .label { font-size: 12px; font-weight: 700; color: var(--blue); margin-bottom: 2px; }
+
+  /* 企画候補ランキング */
+  .kikaku {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 12px rgba(74,74,90,0.06);
+    border-left: 6px solid var(--coral);
+  }
+  .kikaku.rank2 { border-left-color: var(--blue); }
+  .kikaku.rank3 { border-left-color: #C9A227; }
+  .kikaku-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  .kikaku-rank {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--coral); color: var(--white);
+    font-weight: 800; font-size: 18px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .kikaku.rank2 .kikaku-rank { background: var(--blue); }
+  .kikaku.rank3 .kikaku-rank { background: #C9A227; }
+  .kikaku-title { font-size: 19px; font-weight: 800; }
+  .score-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 12px; }
+  .score-badge {
+    font-size: 12px; font-weight: 700;
+    padding: 4px 12px; border-radius: 999px;
+    background: var(--green-light); color: #4A9968;
+  }
+  .score-badge.ng { background: #F5F5F7; color: var(--ink-soft); }
+  .kikaku p { font-size: 14px; }
+  .kikaku .evidence { background: var(--yellow-light); border-radius: 14px; padding: 12px 16px; font-size: 13px; margin-top: 10px; }
+
+  /* パターンカード */
+  .pattern {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 28px 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(74,74,90,0.06);
+    border-top: 6px solid var(--blue);
+  }
+  .pattern.alt { border-top-color: var(--coral); }
+  .pattern-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .pattern-title { font-size: 19px; font-weight: 800; }
+  .pattern-title a { color: inherit; text-decoration: none; border-bottom: 2px dotted var(--blue); }
+  .tag {
+    background: var(--yellow-light); color: #C9A227;
+    font-size: 12px; font-weight: 700;
+    padding: 4px 12px; border-radius: 999px;
+  }
+  .pattern-body { display: grid; grid-template-columns: 220px 1fr; gap: 20px; }
+  .pattern-shots { display: flex; flex-direction: column; gap: 10px; }
+  .pattern-shots img {
+    width: 100%; border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(74,74,90,0.12);
+  }
+  .pattern-shots .caption { font-size: 12px; color: var(--ink-soft); text-align: center; }
+  .row { margin-bottom: 12px; }
+  .row .label {
+    display: inline-block;
+    font-size: 12px; font-weight: 700; color: var(--white);
+    background: var(--ink-soft);
+    padding: 3px 12px; border-radius: 999px;
+    margin-bottom: 4px;
+  }
+  .row.concept .label { background: var(--coral); }
+  .row.kakezan .label { background: var(--blue); }
+  .row.apply .label { background: #4A9968; }
+  .row p { font-size: 14px; }
+  .row.kakezan .formula {
+    background: var(--blue-light); border-radius: 14px;
+    padding: 12px 16px; font-size: 14px; font-weight: 700;
+  }
+  .row.apply { background: var(--green-light); border-radius: 14px; padding: 12px 16px; }
+  .yon-yoso { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .yoso {
+    font-size: 13px; font-weight: 700;
+    padding: 5px 14px; border-radius: 999px;
+    background: #F5F5F7; color: var(--ink-soft);
+  }
+  .yoso.win { background: var(--coral); color: var(--white); }
+  .stats { font-size: 13px; color: var(--ink-soft); margin-bottom: 12px; }
+  .stats b { color: var(--coral); font-size: 15px; }
+
+  /* 独自性素材 */
+  .my-formula {
+    background: linear-gradient(135deg, var(--blue-light), var(--coral-light));
+    border-radius: 14px; padding: 18px 20px;
+    font-size: 16px; font-weight: 800; text-align: center;
+    margin-bottom: 14px;
+  }
+
+  /* フッター */
+  .next {
+    background: var(--coral-light);
+    border-radius: var(--radius);
+    padding: 32px;
+    text-align: center;
+  }
+  .next h2 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+  .next p { font-size: 14px; color: var(--ink-soft); }
+
+  @media (max-width: 640px) {
+    .pattern-body { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ヘッダー：大見出しは「あなたのコンセプトリサーチ報告書」で固定 -->
+  <div class="hero">
+    <div class="pill">コンセプトリサーチ</div>
+    <h1>あなたのコンセプトリサーチ報告書</h1>
+    <div class="sub">{{対象者名}}さん｜{{日付}}｜調べた媒体：{{媒体リスト}}</div>
+  </div>
+
+  <!-- 届けたい相手 -->
+  <div class="card">
+    <h2><span class="dot"></span>届けたい相手（リサーチで裏取り済み）</h2>
+    <div class="summary-grid">
+      <div class="summary-item"><div class="label">どんな人</div>{{実在する1人の描写}}</div>
+      <div class="summary-item"><div class="label">悩みの根っこ</div>{{感情の根っこ}}</div>
+      <div class="summary-item"><div class="label">コメント欄での裏取り</div>{{視聴者層の確認結果}}</div>
+    </div>
+  </div>
+
+  <!-- 企画候補ランキング -->
+  <div class="card" style="background:transparent; box-shadow:none; padding:0 0 4px;">
+    <h2><span class="dot"></span>伸びる企画候補ランキング</h2>
+  </div>
+
+  <!-- 候補1件＝.kikaku 1個。2位はclass="kikaku rank2"、3位は"kikaku rank3" -->
+  <div class="kikaku">
+    <div class="kikaku-head">
+      <div class="kikaku-rank">1</div>
+      <div class="kikaku-title">{{企画名}}</div>
+    </div>
+    <div class="score-row">
+      <!-- 満たした基準はscore-badge、満たさないものはscore-badge ng -->
+      <span class="score-badge">類似企画 {{n}}件が上位に</span>
+      <span class="score-badge">平均の{{n}}倍 再生</span>
+      <span class="score-badge">感謝コメントあり</span>
+      <span class="score-badge">フォロワー0で始められる</span>
+    </div>
+    <p>{{この方向の勝ち筋を1〜2行}}</p>
+    <div class="evidence">📌 根拠：{{お手本アカウント名}}（{{URL}}）の「{{投稿内容}}」が{{再生数}}回（アカウント平均の{{n}}倍）</div>
+  </div>
+
+  <!-- パターンカード集 -->
+  <div class="card" style="background:transparent; box-shadow:none; padding:0 0 4px;">
+    <h2><span class="dot"></span>お手本のパターンカード｜どのパターンでいく？</h2>
+  </div>
+
+  <!-- カード1枚＝1アカウント。奇数=.pattern、偶数=.pattern.alt -->
+  <div class="pattern">
+    <div class="pattern-head">
+      <div class="pattern-title"><a href="{{アカウントURL}}">{{アカウント名}}</a></div>
+      <span class="tag">{{ひとことタグ 例:帰宅シーン型}}</span>
+    </div>
+    <div class="yon-yoso">
+      <!-- 突出している要素にclass="yoso win" -->
+      <span class="yoso win">企画力 ◎</span>
+      <span class="yoso win">独自性 ◎</span>
+      <span class="yoso">世界観 ○</span>
+      <span class="yoso">編集力 ○</span>
+    </div>
+    <div class="stats">フォロワー <b>{{n}}</b>｜代表投稿 <b>{{n}}回</b> 再生（平均の<b>{{n}}倍</b>）</div>
+    <div class="pattern-body">
+      <div class="pattern-shots">
+        <img src="shots/{{ファイル名}}.png" alt="冒頭カット">
+        <div class="caption">リール冒頭の第1カット</div>
+        <img src="shots/{{ファイル名}}.png" alt="プロフィール一覧">
+        <div class="caption">プロフィール一覧の世界観</div>
+      </div>
+      <div>
+        <div class="row concept"><span class="label">コンセプト</span><p>{{誰に×何を×どう届けているか}}</p></div>
+        <div class="row"><span class="label">冒頭に映っているもの</span><p>{{第1カットの言語化}}</p></div>
+        <div class="row kakezan"><span class="label">この人の掛け算式</span>
+          <div class="formula">{{特徴1}}({{n}}人に1人) × {{特徴2}}({{n}}人に1人) × {{特徴3}}({{n}}人に1人) ＝ {{n}}万人に1人</div>
+          <p style="margin-top:6px;">ギャップ：{{◯◯なのに◯◯}}</p>
+        </div>
+        <div class="row apply"><span class="label">あなたに応用するなら</span><p>{{借りられる要素と、自分ならどの掛け算で同じ構造を作れるか}}</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 見せ方・世界観の方針 -->
+  <div class="card">
+    <h2><span class="dot"></span>見せ方・世界観の方針</h2>
+    <div class="summary-grid">
+      <div class="summary-item"><div class="label">編集の参考にする人</div>{{アカウント＋どんな印象の編集か}}</div>
+      <div class="summary-item"><div class="label">自分の映し方</div>{{顔出し方針＋ロールモデル}}</div>
+      <div class="summary-item"><div class="label">アフレコ</div>{{方針＋キャラに合う理由}}</div>
+      <div class="summary-item"><div class="label">身に着けるもの</div>{{服装・顔周り小物の方針}}</div>
+      <div class="summary-item"><div class="label">映り込むもの</div>{{小物・家具・照明の方針}}</div>
+      <div class="summary-item"><div class="label">身だしなみ</div>{{髪・爪・姿勢の方針}}</div>
+    </div>
+  </div>
+
+  <!-- あなたの独自性素材 -->
+  <div class="card">
+    <h2><span class="dot"></span>あなたの独自性素材</h2>
+    <div class="my-formula">{{特徴1}}({{n}}人に1人) × {{特徴2}}({{n}}人に1人) × {{特徴3}}({{n}}人に1人) ＝ {{n}}万人に1人</div>
+    <div class="row"><span class="label">ギャップ</span><p>{{客観イメージ→その真逆}}</p></div>
+    <div class="row"><span class="label">語れるエピソード</span><p>{{過去→価値観→目標→悩み}}</p></div>
+    <div class="row"><span class="label">どこで突出を狙うか</span><p>{{4要素のうちどれで100点を取るか＋理由}}</p></div>
+  </div>
+
+  <!-- フッター -->
+  <div class="next">
+    <h2>次の一歩</h2>
+    <p>この結果をもとに「コンセプト磨き上げ」で、あなただけの決定版コンセプトを作れます。<br>気になるパターンカードの番号を教えてください。</p>
+  </div>
+
+</div>
+</body>
+</html>

@@ -33,7 +33,7 @@ SKILLS = [
     "bunseki-reel", "bunseki-competitor-account", "bunseki-my-account",
     "insta-concept-design", "daihon-copy-make", "daihon-kyaba-vlog",
     "concept-brush-up", "daihon-tensaku", "cut-silence", "genre-sentei",
-    "buzz-kikaku-research",
+    "buzz-kikaku-research", "concept-research",
 ]
 
 # 受講生向けの一般化（before → after）。順序どおり適用。上ほど先。
@@ -69,6 +69,13 @@ REPLACEMENTS = [
     ("・なる式", ""),                       # 「（日付・なる式）」等の丸カッコ内の付記ごと消す
     ("なる式バズリサーチ", "バズリサーチの定石"),
     ("なる式", "参考教材"),
+    ("なるさんは実際にした", "実際に行われた判断"),
+    ("なるさん自身も", "参考教材でも"),
+    ("なるさんの実例", "参考教材の実例"),
+    ("なるさんの新垢と同じ判断", "参考教材と同じ判断"),
+    ("なるさん本人", "参考教材の発信者"),
+    ("なるさんも", "参考教材でも"),
+    ("なるさん", "参考教材の発信者"),
     # 運営者自身の呼称
     ("けんじさん", "運営者"),
     # 個人の絶対パス
