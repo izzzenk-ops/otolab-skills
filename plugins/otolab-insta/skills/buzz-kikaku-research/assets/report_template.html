@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+  バズ企画リサーチ 報告書テンプレート（buzz-kikaku-research）
+  使い方: このファイルをコピーして [[...]] を実データで置換し report.html として保存する。
+  CSS・レイアウト構造は変えない（毎回同じ見た目になることが価値）。
+  繰り返しブロック（仮説カード・冒頭比較カード等）は実データ分だけ複製する。
+  該当しないセクション（例: 横断検証をやっていない）はセクションごと削除してよい。
+  画像は report.html から見た相対パス（reels/<ID>/frames/f_xx.xs.jpg 等）で参照。
+-->
+<title>[[アカウント一言要約]]｜バズ企画リサーチ</title>
+<style>
+  :root {
+    --ink: #3f4a5a; --sub: #8b93a3; --line: #f0e8dd; --bg: #f7f3ec; --card: #ffffff;
+    --accent: #ec8080; --accent-deep: #e06c6c; --accent-soft: #fdecec;
+    --blue: #6b9bd2; --blue-deep: #5b8ac4; --blue-soft: #e8f1fb;
+    --gold: #d9822b; --gold-soft: #fdf1e3;
+    --green: #57a773; --green-soft: #e9f6ee;
+    --purple: #8b7fd0; --purple-soft: #efecfb;
+    --grad: linear-gradient(135deg, #f19a9a, #f4b183);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Maru Gothic ProN", "Zen Maru Gothic", "Hiragino Sans", "Yu Gothic", sans-serif;
+    background: var(--bg); color: var(--ink); line-height: 1.8; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ヘッダー */
+  .report-head { background: var(--card); border: 1px solid var(--line);
+    border-radius: 24px; padding: 36px 40px; margin-bottom: 28px; position: relative; overflow: hidden; }
+  .report-head::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: var(--grad); }
+  .label { font-size: 12px; letter-spacing: 2px; color: var(--accent-deep); font-weight: 700; }
+  .report-head h1 { font-size: 26px; margin: 6px 0 2px; font-weight: 800; line-height: 1.5; }
+  .username { font-size: 14px; color: var(--sub); }
+  .head-stats { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+  .head-stats div b { font-size: 22px; display: block; color: var(--accent-deep); }
+  .head-stats div span { font-size: 12px; color: var(--sub); }
+
+  /* 判定バッジ */
+  .verdict { margin-top: 20px; border-radius: 18px; padding: 16px 20px; font-size: 14px; }
+  .verdict b { font-size: 16px; display: block; margin-bottom: 4px; }
+  .verdict.ok { background: var(--green-soft); border: 1.5px solid var(--green); }
+  .verdict.ok b { color: var(--green); }
+  .verdict.ng { background: var(--accent-soft); border: 1.5px solid var(--accent); }
+  .verdict.ng b { color: var(--accent-deep); }
+  .rank-pill { display: inline-block; background: var(--gold-soft); color: var(--gold);
+    font-weight: 800; font-size: 12.5px; border-radius: 999px; padding: 4px 14px; margin-left: 8px; vertical-align: 2px; }
+
+  /* セクション共通 */
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 28px 32px; margin-bottom: 24px; }
+  h2 { font-size: 19px; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; font-weight: 800; }
+  h2 .num { background: var(--accent); color: #fff; font-size: 12px; width: 26px; height: 26px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sec-sub { font-size: 12.5px; color: var(--sub); margin-bottom: 18px; }
+  h3 { font-size: 15px; margin: 18px 0 8px; font-weight: 800; }
+  .note { font-size: 12.5px; color: var(--sub); margin-top: 12px; }
+  .note b { color: var(--ink); }
+
+  /* 数字の根拠（判断軸の教育パート） */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .kpi { background: var(--blue-soft); border-radius: 16px; padding: 14px 16px; }
+  .kpi b { font-size: 20px; display: block; color: var(--blue-deep); }
+  .kpi span { font-size: 11.5px; color: var(--sub); }
+  .logic-box { background: var(--bg); border-left: 4px solid var(--blue); border-radius: 0 14px 14px 0;
+    padding: 12px 16px; margin-top: 14px; font-size: 13.5px; }
+  .logic-box .tag { font-size: 10.5px; color: var(--blue-deep); font-weight: 700; display: block; margin-bottom: 2px; }
+
+  /* 感覚チェック（あなたの仮説の答え合わせ） */
+  .sense { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .sense > div { border-radius: 16px; padding: 14px 18px; font-size: 13.5px; }
+  .sense .yours { background: var(--purple-soft); }
+  .sense .yours .tag { color: var(--purple); font-weight: 700; font-size: 11px; display: block; }
+  .sense .ours { background: var(--green-soft); }
+  .sense .ours .tag { color: var(--green); font-weight: 700; font-size: 11px; display: block; }
+
+  /* 冒頭7秒比較カード */
+  .reel-card { border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; margin-bottom: 14px; }
+  .reel-card.win { border-left: 6px solid var(--accent); }
+  .reel-card.lose { border-left: 6px solid #d5d9e0; opacity: .92; }
+  .reel-card .rc-head { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; margin-bottom: 8px; }
+  .reel-card .rc-head b { font-size: 15px; }
+  .reel-card .views { color: var(--accent-deep); font-weight: 800; font-size: 14px; }
+  .reel-card .views.low { color: var(--sub); }
+  .reel-card .xf { font-size: 11.5px; color: var(--sub); }
+  .frame-strip { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0; }
+  .frame-strip figure { flex-shrink: 0; width: 96px; }
+  .frame-strip img { width: 96px; aspect-ratio: 9/16; object-fit: cover; border-radius: 8px; display: block; border: 1px solid var(--line); }
+  .frame-strip figcaption { font-size: 10px; color: var(--sub); text-align: center; }
+  .rc-word { background: var(--bg); border-left: 4px solid var(--accent); border-radius: 0 10px 10px 0;
+    padding: 8px 12px; font-size: 13px; margin-top: 8px; font-weight: 700; }
+  .rc-word .tag { font-size: 10px; color: var(--accent-deep); display: block; font-weight: 700; }
+  .rc-note { font-size: 12.5px; color: var(--sub); margin-top: 6px; }
+
+  /* 仮説カード */
+  .hypo { border: 2px solid var(--accent); border-radius: 20px; padding: 20px 24px; margin-bottom: 16px;
+    position: relative; background: #fffdfb; }
+  .hypo .grade { position: absolute; top: -14px; right: 20px; font-weight: 800; font-size: 13px;
+    border-radius: 999px; padding: 4px 16px; color: #fff; }
+  .hypo .grade.a { background: var(--green); }
+  .hypo .grade.b { background: var(--gold); }
+  .hypo .grade.c { background: var(--sub); }
+  .hypo h3 { margin: 0 0 6px; font-size: 16.5px; }
+  .hypo .hook-type { display: inline-block; font-size: 11.5px; font-weight: 800; border-radius: 999px;
+    padding: 3px 12px; margin-bottom: 8px; }
+  .hypo .hook-type.visual { background: var(--blue-soft); color: var(--blue-deep); }
+  .hypo .hook-type.sound { background: var(--purple-soft); color: var(--purple); }
+  .hypo .hook-type.verbal { background: var(--gold-soft); color: var(--gold); }
+  .hypo .evidence { font-size: 13px; background: var(--bg); border-radius: 12px; padding: 10px 14px; margin-top: 6px; }
+  .hypo .evidence .tag { font-size: 10.5px; color: var(--sub); font-weight: 700; display: block; }
+
+  /* 横断検証 */
+  .cross { background: var(--bg); border-radius: 16px; padding: 14px 18px; margin-bottom: 10px; font-size: 13.5px; }
+  .cross b { color: var(--blue-deep); }
+
+  /* 落とし込み */
+  .plan-list { list-style: none; counter-reset: pt; }
+  .plan-list li { counter-increment: pt; padding: 14px 16px 14px 52px; position: relative;
+    background: var(--accent-soft); border-radius: 16px; margin-bottom: 10px; font-size: 13.5px; }
+  .plan-list li::before { content: counter(pt); position: absolute; left: 14px; top: 14px; width: 26px; height: 26px;
+    border-radius: 50%; background: var(--grad); color: #fff; font-weight: 700; font-size: 13px;
+    display: flex; align-items: center; justify-content: center; }
+  .plan-list li b { display: block; font-size: 14.5px; margin-bottom: 2px; }
+  .plan-list .head7 { background: #fff; border-radius: 10px; padding: 8px 12px; margin-top: 6px; font-size: 12.5px; }
+  .plan-list .head7 .tag { font-size: 10px; color: var(--accent-deep); font-weight: 700; display: block; }
+
+  /* 次のアクション */
+  .next { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .next > div { background: var(--blue-soft); border-radius: 16px; padding: 14px 18px; font-size: 13px; }
+  .next b { color: var(--blue-deep); display: block; margin-bottom: 4px; }
+
+  footer { text-align: center; font-size: 11.5px; color: var(--sub); margin-top: 20px; line-height: 2; }
+  @media (max-width: 720px) {
+    .wrap { padding: 20px 12px 60px; }
+    section, .report-head { padding: 22px 20px; }
+    .sense { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ヘッダー＋判定 -->
+  <div class="report-head">
+    <div class="label">BUZZ KIKAKU RESEARCH</div>
+    <h1>[[アカウント一言要約（例: 「102歳美容部員の朝ごはん」— 生活のチラ見せ×具体数字で量産型バズ）]]</h1>
+    <div class="username">@[[ユーザー名]] ｜ 調査日 [[YYYY/MM/DD]]</div>
+    <div class="head-stats">
+      <div><b>[[65.8万]]</b><span>フォロワー</span></div>
+      <div><b>[[658万]]</b><span>バズ認定ライン（フォロワー×10）</span></div>
+      <div><b>[[21本]]</b><span>収集した投稿</span></div>
+      <div><b>[[6本]]</b><span>バズ認定</span></div>
+      <div><b>[[27.5万]]</b><span>再生数の平常値（中央値）</span></div>
+    </div>
+    <!-- 提出リールの合否。ok / ng をクラスで切り替え。アカウントURL起点の場合はランクだけ表示 -->
+    <div class="verdict [[ok|ng]]">
+      <b>[[✅ 本物のバズです／❌ これはバズではありません]]<span class="rank-pill">[[S級ランク/通常/影響力型]]</span></b>
+      [[判定理由を数字つきで。例: 再生119.2万＝フォロワー65.8万の1.8倍で10倍には届かないが100万超えなので合格。ただしこのアカウントは…]]
+    </div>
+  </div>
+
+  <!-- 1. 判定の根拠（数字を全部見せる） -->
+  <section>
+    <h2><span class="num">1</span>📊 判定の根拠 — この数字で決めました</h2>
+    <div class="sec-sub">同じ数字の見方を覚えれば、次からは自分の目で判定できます</div>
+    <div class="kpi-grid">
+      <div class="kpi"><b>[[119.2万]]</b><span>提出リールの再生数</span></div>
+      <div class="kpi"><b>[[×1.8]]</b><span>フォロワー比（10倍が基準）</span></div>
+      <div class="kpi"><b>[[×4.3]]</b><span>アカウント平常値（中央値）比</span></div>
+      <div class="kpi"><b>[[29%]]</b><span>バズ率（バズ本数÷収集本数）</span></div>
+    </div>
+    <div class="logic-box"><span class="tag">📏 使った判定ルール</span>
+      バズ認定 = 再生数がフォロワー数の10倍以上、または100万再生以上。<br>
+      影響力チェック = どの投稿も満遍なく高い人は「本人の人気」で回っているので参考にしない。<br>
+      [[このアカウントへの当てはめを1〜2行で]]
+    </div>
+    <div class="logic-box"><span class="tag">🏅 アカウントランク: [[S級/通常/影響力型]]</span>
+      [[ランク理由。例: 投稿21本でバズ6本（バズ率29%）。少ない投稿でバズを量産できている＝再現性が高いS級ランク。全バズ投稿を分析しました]]
+    </div>
+  </section>
+
+  <!-- 2. あなたの感覚チェック -->
+  <section>
+    <h2><span class="num">2</span>🧭 あなたの感覚チェック</h2>
+    <div class="sec-sub">「なんで手が止まったか」の言語化 → データと照らし合わせ。この往復が判断軸になります</div>
+    <div class="sense">
+      <div class="yours"><span class="tag">🙋 あなたの仮説</span>[[ユーザーが言った「手が止まった理由」。無ければこの枠ごと削除しセクションを「今回は言語化なしで開始」の1行に]]</div>
+      <div class="ours"><span class="tag">🔍 データで見ると</span>[[当たっていたか／ズレていたか。例: 惜しい！色に反応したのは正解。ただ伸びてる群に共通していたのは「色」より「朝ごはんの湯気の接写」でした]]</div>
+    </div>
+  </section>
+
+  <!-- 3. 冒頭7秒の比較（伸びてる群 vs 伸びてない群） -->
+  <section>
+    <h2><span class="num">3</span>🎬 冒頭7秒くらべ — 伸びた投稿・伸びなかった投稿</h2>
+    <div class="sec-sub">分析は冒頭7秒だけ。最初の1〜2秒で手を止めさせ、7秒で「見る価値」を確定させた投稿が伸びます</div>
+
+    <h3>🔥 伸びてる群（[[6]]本）</h3>
+    <!-- バズ投稿の数だけ複製 -->
+    <div class="reel-card win">
+      <div class="rc-head"><b>[[#1 一言タイトル]]</b><span class="views">[[271.4万回]]</span><span class="xf">フォロワー比 [[×4.1]]</span></div>
+      <div class="frame-strip">
+        <figure><img src="[[reels/ID/frames/f_00.3s.jpg]]"><figcaption>0秒</figcaption></figure>
+        <figure><img src="[[reels/ID/frames/f_01.0s.jpg]]"><figcaption>1秒</figcaption></figure>
+        <figure><img src="[[reels/ID/frames/f_02.0s.jpg]]"><figcaption>2秒</figcaption></figure>
+        <figure><img src="[[reels/ID/frames/f_03.0s.jpg]]"><figcaption>3秒</figcaption></figure>
+        <figure><img src="[[reels/ID/frames/f_05.0s.jpg]]"><figcaption>5秒</figcaption></figure>
+        <figure><img src="[[reels/ID/frames/f_07.0s.jpg]]"><figcaption>7秒</figcaption></figure>
+      </div>
+      <div class="rc-word"><span class="tag">💬 冒頭の言葉</span>[[冒頭の文字起こし／テロップ]]</div>
+      <div class="rc-note">[[映像・音・言葉それぞれの冒頭要素メモ 1〜2行]]</div>
+    </div>
+
+    <h3>😴 伸びてない群（対照・[[4]]本）</h3>
+    <!-- 対照群の数だけ複製 -->
+    <div class="reel-card lose">
+      <div class="rc-head"><b>[[一言タイトル]]</b><span class="views low">[[3.4万回]]</span><span class="xf">フォロワー比 [[×0.5]]</span></div>
+      <div class="frame-strip">
+        <figure><img src="[[...]]"><figcaption>0秒</figcaption></figure>
+        <figure><img src="[[...]]"><figcaption>2秒</figcaption></figure>
+        <figure><img src="[[...]]"><figcaption>7秒</figcaption></figure>
+      </div>
+      <div class="rc-word"><span class="tag">💬 冒頭の言葉</span>[[冒頭の文字起こし／テロップ]]</div>
+      <div class="rc-note">[[伸びてる群と何が違うかのメモ]]</div>
+    </div>
+  </section>
+
+  <!-- 4. 仮説カード -->
+  <section>
+    <h2><span class="num">4</span>💡 バズ要素の仮説カード</h2>
+    <div class="sec-sub">伸びてる群に共通していて、伸びてない群に無いもの＝バズ要素の候補。確度は A（他アカウントでも再現）＞ B（このアカウント内のみ）＞ C（単発）</div>
+    <!-- 仮説の数だけ複製。grade クラス: a / b / c -->
+    <div class="hypo">
+      <span class="grade b">確度 B</span>
+      <h3>[[仮説文。例: 「タンブラーはポップなカラーのものが共通して伸びている」]]</h3>
+      <span class="hook-type visual">🎬 ビジュアルフック</span>
+      <!-- サウンド: <span class="hook-type sound">🔊 サウンドフック</span> / バーバル: <span class="hook-type verbal">💬 バーバルフック（[[トリガー名]]）</span> -->
+      <div class="evidence"><span class="tag">📎 根拠</span>[[例: 伸びてる群6本中5本の0〜2秒にカラフルなタンブラーが映る。伸びてない群4本は白か黒。]]</div>
+      <div class="evidence"><span class="tag">⚠️ 反証・注意</span>[[例: #3だけは白タンブラーでも伸びている→色以外の要素（湯気の接写）も効いている可能性。]]</div>
+    </div>
+  </section>
+
+  <!-- 5. 横断検証 -->
+  <section>
+    <h2><span class="num">5</span>🔍 横断検証 — 他のアカウントでも起きているか</h2>
+    <div class="sec-sub">同じ要素が他のアカウントのバズでも見つかるほど、仮説の確度が上がります（B → A）</div>
+    <!-- 検証したアカウントの数だけ複製 -->
+    <div class="cross"><b>@[[アカウント名]]</b>（フォロワー[[◯万]]）— [[検証結果。例: 上位リール5本中3本の冒頭にも同じ要素あり（◯◯万回・フォロワー比◯倍）→ 仮説を補強]]</div>
+    <div class="note">[[検証しきれなかった場合はここに正直に書く。例: 同ジャンルで基準を満たすアカウントが今回は1つしか見つからず、確度はBのまま。競合アカウントのURLが分かれば追加検証できます]]</div>
+  </section>
+
+  <!-- 6. あなたのアカウントへの落とし込み -->
+  <section>
+    <h2><span class="num">6</span>🚀 あなたのアカウントでこう使う</h2>
+    <div class="sec-sub">[[発信プロフィールあり: 「◯◯の発信向けに具体化しました」／なし: 「自分のジャンルに置き換えて使ってください」]]</div>
+    <ol class="plan-list">
+      <li>
+        <b>[[企画案タイトル]]</b>
+        [[どの仮説をどう転用するか 1〜2行]]
+        <div class="head7"><span class="tag">🎬 冒頭7秒の設計</span>[[0-2秒: ◯◯を説明せず映す ／ 2-7秒: 「◯◯」と言う（◯◯トリガー） ／ 音: ◯◯]]</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- 7. 次のアクション -->
+  <section>
+    <h2><span class="num">7</span>👣 次のアクション</h2>
+    <div class="next">
+      <div><b>📒 ネタ帳に保存済み</b>今回の仮説カード[[◯]]枚をネタ帳に追加しました。企画に迷ったら「ネタ帳から出して」でいつでも引き出せます。</div>
+      <div><b>🔬 1本を深掘りするなら</b>「このリールを分析して」で、[[一番強かった1本のURL]]を丸ごと解剖できます（構成・台本・CTAまで）。</div>
+      <div><b>✍️ 台本にするなら</b>「この台本を参考に台本を作って」で、伸びてる型に自分の出来事を流し込めます。</div>
+      <div><b>🔁 確度を上げるなら</b>同ジャンルの競合アカウントURLを貼ってもらえれば、仮説[[◯]]を追加検証してA判定を狙えます。</div>
+    </div>
+  </section>
+
+  <footer>
+    バズ企画リサーチ報告書 ｜ 判定基準: フォロワー×10 or 100万再生<br>
+    [[確認できなかった項目を正直に記載。例: ◯本は再生数非表示のため判定から除外]]<br>
+    収集した画像・動画は研究目的のローカル保存です。転載はしないでください。
+  </footer>
+</div>
+</body>
+</html>
