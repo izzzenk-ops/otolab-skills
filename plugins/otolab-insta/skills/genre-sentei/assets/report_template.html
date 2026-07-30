@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{対象者名}}さんのジャンル選定報告書</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FDFCFA;
+    --white: #FFFFFF;
+    --ink: #4A4A5A;
+    --ink-soft: #8A8A9A;
+    --coral: #FF9E9E;
+    --coral-light: #FFF0F0;
+    --blue: #7EB8E6;
+    --blue-light: #EAF4FC;
+    --yellow: #FFE39E;
+    --yellow-light: #FFF9E8;
+    --green: #8FCFA8;
+    --green-light: #EDF8F1;
+    --radius: 20px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.8;
+    padding: 40px 20px 80px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* ヘッダー */
+  .hero {
+    background: linear-gradient(135deg, var(--coral-light), var(--blue-light));
+    border-radius: var(--radius);
+    padding: 40px 36px;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .hero .pill {
+    display: inline-block;
+    background: var(--white);
+    color: var(--coral);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 6px 18px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .hero h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+  .hero .sub { color: var(--ink-soft); font-size: 14px; }
+
+  /* 汎用カード */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 28px 30px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(74,74,90,0.06);
+  }
+  .card h2 {
+    font-size: 18px; font-weight: 800;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .card h2 .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--coral); flex-shrink: 0; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .summary-item { background: var(--blue-light); border-radius: 14px; padding: 14px 16px; font-size: 14px; }
+  .summary-item .label { font-size: 12px; font-weight: 700; color: var(--blue); margin-bottom: 2px; }
+
+  /* ジャンル判定カード */
+  .genre {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 12px rgba(74,74,90,0.06);
+    border-left: 6px solid var(--green);
+  }
+  .genre.cond { border-left-color: #C9A227; }
+  .genre.nogo { border-left-color: var(--ink-soft); opacity: 0.85; }
+  .genre-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  .genre-title { font-size: 19px; font-weight: 800; }
+  .verdict {
+    font-size: 13px; font-weight: 800;
+    padding: 5px 16px; border-radius: 999px;
+    background: var(--green); color: var(--white);
+  }
+  .genre.cond .verdict { background: #C9A227; }
+  .genre.nogo .verdict { background: var(--ink-soft); }
+  .score-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 12px; }
+  .score-badge {
+    font-size: 12px; font-weight: 700;
+    padding: 4px 12px; border-radius: 999px;
+    background: var(--green-light); color: #4A9968;
+  }
+  .score-badge.ng { background: #F5F5F7; color: var(--ink-soft); }
+  .genre p { font-size: 14px; }
+  .genre .evidence { background: var(--yellow-light); border-radius: 14px; padding: 12px 16px; font-size: 13px; margin-top: 10px; }
+
+  /* アカウント一覧テーブル */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left; font-size: 12px; font-weight: 700; color: var(--ink-soft);
+    padding: 8px 10px; border-bottom: 2px solid var(--blue-light);
+  }
+  td { padding: 9px 10px; border-bottom: 1px solid #F2F2F4; }
+  td a { color: var(--blue); text-decoration: none; font-weight: 700; }
+  td b { color: var(--coral); }
+  .tbl-tag {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 2px 10px; border-radius: 999px;
+    background: var(--coral-light); color: var(--coral);
+  }
+  .tbl-tag.top { background: var(--blue-light); color: var(--blue); }
+
+  /* 収益化導線 */
+  .douzen {
+    background: linear-gradient(135deg, var(--blue-light), var(--coral-light));
+    border-radius: 14px; padding: 18px 20px;
+    font-size: 15px; font-weight: 800; text-align: center;
+    margin-bottom: 14px;
+  }
+  .douzen .arrow { color: var(--ink-soft); font-weight: 400; font-size: 13px; }
+  .row { margin-bottom: 12px; }
+  .row .label {
+    display: inline-block;
+    font-size: 12px; font-weight: 700; color: var(--white);
+    background: var(--ink-soft);
+    padding: 3px 12px; border-radius: 999px;
+    margin-bottom: 4px;
+  }
+  .row.coral .label { background: var(--coral); }
+  .row.blue .label { background: var(--blue); }
+  .row.green { background: var(--green-light); border-radius: 14px; padding: 12px 16px; }
+  .row.green .label { background: #4A9968; }
+  .row p { font-size: 14px; }
+
+  /* 確定ジャンル */
+  .kettei {
+    background: linear-gradient(135deg, var(--coral-light), var(--yellow-light));
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .kettei .pill {
+    display: inline-block;
+    background: var(--white); color: var(--coral);
+    font-weight: 700; font-size: 13px;
+    padding: 6px 18px; border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  .kettei .genre-name { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+  .kettei .theme { font-size: 16px; font-weight: 700; color: var(--blue); margin-bottom: 12px; }
+  .kettei .reason { font-size: 14px; color: var(--ink-soft); max-width: 600px; margin: 0 auto; }
+
+  /* 準備期間プラン */
+  .junbi {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 28px 30px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(74,74,90,0.06);
+    border-top: 6px solid var(--yellow);
+  }
+  .junbi h2 { font-size: 18px; font-weight: 800; margin-bottom: 12px; }
+  .junbi .deadline {
+    display: inline-block;
+    background: var(--yellow-light); color: #C9A227;
+    font-weight: 800; font-size: 15px;
+    padding: 6px 18px; border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  .junbi ul { padding-left: 22px; font-size: 14px; }
+  .junbi li { margin-bottom: 6px; }
+
+  /* フッター */
+  .next {
+    background: var(--coral-light);
+    border-radius: var(--radius);
+    padding: 32px;
+    text-align: center;
+  }
+  .next h2 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+  .next p { font-size: 14px; color: var(--ink-soft); }
+
+  @media (max-width: 640px) {
+    .card { padding: 22px 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ヘッダー：大見出しは「あなたのジャンル選定報告書」で固定 -->
+  <div class="hero">
+    <div class="pill">ジャンル選定</div>
+    <h1>あなたのジャンル選定報告書</h1>
+    <div class="sub">{{対象者名}}さん｜{{日付}}｜調べた候補：{{候補ジャンルリスト}}</div>
+  </div>
+
+  <!-- 現在地 -->
+  <div class="card">
+    <h2><span class="dot"></span>あなたの現在地</h2>
+    <div class="summary-grid">
+      <div class="summary-item"><div class="label">スタート地点</div>{{売りたいものはこれから探す／売りたいものが明確（内容）}}</div>
+      <div class="summary-item"><div class="label">引き継いだジャンルの種</div>{{初期設計から引き継いだ種・仮説}}</div>
+      <div class="summary-item"><div class="label">生活導線の強み</div>{{どうせ毎日やっていること}}</div>
+    </div>
+  </div>
+
+  <!-- ジャンル判定結果 -->
+  <div class="card" style="background:transparent; box-shadow:none; padding:0 0 4px;">
+    <h2><span class="dot"></span>候補ジャンルの判定結果</h2>
+  </div>
+
+  <!-- 候補1件＝.genre 1個。合格=class="genre"、条件付き="genre cond"、見送り="genre nogo" -->
+  <div class="genre">
+    <div class="genre-head">
+      <div class="genre-title">{{ジャンル名}}</div>
+      <span class="verdict">このジャンルで戦える</span>
+      <!-- 条件付き：<span class="verdict">特化すれば戦える</span>／見送り：<span class="verdict">今回は見送り</span> -->
+    </div>
+    <div class="score-row">
+      <!-- 満たした基準はscore-badge、満たさないものはscore-badge ng。数字を必ず入れる -->
+      <span class="score-badge">トップ {{n}}万人</span>
+      <span class="score-badge">5万人以上が {{n}}個</span>
+      <span class="score-badge">伸びたてアカ {{n}}個</span>
+      <span class="score-badge">収益化の先駆者あり</span>
+      <span class="score-badge">生活導線◎ 100投稿いける</span>
+    </div>
+    <p>{{このジャンルの勝ち筋・特化の方向性を1〜2行}}</p>
+    <div class="evidence">📌 根拠：{{代表アカウント名}}（フォロワー{{n}}人・{{n}}投稿）ほか、{{数値の根拠まとめ}}</div>
+  </div>
+
+  <!-- 見つけたアカウント一覧 -->
+  <div class="card">
+    <h2><span class="dot"></span>見つけたアカウント一覧</h2>
+    <table>
+      <tr><th>種類</th><th>アカウント</th><th>フォロワー</th><th>投稿数</th><th>テーマ</th></tr>
+      <!-- トップ層=tbl-tag top「トップ層」、伸びたて=tbl-tag「伸びたて」。伸びたては本人の提出物を優先して載せる -->
+      <tr><td><span class="tbl-tag top">トップ層</span></td><td><a href="{{URL}}">{{アカウント名}}</a></td><td><b>{{n}}万</b></td><td>{{n}}</td><td>{{テーマ1行}}</td></tr>
+      <tr><td><span class="tbl-tag">伸びたて</span></td><td><a href="{{URL}}">{{アカウント名}}</a></td><td><b>{{n}}</b></td><td>{{n}}</td><td>{{テーマ1行}}</td></tr>
+    </table>
+  </div>
+
+  <!-- 収益化への道 -->
+  <div class="card">
+    <h2><span class="dot"></span>収益化への道</h2>
+    <div class="douzen">
+      投稿：{{伸びやすいジャンル}} <span class="arrow">でパイを取る　×</span><br>
+      ストーリーズ：{{収益化したいジャンル}} <span class="arrow">で興味を育てる　→</span><br>
+      {{収益化の形（アフィ・案件・自社商品など）}}
+    </div>
+    <div class="row coral"><span class="label">先駆者はこう稼いでいる</span><p>{{アカウント名}}：{{確認できた収益化の方法}}</p></div>
+    <div class="row blue"><span class="label">あなたの売りたいものへの橋</span><p>{{売りたいものへの自然な連想の橋（パターン②のみ。①の人は「先駆者と同じ道から始められる」の1行）}}</p></div>
+  </div>
+
+  <!-- 確定ジャンル -->
+  <div class="kettei">
+    <div class="pill">あなたが戦うジャンル</div>
+    <div class="genre-name">{{確定ジャンル名}}</div>
+    <div class="theme">特化テーマの方向性：{{特化テーマ}}</div>
+    <div class="reason">{{本人が選んだ理由＋数字の裏付けを2〜3行}}</div>
+  </div>
+
+  <!-- 準備期間プラン（該当者のみ。不要なら削除） -->
+  <div class="junbi">
+    <h2>🗓️ 期限つき準備期間プラン</h2>
+    <div class="deadline">{{開始日}} 〜 {{期限日}}（{{n}}ヶ月）に必ずスタート</div>
+    <ul>
+      <li>{{毎日やること（30分〜1時間のインプット or 実践）}}</li>
+      <li>{{撮り溜める素材（ビフォーアフター写真など）}}</li>
+      <li>期限が来たら、完璧じゃなくても必ず始める（準備期間の延長はなし）</li>
+    </ul>
+  </div>
+
+  <!-- フッター -->
+  <div class="next">
+    <h2>次の一歩</h2>
+    <p>ジャンルが決まったので、次は「コンセプトリサーチ」で、このジャンルの中の<br>どの企画・どのお手本パターンでいくかを一緒に固めていきましょう。</p>
+  </div>
+
+</div>
+</body>
+</html>

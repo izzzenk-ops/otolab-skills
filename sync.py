@@ -32,7 +32,7 @@ DEST = REPO / "plugins" / "otolab-insta" / "skills"
 SKILLS = [
     "bunseki-reel", "bunseki-competitor-account", "bunseki-my-account",
     "insta-concept-design", "daihon-copy-make", "daihon-kyaba-vlog",
-    "concept-brush-up", "daihon-tensaku", "cut-silence",
+    "concept-brush-up", "daihon-tensaku", "cut-silence", "genre-sentei",
 ]
 
 # 受講生向けの一般化（before → after）。順序どおり適用。上ほど先。
@@ -62,6 +62,8 @@ REPLACEMENTS = [
     ("華月", "〔話者名〕"),
     ("@kiiiiiii0228", "〔参考アカウント〕"),
     ("kiiiiiii0228", "〔参考アカウント〕"),
+    # 参考教材の発信者名（genre-sentei由来。教材名ごと一般化）
+    ("なるさん「ショート動画の教科書」", "参考教材"),
     # 運営者自身の呼称
     ("けんじさん", "運営者"),
     # 個人の絶対パス
@@ -75,6 +77,8 @@ REVIEW_TERMS = [
     "/Users/miyabekenji", "eekanji", "desse", "otobana",
     # 他社ブランド名（受講生向けに出さない。concept-brush-up由来）
     "SAKIYOMI", "先読み",
+    # 参考教材の発信者名（genre-sentei由来）
+    "なるさん", "naruwork", "ショート動画の教科書",
 ]
 
 TEXT_EXTS = {".md", ".html", ".json", ".py", ".sh", ".txt", ".ps1"}
