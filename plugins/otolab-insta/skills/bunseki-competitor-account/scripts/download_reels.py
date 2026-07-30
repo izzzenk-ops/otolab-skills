@@ -21,6 +21,7 @@ def run_ytdlp(url, outdir, use_cookies):
     cmd = ["yt-dlp",
            "-o", f"{outdir}/%(id)s.%(ext)s",
            "--write-thumbnail", "--convert-thumbnails", "jpg",
+           "--write-info-json",
            "--no-playlist",
            "-f", "mp4/best",
            "--no-progress",

@@ -51,6 +51,11 @@
   .sec-sub { font-size: 12.5px; color: var(--sub); margin-bottom: 18px; }
   h3 { font-size: 15px; margin: 18px 0 8px; font-weight: 800; }
   .note { font-size: 11.5px; color: var(--sub); margin-top: 10px; }
+  .goal-line { background: var(--gold-soft); border-radius: 10px; padding: 10px 14px; margin-top: 12px; font-size: 12.5px; }
+  .goal-line .tag { font-weight: 700; font-size: 10.5px; color: var(--gold); display: block; }
+  .funnel { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+  .funnel div { background: var(--blue-soft); border-radius: 8px; padding: 8px 12px; font-size: 12px; flex: 1; min-width: 140px; }
+  .funnel b { display: block; font-size: 15px; }
   footer { text-align: center; font-size: 11.5px; color: var(--sub); margin-top: 30px; }
 
   /* KPIダッシュボード */
@@ -195,6 +200,10 @@
       <div class="kpi"><b>[[最もアクティブな時間帯]]</b><span>投稿すべき時間帯</span></div>
       <div class="kpi"><b>[[主要な層]]</b><span>刺さっている層</span></div>
     </div>
+    <div class="goal-line">
+      <span class="tag">🎯 あなたの次の目標ライン</span>
+      フォロワー[[◯人]] × 10倍 = <b>[[◯万回再生]]</b>。ここを超えた投稿は「フォロワーの外まで届いた」証拠です。[[現状との距離を1〜2文。まだ遠い場合は「まずは、ふだんの再生数（[[平常値]]）の3倍超えを増やすのが先」と段階を示す。すでに超えた投稿があるならその本数と再現ポイント]]
+    </div>
     <p class="note">[[全体データから読み取れる運用示唆を1〜2文。例：リールが外部リーチの主力。ストーリーズはフォロワー内で強い＝役割分担ができている]]</p>
   </section>
 
@@ -325,9 +334,23 @@
     </ul>
   </section>
 
-  <!-- 8. 次に作る10本リスト（締めの主役） -->
+  <!-- 8. プロフィールへの導線診断 -->
   <section>
-    <h2><span class="num">8</span>次に作る10本｜そのまま撮れる企画リスト</h2>
+    <h2><span class="num">8</span>プロフィールへの導線｜見た人をどこへ連れて行くか</h2>
+    <div class="sec-sub">投稿で人を集め、プロフィール・ストーリーズで興味を育てるのがインスタの定石</div>
+    <div class="funnel">
+      <div><b>[[リーチ]]</b>投稿を見た人</div>
+      <div><b>[[◯人（◯%）]]</b>プロフィールに来た人</div>
+      <div><b>[[◯人（◯%）]]</b>フォロー / リンクを押した人</div>
+    </div>
+    <ul class="rule-list">
+      <li><b>[[診断1行（例: リーチは出ているのにプロフィールに来ていない）]]</b>[[直し方をセットで。リールの締めの一言・固定コメント・キャプション導線／bio1行目・ハイライト・リンクの見せ方など、どこを直すか具体的に。数値が録画に写っていなければ「未確認」とし、次回撮ってほしい画面を書く]]</li>
+    </ul>
+  </section>
+
+  <!-- 9. 次に作る10本リスト（締めの主役） -->
+  <section>
+    <h2><span class="num">9</span>次に作る10本｜そのまま撮れる企画リスト</h2>
     <div class="sec-sub">テーマ×冒頭文×尺×サムネ方針をセットに。上から順に撮ればいい状態にした</div>
     <table class="plan-table">
       <thead><tr><th></th><th>テーマ</th><th>冒頭文（そのまま言う）</th><th>尺 / サムネ方針</th></tr></thead>

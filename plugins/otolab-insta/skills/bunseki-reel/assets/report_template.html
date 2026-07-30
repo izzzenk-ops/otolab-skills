@@ -63,6 +63,9 @@
   .kpi span { font-size: 11.5px; color: var(--sub); }
   .note { font-size: 12.5px; color: var(--sub); margin-top: 12px; }
   .note b { color: var(--ink); }
+  .buzz-verdict { background: var(--gold-soft); border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 13px; }
+  .buzz-verdict .tag { font-weight: 700; font-size: 11px; color: var(--gold); display: block; }
+  .buzz-verdict b { color: var(--ink); }
 
   /* フック（サムネ＋冒頭フレーム） */
   .hook-grid { display: grid; grid-template-columns: 150px 1fr; gap: 22px; align-items: start; }
@@ -180,6 +183,10 @@
   <section>
     <h2><span class="num">1</span>数字とこの1本のポジション</h2>
     <div class="sec-sub">エンゲージメントと、この投稿が狙っているゴール</div>
+    <div class="buzz-verdict">
+      <span class="tag">🏅 この1本は真似る価値があるか</span>
+      <b>[[判定: 認定／推定認定／未確認／影響力型の疑い]]</b> — [[根拠を1〜2行。例: フォロワー3.2万人 × 再生89万 = 28倍で認定ライン（10倍）超え。推定の場合は推定方法も。1年以上前の投稿なら「◯年◯月投稿のため今の伸びの根拠としては弱い」と添える]]
+    </div>
     <div class="kpi-grid">
       <div class="kpi"><b>[[いいね]]</b><span>いいね</span></div>
       <div class="kpi"><b>[[コメント]]</b><span>コメント</span></div>

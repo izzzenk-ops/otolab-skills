@@ -23,6 +23,7 @@ from transcribe_core import MODEL, check_transcript, transcribe_chunked
 def run_ytdlp(url, outdir, use_cookies):
     cmd = ["yt-dlp", "-o", f"{outdir}/%(id)s.%(ext)s",
            "--write-thumbnail", "--convert-thumbnails", "jpg",
+           "--write-info-json",
            "--no-playlist", "-f", "mp4/best", "--no-progress", url]
     if use_cookies:
         cmd[1:1] = ["--cookies-from-browser", "chrome"]

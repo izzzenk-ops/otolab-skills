@@ -9,7 +9,7 @@
   CSS・レイアウト構造は変えない（毎回同じ見た目になることが価値）。
   画像は report.html から見た相対パス（<ID>.jpg, frames/f_xx.xs.jpg）で参照。
   ・採点リング: .score-ring の style="--p:62" を総合点に置換（0-100）
-  ・レーダー: #radar の data-scores（得点7つ）/ data-max（配点7つ）を置換。JSが描画する
+  ・レーダー: #radar の data-scores（得点8つ）/ data-max（配点8つ）を置換。JSが描画する
   ・離脱リスク: .risk-high / .risk-mid / .risk-safe を実態に合わせて使い分ける
 -->
 <title>[[総合点]]点｜[[一言診断]]｜リール辛口添削</title>
@@ -113,7 +113,7 @@
   .frame-strip img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 8px; display: block; }
   .frame-strip figcaption { font-size: 10px; color: var(--sub); text-align: center; margin-top: 3px; }
 
-  /* 添削カード（7軸） */
+  /* 添削カード（8軸） */
   .axis h2 .score-pill { margin-left: auto; background: var(--blue-soft); color: var(--blue-deep);
     font-size: 13.5px; font-weight: 800; padding: 3px 16px; border-radius: 999px; }
   .evid { background: var(--bg); border-left: 4px solid var(--blue); border-radius: 0 12px 12px 0;
@@ -214,16 +214,16 @@
 
   <!-- 1. 採点表 -->
   <section>
-    <h2><span class="num">1</span>採点表（7つの評価軸）</h2>
+    <h2><span class="num">1</span>採点表（8つの評価軸）</h2>
     <div class="sec-sub">固定の採点基準でつけています。誰のリールでも同じ基準＝甘くしません</div>
     <div class="score-grid">
       <!-- レーダーのラベルは短縮形で固定（長いとSVGの端で切れる。正式名はバー側に出る） -->
       <div id="radar"
-           data-labels="冒頭フック,カバー,構成,台本,テロップ,音声,CTA"
-           data-scores="[[7軸の得点をカンマ区切り 例: 12,6,9,10,6,7,8]]"
-           data-max="25,10,15,15,10,10,15"></div>
+           data-labels="冒頭フック,カバー,構成,台本,感情設計,テロップ,音声,CTA"
+           data-scores="[[8軸の得点をカンマ区切り 例: 12,6,7,6,9,6,7,6]]"
+           data-max="25,10,10,10,15,10,10,10"></div>
       <ul class="bar-list">
-        <!-- ▼7軸分。widthは 得点/配点*100 を%で -->
+        <!-- ▼8軸分。widthは 得点/配点*100 を%で -->
         <li>
           <div class="bar-head"><span>[[① 冒頭フック]]</span><span class="pt">[[12]] / [[25]]</span></div>
           <div class="bar-track"><div class="bar-fill" style="width:[[48]]%"></div></div>
@@ -269,7 +269,7 @@
     <p class="note">[[全体講評（例: 危険は冒頭と18秒の2箇所。逆に20秒以降は最後まで見せる力がある）]]</p>
   </section>
 
-  <!-- 4〜10. 7軸の添削カード（▼この構造を7軸分。numは ①〜⑦） -->
+  <!-- 4〜11. 8軸の添削カード（▼この構造を8軸分。numは ①〜⑧） -->
   <section class="axis">
     <h2><span class="num">[[①]]</span>[[冒頭フック]]<span class="score-pill">[[12]] / [[25]]</span></h2>
     <div class="sec-sub">[[この軸で見ていること（例: スクロールを止める理由が2秒以内にあるか）]]</div>
@@ -284,11 +284,11 @@
       <li><b>直し方:</b> [[手順として実行できる粒度で]]</li>
     </ul>
   </section>
-  <!-- ▲7軸分の複製ここまで -->
+  <!-- ▲8軸分の複製ここまで -->
 
   <!-- 11. 維持してほしい良いところ -->
   <section>
-    <h2><span class="num">11</span>🌱 維持してほしい良いところ</h2>
+    <h2><span class="num">12</span>🌱 維持してほしい良いところ</h2>
     <div class="sec-sub">次の動画で作り変えないでほしい部分。ここは武器です</div>
     <ul class="keep-list">
       <!-- ▼1〜3個 -->
@@ -299,7 +299,7 @@
 
   <!-- 12. リライト台本 -->
   <section>
-    <h2><span class="num">12</span>私が作り直すならこうする（リライト台本）</h2>
+    <h2><span class="num">13</span>私が作り直すならこうする（リライト台本）</h2>
     <div class="sec-sub">同じ素材・同じネタのまま、構成と言葉だけ組み直した完全版。<b>左＝元の台本、右＝リライト</b>。何をどう変えたかを見比べて学べます</div>
     <!-- ▼ブロックの数だけ複製。BEFOREは実際の台本/テロップから該当箇所を引用（対応が無い新設ブロックは「（該当なし・新設）」）。
          rw-changeタグは何を変えたかの一言。変更しないブロックは class="rw-change keep" で「維持」。
@@ -322,7 +322,7 @@
 
   <!-- 13. 次回投稿前チェックリスト -->
   <section>
-    <h2><span class="num">13</span>次回投稿前チェックリスト</h2>
+    <h2><span class="num">14</span>次回投稿前チェックリスト</h2>
     <div class="sec-sub">今回の指摘をチェック項目にしました。次の動画はこれを全部つぶしてから投稿</div>
     <ul class="check-list">
       <!-- ▼5〜8個。今回の指摘に対応させる -->
@@ -349,7 +349,7 @@
   </footer>
 </div>
 <script>
-/* 7軸レーダー（data-scores / data-max / data-labels から描画） */
+/* 8軸レーダー（data-scores / data-max / data-labels から描画） */
 (function () {
   const el = document.getElementById('radar');
   if (!el) return;

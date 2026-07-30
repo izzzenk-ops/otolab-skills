@@ -150,6 +150,13 @@
   .action-list li::before { background: var(--grad); }
 
   .note { font-size: 11.5px; color: var(--sub); margin-top: 10px; }
+  .buzz-verdict { background: var(--gold-soft); border-radius: 10px; padding: 10px 14px; margin-top: 12px; font-size: 12.5px; }
+  .buzz-verdict .tag { font-weight: 700; font-size: 10.5px; color: var(--gold); display: block; }
+  .four-el { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin: 12px 0; }
+  .four-el div { background: var(--blue-soft); border-radius: 8px; padding: 8px 10px; font-size: 12px; }
+  .four-el b { display: block; font-size: 12.5px; }
+  .psy-block { background: #efecfb; border-radius: 8px; padding: 10px 12px; margin-top: 12px; font-size: 12.5px; color: #5f5590; }
+  .psy-block .tag { font-weight: 700; font-size: 10.5px; color: #8b7fd0; display: block; }
   footer { text-align: center; font-size: 11.5px; color: var(--sub); margin-top: 30px; }
 
 
@@ -243,6 +250,10 @@
       <div class="kpi"><b>[[◯倍]]</b><span>最高再生÷フォロワー数</span></div>
       <div class="kpi"><b>[[◯本]]</b><span>中央値の3倍超え（バズ本数）</span></div>
     </div>
+    <div class="buzz-verdict">
+      <span class="tag">🏅 このアカウントを教科書にしてよいか（バズ判定）</span>
+      [[判定と根拠を2〜3行。例:「フォロワー3.2万人に対し最高89万再生（×28倍）でバズ認定ライン（フォロワー×10倍 or 100万再生）超えのリールが◯本。企画・フックを学ぶ価値があるアカウントです」。影響力型（フォロワー10万以上・ふだんの再生数がフォロワー×2以上・突出した1本がない）の場合は「伸びは本人の人気で回っている可能性が高く、企画やフックをそのまま真似ても再現しにくいアカウントです。真似るなら世界観・編集・サムネ設計に絞りましょう」と警告する]]
+    </div>
     <p class="note">[[数字から読み取れることを2〜3文。例：平常値に対してバズが突出しているのか、全体的に底上げされているのか]]</p>
   </section>
 
@@ -277,7 +288,9 @@
         <div class="badges">
           <span class="badge views">▶ [[12.3万]]回</span>
           <span class="badge mult">平常値の[[◯.◯]]倍</span>
+          <span class="badge mult">フォロワーの[[◯]]倍</span>
           <span class="badge type">[[テーマ分類]]</span>
+          <span class="badge type">[[YYYY/MM]]投稿</span>
         </div>
         <h4>[[この動画の内容を1行で]]</h4>
         <div class="hook"><span class="tag">冒頭フック（0〜3秒）</span>[[文字起こし冒頭をそのまま引用]]</div>
@@ -323,21 +336,43 @@
       <li><b>頻出フレーズ:</b> [[]]</li>
       <li><b>尺と文字数:</b> [[平均◯秒・◯文字]]</li>
     </ul>
+    <div class="psy-block">
+      <span class="tag">🧠 視聴者心理の設計（推定）</span>
+      [[この人の台本が視聴者に起こす効果を効果ベースで。どこで疑問・伏線を植え、どこで回収し、感情がどう動くか（引き→緊張→解放 など）。具体トリガー＋視聴者の頭に浮かぶ言葉「〜」＋次にさせる行動、の粒度で2〜4個。推定と分かる書き方にする]]
+    </div>
   </section>
 
   <!-- 6. なぜ伸びているのか -->
   <section>
     <h2><span class="num">6</span>なぜこのアカウントは伸びているのか</h2>
     <div class="sec-sub">ここまでの分析の結論</div>
+    <div class="four-el">
+      <div><b>🎨 世界観 [[◎/○/△]]</b>[[1行コメント]]</div>
+      <div><b>💡 企画力 [[◎/○/△]]</b>[[1行コメント]]</div>
+      <div><b>✂️ 編集力 [[◎/○/△]]</b>[[1行コメント]]</div>
+      <div><b>✨ 独自性 [[◎/○/△]]</b>[[1行コメント]]</div>
+    </div>
+    <p class="note">[[どの1〜2要素で100点を取っているか。伸びるアカウントは1〜2要素が突出し、他は普通でも伸びる]]</p>
     <ol class="point-list">
       <li><b>[[理由の見出し]]</b>[[根拠となるデータ・実例を添えて2〜3文]]</li>
       <!-- 3〜5個 -->
     </ol>
   </section>
 
-  <!-- 7. あなたのアカウントへの活かし方 -->
+  <!-- 7. 収益化導線 -->
   <section>
-    <h2><span class="num">7</span>あなたのアカウントに活かすなら</h2>
+    <h2><span class="num">7</span>この人は何で稼いでいるか（収益への道すじ）</h2>
+    <div class="sec-sub">プロフィール・ハイライト・リンク先の「形跡」から読む</div>
+    <ul class="rule-list">
+      <li><b>収益の形:</b> [[購入型の紹介収入（楽天ROOM/Amazon）／企業案件（PR表記）／自社商品・講座（ハイライト・LINE登録）など、確認できた形跡を実例つきで。形跡がなければ「収益化の形跡は確認できなかった（フォロワー規模に対して収益化はまだの可能性）」と正直に]]</li>
+      <li><b>リールからの流れ:</b> [[リール→プロフィール→着地先（何に誘導しているか）を1本の線で]]</li>
+      <li><b>自分に置き換えるなら:</b> [[この導線の型を自分の売りたいものでどう再現するか1〜2行]]</li>
+    </ul>
+  </section>
+
+  <!-- 8. あなたのアカウントへの活かし方 -->
+  <section>
+    <h2><span class="num">8</span>あなたのアカウントに活かすなら</h2>
     <div class="sec-sub">[[ユーザーのアカウント/目的]]を前提にした具体アクション</div>
     <ol class="point-list action-list">
       <li><b>[[明日からできるアクション]]</b>[[何をどう真似るか、具体的に]]</li>

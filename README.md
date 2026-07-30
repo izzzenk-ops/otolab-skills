@@ -56,11 +56,13 @@ otolab-skills/                              ← マーケットプレイスの�
 4. `plugins/otolab-insta/.claude-plugin/plugin.json` の `description` にスキル名を追記
 5. `.claude-plugin/marketplace.json` の該当プラグインの `description` も同様に更新
 6. ローカルで動作確認してからコミット・push（公開手順は下記）
+7. **Instagram AI活用講座もセットで改訂する**（けんじさん指示）＝STEP7-1の一覧表・スキル数表記・STEP8に1スキル1レッスン追加＋deploy＋D1反映。手順書=`~/Documents/Claude/Projects/UTAGE乗り換え講座サイト/講座改訂チェックリスト_スキル変更時.md`
 
 **既存スキルを更新するとき：**
 1. `~/.claude/skills/<スキル名>/` の変更点を、このリポジトリの対応フォルダに同様の手順でコピー・一般化
 2. `plugin.json` の `version` を上げる
 3. コミット・push
+4. **講座側に影響する変更（機能追加・評価軸変更・使い方変更）なら Instagram AI活用講座の該当レッスンも改訂**（手順書は上記チェックリスト）
 
 **一般化のルール（今回の作業で適用した基準）：**
 - 個人名「けんじさん」「けんじ個人」→「運営者」「運営者個人」に置き換える
