@@ -33,7 +33,7 @@ SKILLS = [
     "bunseki-reel", "bunseki-competitor-account", "bunseki-my-account",
     "insta-concept-design", "daihon-copy-make", "daihon-kyaba-vlog",
     "concept-brush-up", "daihon-tensaku", "cut-silence", "genre-sentei",
-    "buzz-kikaku-research", "concept-research",
+    "buzz-kikaku-research", "concept-research", "tensaku-reel",
 ]
 
 # 受講生向けの一般化（before → after）。順序どおり適用。上ほど先。
