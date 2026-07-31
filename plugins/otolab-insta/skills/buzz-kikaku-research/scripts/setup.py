@@ -56,7 +56,8 @@ def main():
 
     ok = True
     ok &= pip_install(py, ["pip"])
-    ok &= pip_install(py, ["yt-dlp", "imageio-ffmpeg", "numpy"])
+    # Pillow は報告書に画像を埋め込むとき（inline_images.py）の縮小用。無くても動く
+    ok &= pip_install(py, ["yt-dlp", "imageio-ffmpeg", "numpy", "Pillow"])
     ok &= pip_install(py, [engine])
 
     # 動作確認

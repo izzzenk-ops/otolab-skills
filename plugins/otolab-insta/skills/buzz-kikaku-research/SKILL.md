@@ -64,7 +64,8 @@ description: "【バズ企画リサーチ】発見欄で『手が止まった』
     │   ├── <ID>.mp4 / <ID>.jpg        動画・カバー
     │   ├── frames/f_xx.xs.jpg         冒頭フレーム（0.3/1/2/3/5/7秒）
     │   └── data/head_transcript.txt   冒頭12秒の文字起こし
-    └── report.html                    最終報告書
+    ├── report.html                    最終報告書（画像は相対パス参照）
+    └── report_1file.html              自己完結版（画像を埋め込み・1枚で持ち出せる）
 ```
 
 ---
@@ -252,11 +253,19 @@ python3 <skill>/scripts/buzz_judge.py <out>/data/reels.json <out>/data --followe
    - 冒頭比較カード・仮説カード・横断検証は実データ分だけ複製。該当なしのセクション（例: 横断検証未実施）は削除せず「未実施＋理由」を書くか、注記して残す
    - 画像は相対パス（`reels/<ID>/frames/f_xx.xs.jpg`）
    - フッターに確認できなかった項目を正直に記載（再生数非表示・DL失敗・検証不足など）
-2. 開く＋表示検証：
+2. **自己完結版（1ファイル）も必ず作る**。report.html は画像を相対パスで参照しているため、フォルダごと持ち出さないと画像が壊れる（チャットに1枚送る・受講生に渡す・別PCで開く、で事故る）。画像をbase64で埋め込んだ `report_1file.html` を出力する：
+
+```bash
+<venv-python> <skill>/scripts/inline_images.py "<out>/report.html"
+```
+
+3. 開く＋表示検証：
 
 ```bash
 <venv-python> <skill>/scripts/open_report.py "<out>/report.html"
 ```
+
+⚠️ **open_report.py の出力を捨てない**（`>/dev/null` を付けない）。失敗しても気づけず「開いたつもり」で報告してしまう。実行後は完了報告で**両方のパスを伝え、「1ファイル版はどこへ送っても画像ごと開けます」と一言添える**。
 
 可能ならヘッドレスChromeでスクショを撮って画像欠け・崩れを確認（Macの例: `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu --screenshot=<scratchpad>/check.png --window-size=1200,2600 "file://<out>/report.html"`。撮れない環境ではスキップ）。
 
