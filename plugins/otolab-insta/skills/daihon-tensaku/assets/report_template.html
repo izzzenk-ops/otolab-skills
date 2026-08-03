@@ -10,6 +10,8 @@
   ・採点リング: .score-ring の style="--p:62" を総合点に置換（0-100）
   ・レーダー: #radar の data-scores（得点6つ）/ data-max（配点6つ）を置換。JSが描画する
   ・1行ずつ解説: .line-row を台本の行数だけ複製。感情フェーズは phase-hook/phase-tension/phase-empathy/phase-payoff/phase-cta を使い分け
+  ・離脱リスク行: class="line-row risk" ＋ lr-head に <span class="chip risk">⚠️ 離脱リスク</span> をフェーズチップと併記
+  ・保存・コメント・シェアの理由: .eng-card 3枚固定。バッジは eng-badge yes/weak/no。ない/弱いカードは eng-how（どう作るか）必須
   ・リライト: .rw-block を複製。AFTER列だけ縦読みで完成台本になること
 -->
 <title>[[総合点]]点｜[[一言診断]]｜台本辛口添削</title>
@@ -121,6 +123,19 @@
     padding: 1px 11px; font-size: 12.5px; font-weight: 700; margin: 2px 4px 2px 0; }
   .line-row.good { border-color: var(--green); background: var(--green-soft); }
   .line-row.good .orig::after { content: " 🌱"; }
+  .chip.risk { background: #fff; color: var(--accent-deep); border: 1.5px dashed var(--accent-deep); }
+  .line-row.risk { border: 1.5px dashed var(--accent); background: #fffafa; }
+
+  /* 保存・コメント・シェアの理由 */
+  .eng-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .eng-card { border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; font-size: 13px; }
+  .eng-name { font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .eng-badge { font-size: 11px; font-weight: 800; border-radius: 999px; padding: 2px 12px; flex-shrink: 0; white-space: nowrap; }
+  .eng-badge.yes { background: var(--green-soft); color: var(--green); }
+  .eng-badge.weak { background: var(--gold-soft); color: var(--gold); }
+  .eng-badge.no { background: var(--accent-soft); color: var(--accent-deep); }
+  .eng-how { margin-top: 8px; font-size: 12.5px; background: var(--bg); border-left: 3px solid var(--blue); border-radius: 0 10px 10px 0; padding: 8px 12px; }
+  .eng-how .tag { font-size: 10.5px; font-weight: 800; color: var(--blue-deep); display: block; letter-spacing: 1px; }
 
   /* 維持ポイント */
   .keep-list { list-style: none; }
@@ -169,6 +184,7 @@
     .head-grid { grid-template-columns: 1fr; }
     .score-grid { grid-template-columns: 1fr; justify-items: center; }
     .ba-grid { grid-template-columns: 1fr; }
+    .eng-grid { grid-template-columns: 1fr; }
   }
   @media print { body { background: #fff; } section { break-inside: avoid; } }
 </style>
@@ -240,9 +256,34 @@
     <p class="note"><b>伏線→回収:</b> [[どこで何を仕込み、どこで回収したか（回収されていない振りがあれば指摘）]]</p>
   </section>
 
-  <!-- 4. ⭐1行ずつ解説 -->
+  <!-- 4. 保存・コメント・シェアの理由 -->
   <section>
-    <h2><span class="num">4</span>1行ずつ解説（感情の動き・改善案・加えるワード）</h2>
+    <h2><span class="num">4</span>保存・コメント・シェアの理由はあるか</h2>
+    <div class="sec-sub">伸びる台本には「保存する理由」「コメントする理由」「シェアする理由」が言葉で仕込まれています。この台本にあるかを判定（※上の採点6軸とは別の診断です）</div>
+    <div class="eng-grid">
+      <!-- ▼3枚固定（保存/コメント/シェア）。eng-badge は yes(✅ ある)/weak(⚠️ 弱い)/no(❌ ない) を使い分け。
+           判定の根拠は台本の言葉を引用。ない/弱いカードは eng-how に「どう作るか」を必ず書く。✅あるカードの eng-how は省略可 -->
+      <div class="eng-card">
+        <div class="eng-name">💾 保存する理由<span class="eng-badge no">[[❌ ない]]</span></div>
+        [[判定の根拠1〜2文（後で見返す価値＝手順・数字・リスト・チェックできる情報があるか。台本の言葉を引用して）]]
+        <div class="eng-how"><span class="tag">💡 どう作るか</span>[[この台本に保存する理由を足す具体案]]</div>
+      </div>
+      <div class="eng-card">
+        <div class="eng-name">💬 コメントする理由<span class="eng-badge weak">[[⚠️ 弱い]]</span></div>
+        [[判定の根拠（答えたくなる問い・意見が割れる主張・呼びかけがあるか）]]
+        <div class="eng-how"><span class="tag">💡 どう作るか</span>[[具体案]]</div>
+      </div>
+      <div class="eng-card">
+        <div class="eng-name">📣 シェアする理由<span class="eng-badge yes">[[✅ ある]]</span></div>
+        [[判定の根拠（誰かに教えたくなる・「これ、あの人に見せたい」と思わせる要素があるか）]]
+        <div class="eng-how"><span class="tag">💡 どう作るか</span>[[具体案（✅あるなら eng-how ごと省略可）]]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ⭐1行ずつ解説 -->
+  <section>
+    <h2><span class="num">5</span>1行ずつ解説（感情の動き・改善案・加えるワード）</h2>
     <div class="sec-sub">台本を上から1フレーズずつ。「👀この行で視聴者に何が起きるか」「✍️どう直すか」「➕加えるといいワード」の3点で。良い行は🌱でそのまま残す印です</div>
     <div class="phase-legend">
       <span class="chip phase-hook">引き（好奇心）</span>
@@ -250,9 +291,11 @@
       <span class="chip phase-empathy">共感</span>
       <span class="chip phase-payoff">納得・解放</span>
       <span class="chip phase-cta">行動（CTA）</span>
+      <span class="chip risk">⚠️ 離脱リスク（指が動く行）</span>
     </div>
     <!-- ▼台本の行数だけ複製。良い行は class="line-row good" にして lr-fix/lr-word は省略可。
-         phase-* チップはその行が担う感情フェーズを1つ選ぶ。改善不要なら lr-fix を出さない。加えるワードが無ければ lr-word を出さない -->
+         phase-* チップはその行が担う感情フェーズを1つ選ぶ。改善不要なら lr-fix を出さない。加えるワードが無ければ lr-word を出さない。
+         離脱リスクが特に高い行（目安1〜3行）は class="line-row risk" にし、フェーズチップの後に <span class="chip risk">⚠️ 離脱リスク</span> を併記 -->
     <div class="line-row">
       <div class="lr-head">
         <span class="ln">1</span>
@@ -268,9 +311,9 @@
     <!-- ▲複製ここまで -->
   </section>
 
-  <!-- 5. 維持してほしい良いところ -->
+  <!-- 6. 維持してほしい良いところ -->
   <section>
-    <h2><span class="num">5</span>🌱 維持してほしい良いところ</h2>
+    <h2><span class="num">6</span>🌱 維持してほしい良いところ</h2>
     <div class="sec-sub">次の台本でも作り変えないでほしい部分。ここは武器です</div>
     <ul class="keep-list">
       <!-- ▼1〜3個 -->
@@ -279,9 +322,9 @@
     </ul>
   </section>
 
-  <!-- 6. リライト台本 -->
+  <!-- 7. リライト台本 -->
   <section>
-    <h2><span class="num">6</span>私が直すならこうする（リライト台本）</h2>
+    <h2><span class="num">7</span>私が直すならこうする（リライト台本）</h2>
     <div class="sec-sub">同じネタ・同じ出来事のまま、構成と言葉だけ組み直した完全版。<b>左＝元の台本、右＝リライト</b>。何をどう変えたかを見比べて学べます</div>
     <!-- ▼ブロックの数だけ複製。BEFOREは元の台本から該当箇所を引用（新設ブロックは「（該当なし・新設）」）。
          rw-changeタグは何を変えたかの一言。変更しないブロックは class="rw-change keep" で「維持」。
@@ -301,9 +344,9 @@
     <p class="note">[[リライトの狙いを1〜2文（何を残し、何を変えたか）]]</p>
   </section>
 
-  <!-- 7. 次回チェックリスト -->
+  <!-- 8. 次回チェックリスト -->
   <section>
-    <h2><span class="num">7</span>次に台本を書く前のチェックリスト</h2>
+    <h2><span class="num">8</span>次に台本を書く前のチェックリスト</h2>
     <div class="sec-sub">今回の指摘をチェック項目にしました。次の台本はこれを全部つぶしてから撮影</div>
     <ul class="check-list">
       <!-- ▼5〜8個。今回の指摘に対応させる -->
