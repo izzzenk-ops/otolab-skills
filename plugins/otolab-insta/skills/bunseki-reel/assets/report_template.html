@@ -334,32 +334,57 @@
   </footer>
 </div>
 <script>
-function mkPrompt(btn) {
-  const text = btn.dataset.prompt;
+/* --- コピー共通処理（file:// やアプリ内ブラウザで clipboard API が拒否されても確実に動く） --- */
+async function __copyText(text) {
+  if (!text) return false;
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) {}
+  const t = document.createElement('textarea');
+  t.value = text; t.setAttribute('readonly', '');
+  t.style.cssText = 'position:fixed;left:0;bottom:0;width:1px;height:1px;padding:0;border:0;margin:0;opacity:0;font-size:16px;';
+  document.body.appendChild(t);
+  t.focus(); t.select();
+  try { t.setSelectionRange(0, text.length); } catch (e) {}
+  let ok = false;
+  try { ok = document.execCommand('copy') && t.selectionEnd > 0; } catch (e) {}
+  t.remove();
+  return ok;
+}
+function __copyManual(btn, text) {
+  const anchor = btn.closest('.tr-actions') || btn;
+  let box = anchor.nextElementSibling;
+  if (!box || !box.classList || !box.classList.contains('copy-manual')) {
+    box = document.createElement('textarea');
+    box.className = 'copy-manual'; box.readOnly = true;
+    box.style.cssText = 'display:block;width:100%;min-height:180px;margin:10px 0 0;padding:12px;border:1px solid #e3d5cf;border-radius:12px;font:14px/1.9 inherit;color:#4a3f3b;background:#fff;';
+    anchor.insertAdjacentElement('afterend', box);
+  }
+  box.value = text; box.focus(); box.select();
+}
+function __copyRun(btn, text, okMsg) {
+  const orig = btn.textContent;
   (async () => {
-    let ok = false;
-    try { await navigator.clipboard.writeText(text); ok = true; } catch (e) {
-      const t = document.createElement('textarea'); t.value = text;
-      document.body.appendChild(t); t.select(); ok = document.execCommand('copy'); t.remove();
+    if (!text) {
+      btn.textContent = '⚠️ コピーする本文が見つかりません';
+      setTimeout(() => { btn.textContent = orig; }, 3000); return;
     }
-    btn.textContent = ok ? '✅ コピーしました。Claude Codeに貼り付けてください' : 'コピー失敗。手動でコピーしてください';
-    setTimeout(() => { btn.textContent = '🎬 この型で台本を作る（起動プロンプトをコピー）'; }, 3000);
+    const ok = await __copyText(text);
+    btn.textContent = ok ? (okMsg || '✅ コピーしました')
+                         : '⚠️ コピーできませんでした。下の枠を選択してコピーしてください';
+    if (!ok) __copyManual(btn, text);
+    setTimeout(() => { btn.textContent = orig; }, ok ? 1800 : 6000);
   })();
+}
+function mkPrompt(btn) {
+  __copyRun(btn, btn.dataset.prompt, '✅ コピーしました。Claude Codeに貼り付けてください');
 }
 function trToggle(btn) {
   const body = btn.nextElementSibling; const opening = body.hidden;
   body.hidden = !opening; btn.textContent = opening ? '📝 文字起こしを閉じる' : '📝 文字起こし全文を見る';
 }
-async function trCopy(btn) {
-  const el = btn.closest('.tr-body').querySelector('.tr-text');
-  let ok = false;
-  try { await navigator.clipboard.writeText(el.textContent); ok = true; } catch (e) {
-    const range = document.createRange(); range.selectNodeContents(el);
-    const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
-    ok = document.execCommand('copy'); sel.removeAllRanges();
-  }
-  btn.textContent = ok ? '✅ コピーしました' : '選択済み → Cmd+C';
-  setTimeout(() => { btn.textContent = '📋 コピー'; }, 1800);
+function trCopy(btn) {
+  const box = btn.closest('.tr-body') || document;
+  const el = box.querySelector('.tr-text');
+  __copyRun(btn, el ? el.textContent.trim() : '');
 }
 function trDownload(btn, name) {
   const text = btn.closest('.tr-body').querySelector('.tr-text').textContent;

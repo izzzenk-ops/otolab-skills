@@ -143,13 +143,24 @@ python3 <skill>/scripts/detect_narration.py reels/
 ```
 
 - **`ナレーションあり`** と出たら、これまで通り文字起こしを台本分析に使う
-- **`★テロップ主体アカウント`** と出たら → 音声文字起こしは捨て、**動画フレームから画面テロップを実読**する。選定リールのグリッド画像を作る：
+- **`★テロップ主体アカウント`** と出たら → 音声文字起こしは捨て、**動画フレームから画面テロップを実読**する。選定リールのフレームを2秒ごとに書き出す：
 
 ```bash
-python3 <skill>/scripts/telop_frames.py data/selection.json reels/ frames/ --every 4 --cols 4
+python3 <skill>/scripts/telop_frames.py data/selection.json reels/ frames/ --every 2
 ```
 
-生成された `frames/grid_<ID>.jpg` をReadして、各フレームの白テロップを時系列で書き起こす（最低でも上位バズ2〜3本は全テロップを実読する）。この**テロップ列がこの人の「台本」**。以降の分析・報告書・style_profile.md・tr-box は、音声文字起こしの代わりに**このテロップ**を使う（報告書に「音声はBGMのみ・テロップ主体」と明記）。実例: `~/Documents/Claude/Projects/競合アカウント分析/mokomoko__gohan_20260721/`（226.9万・208.1万のテロップを実読して報告書化）
+**⚠️ 選定リールは全本やる。上位2〜3本で止めない。** TOP10のうち2本だけ読んで残り8本を空にすると、報告書のカードが歯抜けになり「コピーできない」とユーザーに言われる（2026-08-06に実際に発生し、後から8本ぶんを手作業で足すことになった）。
+
+手順は**1本ずつ完了させる**（まとめて全部読もうとしない）：
+
+1. `frames/<ID>_NN.jpg` をその1本ぶん全部Readして、白テロップを時系列で書き起こす
+2. **読んだ直後に `reels/transcripts/<ID>.telop.txt` へ保存する**（次の本に進む前に保存。コンテキストが詰まっても消えないようにするため）
+3. 全本ぶん繰り返す
+
+この**テロップ列がこの人の「台本」**。以降の分析・報告書・style_profile.md・tr-box は、音声文字起こしの代わりに**このテロップ**を使う。報告書には「音声はBGMのみのため文字起こしはテロップを実読（2秒ごとにフレームを抜いて読み取り。表示の短いテロップは拾えていない場合あり）」と明記する。実例: `~/Documents/Claude/Projects/競合アカウント分析/mokomoko__gohan_20260721/`（TOP10全10本のテロップを実読して報告書化・`reels/transcripts/*.telop.txt`）
+
+- フレームは1本あたり15〜25枚になる。全体の構成だけ先に俯瞰したいときは `--grid` を足すと `frames/grid_<ID>.jpg` も作れるが、**グリッドは日本語テロップが潰れて読めないので書き起こしには使わない**（個別フレームを読む）
+- 動画が長い・テロップの入れ替わりが速いアカウントは `--every 1` にする
 
 ## STEP 5：分析
 
@@ -179,6 +190,7 @@ python3 <skill>/scripts/telop_frames.py data/selection.json reels/ frames/ --eve
 
 1. `<skill>/assets/report_template.html` を読み、**CSSと構造はそのまま**に中身を実データで埋めて `report.html` として保存する（テンプレートの`[[...]]`を置換し、リールカード等は必要数複製）
    - **文字起こし済みのリールカードには必ず`tr-box`ブロック（「文字起こしを見る」開閉＋コピー＋.txt保存ボタン）を付ける**。全文をHTMLエスケープして`<pre class="tr-text">`に埋め込む（ユーザーがワンクリックで台本スキルに渡せるのがこの報告書の価値）。テンプレート末尾の`<script>`（trToggle/trCopy/trDownload）も忘れず含める
+   - **tr-boxは選定リールの全カードに付ける。一部のカードだけ付いている状態で完成にしない。** テロップ主体アカウントなら `reels/transcripts/<ID>.telop.txt`、ナレーションありなら `reels/transcripts/<ID>.txt` が全カードぶん揃っているかを、報告書を書く前にファイル数で確認する（`ls reels/transcripts/ | wc -l` が選定本数と合うか）。揃っていなければ先にテロップ実読を終わらせる
    - カード数が多い場合、この埋め込みはEditの繰り返しよりPythonスクリプトでtranscripts/*.txtを読んで一括注入する方が確実
 2. 画像は相対パス（`thumbs/000_xxx.jpg`, `reels/<ID>.jpg`）で参照。サムネギャラリーは選定リール分が `reels/<ID>.jpg`、選定外が `thumbs/NNN_<ID>.jpg` に分かれているのでグリッド順（selection.jsonのgrid_index順）に混ぜて並べる。DLに失敗したリールのカードは画像なし（枠のみ）でよい
 3. フッターに「確認できなかった項目」を正直に記載（スキップ・推定・打ち切りなど）

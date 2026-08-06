@@ -89,7 +89,8 @@ def main():
         "telop_driven": telop_driven,
         "recommendation": (
             "テロップ主体アカウント。音声文字起こしは使わず、telop_frames.py で"
-            "動画フレームを抜いて画面テロップを実読すること。"
+            "動画フレームを抜いて画面テロップを実読すること（選定リールは全本。"
+            "1本読むごとに reels/transcripts/<ID>.telop.txt へ保存する）。"
             if telop_driven else
             "ナレーションあり。文字起こしをそのまま台本分析に使ってよい。"),
         "per_reel": results,
