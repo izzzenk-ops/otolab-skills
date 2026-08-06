@@ -341,6 +341,7 @@
     <!-- コピー用のリライト全文（画面には出ない。AFTER本文のみのプレーンテキスト） -->
     <pre id="rewrite-script" hidden>[[リライト台本の全文（コピー用。1フレーズ＝1行、セクション間は空行）]]</pre>
     <button class="mk-btn" onclick="copyRewrite(this)">📋 リライト台本をコピー</button>
+    <button class="mk-btn sub" data-prompt="この添削を踏まえて台本を作り直して（daihon-copy-makeスキル・改稿モード）。添削レポート: [[出力フォルダのフルパス]]/report.html（元台本と指摘が入っています）。★指摘の継ぎ足しではなく、参考にする台本の型に沿って書き直してください。参考にする台本（文字起こし全文 or 分析フォルダのパス）: " onclick="mkPrompt(this)">🎬 この添削で台本を作り直す（プロンプトをコピー）</button>
     <p class="note">[[リライトの狙いを1〜2文（何を残し、何を変えたか）]]</p>
   </section>
 
@@ -412,6 +413,18 @@
   el.innerHTML = s;
 })();
 
+function mkPrompt(btn) {
+  const text = btn.dataset.prompt, orig = btn.textContent;
+  (async () => {
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; } catch (e) {
+      const t = document.createElement('textarea'); t.value = text;
+      document.body.appendChild(t); t.select(); ok = document.execCommand('copy'); t.remove();
+    }
+    btn.textContent = ok ? '✅ コピーしました。Claude Codeに貼り付けてください' : 'コピー失敗。手動でコピーしてください';
+    setTimeout(() => { btn.textContent = orig; }, 3000);
+  })();
+}
 function copyRewrite(btn) {
   const el = document.getElementById('rewrite-script'), orig = btn.textContent;
   (async () => {
