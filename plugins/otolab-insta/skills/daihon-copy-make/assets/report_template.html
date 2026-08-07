@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>[[TITLE]]</title>
+<style>
+:root{
+  --ink:#3f4a5a; --sub:#8b93a3; --line:#f0e8dd; --bg:#f7f3ec; --card:#ffffff;
+  --accent:#ec8080; --accent-deep:#e06c6c; --accent-soft:#fdecec;
+  --blue:#6b9bd2; --blue-deep:#5b8ac4; --blue-soft:#e8f1fb;
+  --gold:#d9822b; --gold-soft:#fdf1e3;
+  --green:#57a773; --green-soft:#e9f6ee;
+  --purple:#9b7bd0; --purple-soft:#f1ebfa;
+  --grad:linear-gradient(135deg,#f19a9a,#f4b183);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",-apple-system,sans-serif;
+  line-height:1.85;font-size:15px;-webkit-text-size-adjust:100%}
+.wrap{max-width:840px;margin:0 auto;padding:0 18px 80px}
+
+header{background:var(--grad);color:#fff;padding:46px 18px 40px;text-align:center}
+header .eyebrow{font-size:12px;letter-spacing:.16em;opacity:.9;margin:0 0 12px}
+header h1{margin:0 0 14px;font-size:25px;line-height:1.5;font-weight:800}
+header p{margin:0;font-size:13.5px;opacity:.95;line-height:1.8}
+.pill{display:inline-block;background:rgba(255,255,255,.22);border-radius:999px;
+  padding:5px 15px;font-size:12px;margin:14px 5px 0}
+
+section{background:var(--card);border-radius:18px;padding:28px 24px;margin:22px 0;
+  box-shadow:0 2px 14px rgba(120,100,80,.07)}
+h2{margin:0 0 6px;font-size:19px;font-weight:800;display:flex;align-items:center;gap:10px;line-height:1.5}
+h2 .num{background:var(--accent);color:#fff;border-radius:999px;min-width:28px;height:28px;
+  display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:none}
+.lead{color:var(--sub);font-size:13.5px;margin:0 0 20px;padding-left:38px}
+h3{font-size:15.5px;margin:26px 0 10px;padding-left:11px;border-left:4px solid var(--blue);font-weight:700}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0 4px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+th,td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+th{background:var(--blue-soft);color:var(--blue-deep);font-weight:700;white-space:nowrap;font-size:12.5px}
+td.sec{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--sub);font-size:12.5px}
+tr.key td{background:var(--accent-soft)}
+tr.key td.sec{color:var(--accent-deep);font-weight:700}
+
+.script{background:#fffdf9;border:2px dashed var(--line);border-radius:14px;
+  padding:22px 20px;white-space:pre-wrap;font-size:15.5px;line-height:2.15}
+.script .q{color:var(--accent-deep);font-weight:700}
+.script .sil{color:var(--sub);letter-spacing:.2em}
+.script .rep{background:linear-gradient(transparent 62%,#fde3e3 62%);font-weight:700}
+
+.copybar{display:flex;gap:9px;align-items:center;margin:14px 0 0;flex-wrap:wrap}
+button.copy{background:var(--accent);color:#fff;border:0;border-radius:999px;
+  padding:10px 22px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit}
+button.copy:hover{background:var(--accent-deep)}
+.copymsg{font-size:12.5px;color:var(--green);font-weight:700}
+.fallback{display:none;width:100%;margin-top:10px}
+.fallback textarea{width:100%;height:190px;font-family:inherit;font-size:13px;line-height:1.9;
+  padding:12px;border:2px solid var(--accent);border-radius:10px;background:#fff;color:var(--ink)}
+.fallback p{margin:6px 0 0;font-size:12.5px;color:var(--accent-deep);font-weight:700}
+
+.bad,.good{border-radius:12px;padding:15px 17px;margin:12px 0;font-size:14px}
+.bad{background:var(--accent-soft);border-left:5px solid var(--accent)}
+.good{background:var(--green-soft);border-left:5px solid var(--green)}
+.bad b,.good b{display:block;margin-bottom:5px;font-size:14.5px}
+.bad .arrow,.good .arrow{color:var(--sub);font-size:12.5px}
+
+ul{padding-left:20px;margin:10px 0}
+li{margin:7px 0}
+.note{background:var(--gold-soft);border-left:5px solid var(--gold);border-radius:12px;
+  padding:15px 17px;font-size:13.5px;margin:18px 0}
+.note b{color:#a8621f}
+.psy{background:var(--purple-soft);border-left:5px solid var(--purple);border-radius:12px;
+  padding:16px 18px;font-size:14px;margin:14px 0}
+.cap{background:#fffdf9;border:2px dashed var(--line);border-radius:14px;padding:20px;
+  white-space:pre-wrap;font-size:14px;line-height:1.95}
+.tag{display:inline-block;background:var(--blue-soft);color:var(--blue-deep);border-radius:999px;
+  padding:3px 12px;font-size:12px;margin:3px 4px 3px 0;font-weight:700}
+footer{text-align:center;color:var(--sub);font-size:12px;padding:34px 18px 0;line-height:2}
+@media(max-width:560px){
+  header h1{font-size:20px} section{padding:22px 16px} .lead{padding-left:0}
+  h2{font-size:17px} .script{font-size:15px;padding:18px 15px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">DAIHON COPY MAKE ／ 構成移植レポート</p>
+  <h1>[[H1]]</h1>
+  <p>[[SUBTITLE]]</p>
+  <div>[[PILLS]]</div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ 1. 参考の実測 ============ -->
+<section>
+  <h2><span class="num">1</span>まず、参考を分解しました</h2>
+  <p class="lead">[[REF_LEAD]]</p>
+
+  <div class="scroll">
+  <table>
+    <tr><th>秒</th><th>ブロックの役割</th><th>参考の中身（実測）</th></tr>
+    [[REF_ROWS]]
+  </table>
+  </div>
+
+  <h3>この参考がやっている仕掛け</h3>
+  <ul>
+    [[REF_POINTS]]
+  </ul>
+  <div class="note">[[REF_CHARS_NOTE]]</div>
+</section>
+
+<!-- ============ 2. 元台本の崩れ（改稿モードのときだけ／新規作成なら丸ごと削除） ============ -->
+<section>
+  <h2><span class="num">2</span>元の台本、ここが崩れていました</h2>
+  <p class="lead">[[BAD_LEAD]]</p>
+
+  [[BAD_BLOCKS]]
+
+  <div class="good">
+    <b>逆に、良かったところ</b>
+    [[GOOD_BLOCK]]
+  </div>
+</section>
+
+<!-- ============ 3. 台本 ============ -->
+<section>
+  <h2><span class="num">3</span>[[SCRIPT_HEADING]]</h2>
+  <p class="lead"><span class="rep">ピンクの線</span>＝繰り返す行。<span class="sil">・・・。</span>＝音声を止めて、テロップだけ出すところ。</p>
+
+  <div class="script" id="scriptBox">[[SCRIPT_HTML]]</div>
+
+  <div class="copybar">
+    <button class="copy" data-copy="scriptBox" data-key="script">台本をコピー</button>
+    <span class="copymsg" id="msg-script"></span>
+  </div>
+  <div class="fallback" id="fb-script">
+    <textarea readonly></textarea>
+    <p>自動コピーができませんでした。上の枠の中を選んで、手でコピーしてください。</p>
+  </div>
+
+  <h3>参考のどこを、どう移植したか</h3>
+  <div class="scroll">
+  <table>
+    <tr><th>秒</th><th>参考</th><th>今回</th></tr>
+    [[MAP_ROWS]]
+  </table>
+  </div>
+  <div class="note">[[CHARS_NOTE]]</div>
+
+  <div class="psy">
+    <b>視聴者の中で何が起きるか</b><br>
+    [[PSY]]
+  </div>
+</section>
+
+<!-- ============ 4. 撮影メモ ============ -->
+<section>
+  <h2><span class="num">4</span>撮影メモ</h2>
+  <p class="lead">台本の行には混ぜていません。撮るときだけ見てください。</p>
+  <ul>
+    [[SHOOT_NOTES]]
+  </ul>
+</section>
+
+<!-- ============ 5. キャプション ============ -->
+<section>
+  <h2><span class="num">5</span>キャプション</h2>
+  <p class="lead">[[CAPTION_LEAD]]</p>
+  <div class="cap" id="capBox">[[CAPTION_TEXT]]</div>
+  <div class="copybar">
+    <button class="copy" data-copy="capBox" data-key="cap">キャプションをコピー</button>
+    <span class="copymsg" id="msg-cap"></span>
+  </div>
+  <div class="fallback" id="fb-cap">
+    <textarea readonly></textarea>
+    <p>自動コピーができませんでした。上の枠の中を選んで、手でコピーしてください。</p>
+  </div>
+  [[CAPTION_NOTE]]
+</section>
+
+<!-- ============ 6. 次にやること ============ -->
+<section>
+  <h2><span class="num">6</span>次にやること</h2>
+  <ul>
+    [[NEXT_STEPS]]
+  </ul>
+  <div>[[TAGS]]</div>
+</section>
+
+<footer>
+  台本コピー（daihon-copy-make）／構成移植レポート<br>
+  [[DATE]]
+</footer>
+
+</div>
+
+<script>
+/* コピー対象は画面に出ている要素の innerText をそのまま使う。
+   別途テキストを二重に持つと、台本を直したときにコピー内容だけ古くなる事故が起きる。 */
+function sourceText(btn){
+  return document.getElementById(btn.getAttribute("data-copy")).innerText.replace(/ /g, " ");
+}
+
+function showFallback(key, text){
+  var fb = document.getElementById("fb-" + key);
+  fb.style.display = "block";
+  var ta = fb.querySelector("textarea");
+  ta.value = text;
+  ta.focus(); ta.select();
+}
+
+function copyFrom(btn){
+  var key = btn.getAttribute("data-key");
+  var text = sourceText(btn);
+  var msg = document.getElementById("msg-" + key);
+  msg.textContent = "";
+
+  /* 画面外の textarea に入れて選択する。
+     display:none の要素は選択が無音で失敗するので絶対に使わない。 */
+  var ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly", "");
+  ta.style.position = "fixed";
+  ta.style.left = "-9999px";
+  ta.style.top = "0";
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  ta.setSelectionRange(0, text.length);
+
+  /* 本当に選択できたかを確認する（できていなければコピーは成立しない） */
+  var selected = (ta.selectionEnd - ta.selectionStart) === text.length;
+  var ok = false;
+  if (selected) {
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+  }
+  document.body.removeChild(ta);
+
+  if (ok) {
+    msg.textContent = "✅ コピーしました";
+    setTimeout(function(){ msg.textContent = ""; }, 2600);
+    return;
+  }
+
+  if (!(navigator.clipboard && navigator.clipboard.writeText)) {
+    showFallback(key, text);
+    return;
+  }
+
+  /* ⚠️ writeText の Promise は、フォーカスやユーザー操作の条件を満たさないと
+     resolve も reject もせず宙吊りになることがある（＝押しても無反応になる）。
+     必ず時間で打ち切って、手動コピー枠を出す。 */
+  var settled = false;
+  var giveUp = setTimeout(function(){
+    if (settled) return;
+    settled = true;
+    showFallback(key, text);
+  }, 800);
+
+  navigator.clipboard.writeText(text).then(function(){
+    if (settled) return;
+    settled = true; clearTimeout(giveUp);
+    msg.textContent = "✅ コピーしました";
+    setTimeout(function(){ msg.textContent = ""; }, 2600);
+  }).catch(function(){
+    if (settled) return;
+    settled = true; clearTimeout(giveUp);
+    showFallback(key, text);
+  });
+}
+
+document.querySelectorAll("button.copy").forEach(function(b){
+  b.addEventListener("click", function(){ copyFrom(b); });
+});
+</script>
+</body>
+</html>

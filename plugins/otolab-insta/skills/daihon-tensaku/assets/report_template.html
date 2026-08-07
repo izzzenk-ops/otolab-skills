@@ -69,6 +69,13 @@
   .note { font-size: 12.5px; color: var(--sub); margin-top: 12px; }
   .note b { color: var(--ink); }
 
+  /* 実測データ（投稿済み台本のときだけ出す §0） */
+  .fact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 14px; }
+  .fact { background: var(--bg); border-radius: 16px; padding: 14px 16px; text-align: center; }
+  .fact b { display: block; font-size: 22px; color: var(--accent-deep); line-height: 1.3; }
+  .fact span { font-size: 11.5px; color: var(--sub); }
+  .fact.hi { background: var(--green-soft); } .fact.hi b { color: var(--green); }
+
   /* 採点表（レーダー＋バー） */
   .score-grid { display: grid; grid-template-columns: 360px 1fr; gap: 22px; align-items: center; }
   #radar svg { display: block; }
@@ -215,10 +222,23 @@
     </div>
   </div>
 
+  <!-- 0. 実測データ（★投稿済みで数字が分かる台本のときだけ出す。撮影前の台本ではこのsectionごと削除する） -->
+  <section>
+    <h2><span class="num">0</span>この台本の実測データ</h2>
+    <div class="sec-sub">採点の前に、この台本が現実に出した数字。ここが評価の土台です</div>
+    <div class="fact-grid">
+      <div class="fact hi"><b>[[投稿時フォロワー]]</b><span>投稿時フォロワー</span></div>
+      <div class="fact hi"><b>[[再生数]]</b><span>再生数</span></div>
+      <div class="fact"><b>[[いいね]]</b><span>いいね（再生の[[◯]]%）</span></div>
+      <div class="fact"><b>[[コメント]]</b><span>コメント（再生の[[◯]]%）</span></div>
+    </div>
+    <p class="note"><b>読み方:</b> [[バズ判定ライン（フォロワー×10倍 or 100万再生）に対してどうか。超えていれば「フック力は実証済み」と明記し、入口キャップは適用しない。いいね率・コメント率が低ければ、どの軸の取りこぼしかをここで名指しする]]</p>
+  </section>
+
   <!-- 1. 採点表 -->
   <section>
     <h2><span class="num">1</span>採点表（6つの評価軸）</h2>
-    <div class="sec-sub">固定の採点基準でつけています。誰の台本でも同じ基準＝甘くしません。※テロップ演出・音・カバーは動画添削（tensaku-reel）の担当で、ここは台本の言葉だけを見ています</div>
+    <div class="sec-sub">固定の採点基準でつけています。誰の台本でも同じ基準＝甘くしません。※この台本は<b>[[A. ノウハウ・情報系 / B. 共感・連載ドラマ系]]</b>と判定しました。[[Bなら「ノウハウ系の物差し（今回の持ち帰り・語尾統一・反復禁止）はこのジャンルには当てません」と明記]]。テロップ演出・音・カバーは動画添削（tensaku-reel）の担当で、ここは台本の言葉だけを見ています</div>
     <div class="score-grid">
       <!-- レーダーのラベルは短縮形で固定（長いとSVGの端で切れる。正式名はバー側に出る） -->
       <div id="radar"
