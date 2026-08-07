@@ -434,17 +434,28 @@
 })();
 
 /* --- コピー共通処理（file:// やアプリ内ブラウザで clipboard API が拒否されても確実に動く） --- */
-async function __copyText(text) {
-  if (!text) return false;
-  try { await navigator.clipboard.writeText(text); return true; } catch (e) {}
+
+/* コピー原文は画面に出ている要素からそのまま読む。
+   別途テキストを二重に持つと、中身を直したときにコピー内容だけ古くなる事故が起きる。
+   innerText なら <br> が改行になり、タグや非表示の要素は混ざらない。 */
+function __elText(el) {
+  if (!el) return '';
+  return (el.innerText || el.textContent || '').replace(/\u00a0/g, ' ').trim();
+}
+
+/* 画面外の textarea に入れて選択する。
+   display:none の要素は選択が無音で失敗するので絶対に使わない。 */
+function __copySync(text) {
   const t = document.createElement('textarea');
   t.value = text; t.setAttribute('readonly', '');
-  t.style.cssText = 'position:fixed;left:0;bottom:0;width:1px;height:1px;padding:0;border:0;margin:0;opacity:0;font-size:16px;';
+  t.style.cssText = 'position:fixed;left:-9999px;top:0;width:1px;height:1px;padding:0;border:0;margin:0;font-size:16px;';
   document.body.appendChild(t);
   t.focus(); t.select();
   try { t.setSelectionRange(0, text.length); } catch (e) {}
+  /* 本当に選択できたかを確認する（できていなければコピーは成立しない） */
+  const selected = (t.selectionEnd - t.selectionStart) === text.length;
   let ok = false;
-  try { ok = document.execCommand('copy') && t.selectionEnd > 0; } catch (e) {}
+  if (selected) { try { ok = document.execCommand('copy'); } catch (e) { ok = false; } }
   t.remove();
   return ok;
 }
@@ -461,28 +472,47 @@ function __copyManual(btn, text) {
 }
 function __copyRun(btn, text, okMsg) {
   const orig = btn.textContent;
-  (async () => {
-    if (!text) {
-      btn.textContent = '⚠️ コピーする本文が見つかりません';
-      setTimeout(() => { btn.textContent = orig; }, 3000); return;
-    }
-    const ok = await __copyText(text);
+  if (!text) {
+    btn.textContent = '⚠️ コピーする本文が見つかりません';
+    setTimeout(() => { btn.textContent = orig; }, 3000);
+    return;
+  }
+  const done = (ok) => {
     btn.textContent = ok ? (okMsg || '✅ コピーしました')
                          : '⚠️ コピーできませんでした。下の枠を選択してコピーしてください';
     if (!ok) __copyManual(btn, text);
     setTimeout(() => { btn.textContent = orig; }, ok ? 1800 : 6000);
-  })();
+  };
+
+  if (__copySync(text)) { done(true); return; }
+  if (!(navigator.clipboard && navigator.clipboard.writeText)) { done(false); return; }
+
+  /* ⚠️ writeText の Promise は、フォーカスやユーザー操作の条件を満たさないと
+     resolve も reject もせず宙吊りになることがある（＝押しても無反応になる）。
+     必ず時間で打ち切って、手動コピー枠を出す。 */
+  let settled = false;
+  const giveUp = setTimeout(() => {
+    if (settled) return;
+    settled = true; done(false);
+  }, 800);
+  navigator.clipboard.writeText(text).then(() => {
+    if (settled) return;
+    settled = true; clearTimeout(giveUp); done(true);
+  }).catch(() => {
+    if (settled) return;
+    settled = true; clearTimeout(giveUp); done(false);
+  });
 }
 function mkPrompt(btn) {
   __copyRun(btn, btn.dataset.prompt, '✅ コピーしました。Claude Codeに貼り付けてください');
 }
 function copyRewrite(btn) {
-  const el = document.getElementById('rewrite-script');
-  let text = el ? el.textContent.trim() : '';
+  let text = __elText(document.getElementById('rewrite-script'));
   if (!text) {
+    /* 見出しの <b>（AFTER（リライト）等）は本文ではないので落とす */
     text = [...document.querySelectorAll('.rw-block .ba.after')].map(n => {
-      const c = n.cloneNode(true); const b = c.querySelector('b'); if (b) b.remove();
-      return c.textContent.trim();
+      const body = __elText(n), label = __elText(n.querySelector('b'));
+      return (label && body.startsWith(label) ? body.slice(label.length) : body).trim();
     }).filter(Boolean).join('\n\n');
   }
   __copyRun(btn, text);
@@ -493,8 +523,7 @@ function trToggle(btn) {
 }
 function trCopy(btn) {
   const box = btn.closest('.tr-body') || document;
-  const el = box.querySelector('.tr-text');
-  __copyRun(btn, el ? el.textContent.trim() : '');
+  __copyRun(btn, __elText(box.querySelector('.tr-text')));
 }
 function trDownload(btn, name) {
   const text = btn.closest('.tr-body').querySelector('.tr-text').textContent;

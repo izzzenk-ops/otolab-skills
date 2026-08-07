@@ -48,7 +48,9 @@ tr.key td.sec{color:var(--accent-deep);font-weight:700}
   padding:22px 20px;white-space:pre-wrap;font-size:15.5px;line-height:2.15}
 .script .q{color:var(--accent-deep);font-weight:700}
 .script .sil{color:var(--sub);letter-spacing:.2em}
-.script .rep{background:linear-gradient(transparent 62%,#fde3e3 62%);font-weight:700}
+/* ⚠️ 下線グラデ（linear-gradient(transparent 62%,…)）は pre-wrap の中では描画されない。
+   末尾に点が出るだけになるのでベタ塗りのチップにする（2026-08-07に実測） */
+.script .rep{background:#fde3e3;border-radius:5px;padding:2px 7px;font-weight:700}
 
 .copybar{display:flex;gap:9px;align-items:center;margin:14px 0 0;flex-wrap:wrap}
 button.copy{background:var(--accent);color:#fff;border:0;border-radius:999px;
@@ -63,7 +65,8 @@ button.copy:hover{background:var(--accent-deep)}
 .bad,.good{border-radius:12px;padding:15px 17px;margin:12px 0;font-size:14px}
 .bad{background:var(--accent-soft);border-left:5px solid var(--accent)}
 .good{background:var(--green-soft);border-left:5px solid var(--green)}
-.bad b,.good b{display:block;margin-bottom:5px;font-size:14.5px}
+/* 見出しの b だけブロック。文中の強調 b までブロックにすると文が途中で改行される */
+.bad>b:first-child,.good>b:first-child{display:block;margin-bottom:5px;font-size:14.5px}
 .bad .arrow,.good .arrow{color:var(--sub);font-size:12.5px}
 
 ul{padding-left:20px;margin:10px 0}
@@ -130,7 +133,7 @@ footer{text-align:center;color:var(--sub);font-size:12px;padding:34px 18px 0;lin
 <!-- ============ 3. 台本 ============ -->
 <section>
   <h2><span class="num">3</span>[[SCRIPT_HEADING]]</h2>
-  <p class="lead"><span class="rep">ピンクの線</span>＝繰り返す行。<span class="sil">・・・。</span>＝音声を止めて、テロップだけ出すところ。</p>
+  <p class="lead"><span class="rep">ピンクの囲み</span>＝繰り返す行。<span class="sil">・・・。</span>＝音声を止めて、テロップだけ出すところ。</p>
 
   <div class="script" id="scriptBox">[[SCRIPT_HTML]]</div>
 
