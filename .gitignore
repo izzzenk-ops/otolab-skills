@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# けんじさん用の作業依頼リスト（内部用。sync.py の git add -A で公開されないように）
+やることリスト.html
