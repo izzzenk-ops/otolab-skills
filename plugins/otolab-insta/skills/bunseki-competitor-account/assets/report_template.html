@@ -472,12 +472,11 @@ function trCopy(btn) {
   __copyRun(btn, __elText(box.querySelector('.tr-text')));
 }
 function trDownload(btn, name) {
-  const text = btn.closest('.tr-body').querySelector('.tr-text').textContent;
+  /* 保存する本文もコピーと同じ読み方に揃える（<br> が改行になり、タグは混ざらない） */
+  const text = __elText(btn.closest('.tr-body').querySelector('.tr-text'));
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([text], {type: 'text/plain;charset=utf-8'}));
-  a.download = name + '.txt';
-  a.click();
-  URL.revokeObjectURL(a.href);
+  a.download = name + '.txt'; a.click(); URL.revokeObjectURL(a.href);
 }
 </script>
 </body>
