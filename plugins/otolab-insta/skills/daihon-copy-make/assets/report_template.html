@@ -76,6 +76,15 @@ li{margin:7px 0}
 .note b{color:#a8621f}
 .psy{background:var(--purple-soft);border-left:5px solid var(--purple);border-radius:12px;
   padding:16px 18px;font-size:14px;margin:14px 0}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:6px 0 4px}
+.thumb{border:2px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.thumb .pic{background:#4a4a52;color:#fff;padding:20px 16px;min-height:118px}
+.thumb .pic b{font-size:19px;font-weight:800;line-height:1.5;display:block}
+.thumb .meta{padding:12px 14px;font-size:13px;line-height:1.7}
+.thumb .kata{display:inline-block;background:var(--blue-soft);color:var(--blue-deep);
+  border-radius:999px;padding:2px 11px;font-size:11.5px;font-weight:700;margin-bottom:7px}
+.thumb .why{color:var(--sub)}
+
 .cap{background:#fffdf9;border:2px dashed var(--line);border-radius:14px;padding:20px;
   white-space:pre-wrap;font-size:14px;line-height:1.95}
 .tag{display:inline-block;background:var(--blue-soft);color:var(--blue-deep);border-radius:999px;
@@ -84,6 +93,7 @@ footer{text-align:center;color:var(--sub);font-size:12px;padding:34px 18px 0;lin
 @media(max-width:560px){
   header h1{font-size:20px} section{padding:22px 16px} .lead{padding-left:0}
   h2{font-size:17px} .script{font-size:15px;padding:18px 15px}
+  .thumbs{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -161,18 +171,30 @@ footer{text-align:center;color:var(--sub);font-size:12px;padding:34px 18px 0;lin
   </div>
 </section>
 
-<!-- ============ 4. 撮影メモ ============ -->
+<!-- ============ 4. サムネ（カバー）の文字案 ============ -->
 <section>
-  <h2><span class="num">4</span>撮影メモ</h2>
+  <h2><span class="num">4</span>サムネの文字、3案</h2>
+  <p class="lead">[[THUMB_LEAD]]</p>
+
+  <div class="thumbs">
+    [[THUMB_CARDS]]
+  </div>
+
+  <div class="note">[[THUMB_RULES]]</div>
+</section>
+
+<!-- ============ 5. 撮影メモ ============ -->
+<section>
+  <h2><span class="num">5</span>撮影メモ</h2>
   <p class="lead">台本の行には混ぜていません。撮るときだけ見てください。</p>
   <ul>
     [[SHOOT_NOTES]]
   </ul>
 </section>
 
-<!-- ============ 5. キャプション ============ -->
+<!-- ============ 6. キャプション ============ -->
 <section>
-  <h2><span class="num">5</span>キャプション</h2>
+  <h2><span class="num">6</span>キャプション</h2>
   <p class="lead">[[CAPTION_LEAD]]</p>
   <div class="cap" id="capBox">[[CAPTION_TEXT]]</div>
   <div class="copybar">
@@ -186,9 +208,9 @@ footer{text-align:center;color:var(--sub);font-size:12px;padding:34px 18px 0;lin
   [[CAPTION_NOTE]]
 </section>
 
-<!-- ============ 6. 次にやること ============ -->
+<!-- ============ 7. 次にやること ============ -->
 <section>
-  <h2><span class="num">6</span>次にやること</h2>
+  <h2><span class="num">7</span>次にやること</h2>
   <ul>
     [[NEXT_STEPS]]
   </ul>

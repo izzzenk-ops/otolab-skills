@@ -164,6 +164,11 @@
     color: #fff; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 999px; }
   .mk-btn:active { opacity: .8; }
   .mk-btn.sub { background: var(--blue-soft); color: var(--blue-deep); }
+  .mk-box { margin-top: 16px; background: var(--blue-soft); border-radius: 14px; padding: 12px 14px; }
+  .mk-label { display: block; font-size: 12px; font-weight: 700; color: var(--blue-deep); margin-bottom: 6px; }
+  .mk-ref { width: 100%; box-sizing: border-box; border: none; border-radius: 10px; padding: 9px 12px;
+    font-family: inherit; font-size: 13px; line-height: 1.7; resize: vertical; background: #fff; color: var(--text); }
+  .mk-hint { font-size: 11.5px; color: var(--sub); margin-top: 6px; }
 
   /* チェックリスト */
   .check-list { list-style: none; }
@@ -361,7 +366,12 @@
     <!-- コピー用のリライト全文（画面には出ない。AFTER本文のみのプレーンテキスト） -->
     <pre id="rewrite-script" hidden>[[リライト台本の全文（コピー用。1フレーズ＝1行、セクション間は空行）]]</pre>
     <button class="mk-btn" onclick="copyRewrite(this)">📋 リライト台本をコピー</button>
-    <button class="mk-btn sub" data-prompt="この添削を踏まえて台本を作り直して（daihon-copy-makeスキル・改稿モード）。添削レポート: [[出力フォルダのフルパス]]/report.html（元台本と指摘が入っています）。★指摘の継ぎ足しではなく、参考にする台本の型に沿って書き直してください。参考にする台本（文字起こし全文 or 分析フォルダのパス）: " onclick="mkPrompt(this)">🎬 この添削で台本を作り直す（プロンプトをコピー）</button>
+    <div class="mk-box">
+      <label class="mk-label" for="mk-ref">参考にする台本（入れてから下のボタンを押す）</label>
+      <textarea id="mk-ref" class="mk-ref" rows="3" placeholder="文字起こし全文を貼り付け ／ 参考リールのURL ／ 分析フォルダのパス（例: ~/Documents/Claude/Projects/競合アカウント分析/〇〇）"></textarea>
+      <div class="mk-hint">ボタンを押すとClaude Codeが新しいタブで開きます（プロンプトが入っていなければ ⌘V で貼り付け→Enter）。空のままでも押せます。</div>
+    </div>
+    <button class="mk-btn sub" data-prompt="この添削を踏まえて台本を作り直して（daihon-copy-makeスキル・改稿モード）。添削レポート: [[出力フォルダのフルパス]]/report.html（元台本と指摘が入っています）。★指摘の継ぎ足しではなく、参考にする台本の型に沿って書き直してください。参考にする台本（文字起こし全文 or 分析フォルダのパス）: " onclick="mkLaunch(this)">🎬 この添削で台本を作り直す（Claude Codeで開く）</button>
     <p class="note">[[リライトの狙いを1〜2文（何を残し、何を変えたか）]]</p>
   </section>
 
@@ -505,6 +515,18 @@ function __copyRun(btn, text, okMsg) {
 }
 function mkPrompt(btn) {
   __copyRun(btn, btn.dataset.prompt, '✅ コピーしました。Claude Codeに貼り付けてください');
+}
+function mkLaunch(btn) {
+  const ref = (document.getElementById('mk-ref') || {}).value || '';
+  const text = btn.dataset.prompt + (ref.trim() || '（未入力。参考にする台本を聞いてください）');
+  /* 先にコピーを確定させる。claude:// へ遷移するとフォーカスが外れてコピーが失敗するため、
+     遷移は必ずコピーのあと（プリフィルが効かない環境でも ⌘V で貼れる状態にしておく）。 */
+  __copyRun(btn, text, '✅ コピーしました。Claude Codeを開きます');
+  setTimeout(() => {
+    const q = encodeURIComponent(text);
+    /* 参考台本を丸ごと貼ると URL が長くなりすぎて開けないので、その場合は空で開く（⌘Vで貼る） */
+    window.location.href = q.length <= 6000 ? 'claude://code/new?q=' + q : 'claude://code/new';
+  }, 400);
 }
 function copyRewrite(btn) {
   let text = __elText(document.getElementById('rewrite-script'));

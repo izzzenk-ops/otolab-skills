@@ -1,6 +1,6 @@
 ---
 name: reel-henshu-afreco
-description: アフレコ音声から縦型ショート動画を自動編集する
+description: 【アフレコ動画編集】アフレコ音声（自分でしゃべって録音したナレーション）から、縦型ショート動画を自動編集するスキル。音声をWhisperで文字起こし → テロップ入りのカード生成 → 素材の割り当て → 動画の書き出しまで一気に行う。Mac（Apple Silicon）とWindowsの両対応で、初回だけ編集ツールの自動セットアップが走る（数分〜十数分・ネット接続必須）。「アフレコ動画を編集して」「アフレコから編集して」「アフレコ音声で動画を作って」「ショート動画を自動編集して」「reel-henshu-afreco」などのフレーズで必ず起動すること。※参考リールと同じ秒数・カット割りで作る完コピは reel-henshu-copy、無音区間のカットだけなら cut-silence を使う。
 argument-hint: [project]
 allowed-tools: [Bash, Read, Write]
 version: 2.0.0
