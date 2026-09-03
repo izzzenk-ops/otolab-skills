@@ -77,9 +77,10 @@ description: "【ローンチのストーリーズ設計】自分の商品・サ
 3. 出来事 × その日の枠 で文面を作る（`stories-days` の STEP 5〜6 と同じ作り方）
 4. **訴求当日だけは** `references/launch_calendar.md` の「訴求当日の7つの順番」を使う
 5. `references/common/` の kakikae_7 / hitei_zurashi / neta_cho を当てる
+   （`neta_log.md` の直近30件を見て、同じ言い回しを繰り返さない）
 6. 文面を出して **「この文面でいいですか？」で止まる**
 7. 承認後に画像化（`references/gazou_seisei.md` ／ `scripts/render_stories.py`）
-8. ログに `YYYY-MM-DD | launch | ...` と**用途タグ `launch`** を付けて記録する
+8. ログに `YYYY-MM-DD | launch | ...` と**用途タグ `launch`** を付けて記録する。使った言い回しは `neta_log.md` にも追記
 
 ## STEP 4：アフター（販売後）
 

@@ -83,10 +83,11 @@ description: "【アフィリエイト訴求のストーリーズ】他社商品
 
 1. カレンダーでその日のカードを確認
 2. その日の出来事も聞いて混ぜる（商品の話だけにしない）
-3. 文面を作る（`references/common/` の kakikae_7 / hitei_zurashi / neta_cho を当てる）
+3. 文面を作る（`references/common/` の kakikae_7 / hitei_zurashi / neta_cho を当てる。
+   `neta_log.md` の直近30件を見て、同じ言い回しを繰り返さない）
 4. ★**「この文面でいいですか？」で止まる**
 5. 承認後に画像化（`references/gazou_seisei.md` ／ `scripts/render_stories.py`）
-6. ログに `YYYY-MM-DD | affiliate | ...` と**用途タグ `affiliate`** を付けて記録
+6. ログに `YYYY-MM-DD | affiliate | ...` と**用途タグ `affiliate`** を付けて記録。使った言い回しは `neta_log.md` にも追記
 
 ## Phase 6：訴求日の直前チェック（★事故防止・1件目は必須）
 
