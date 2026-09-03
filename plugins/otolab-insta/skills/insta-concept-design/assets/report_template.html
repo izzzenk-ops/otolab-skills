@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{対象者名}}さんの発信ジャンル候補10</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FDFCFA;
+    --white: #FFFFFF;
+    --ink: #4A4A5A;
+    --ink-soft: #8A8A9A;
+    --coral: #FF9E9E;
+    --coral-light: #FFF0F0;
+    --blue: #7EB8E6;
+    --blue-light: #EAF4FC;
+    --yellow: #FFE39E;
+    --yellow-light: #FFF9E8;
+    --radius: 20px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.8;
+    padding: 40px 20px 80px;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  /* ヘッダー */
+  .hero {
+    background: linear-gradient(135deg, var(--coral-light), var(--blue-light));
+    border-radius: var(--radius);
+    padding: 40px 36px;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .hero .pill {
+    display: inline-block;
+    background: var(--white);
+    color: var(--coral);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 6px 18px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .hero h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+  .hero .sub { color: var(--ink-soft); font-size: 14px; }
+
+  /* 引き継ぎサマリー・理論カード */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 28px 30px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(74,74,90,0.06);
+  }
+  .card h2 {
+    font-size: 18px; font-weight: 800;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .card h2 .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--coral); flex-shrink: 0; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .summary-item { background: var(--blue-light); border-radius: 14px; padding: 14px 16px; font-size: 14px; }
+  .summary-item .label { font-size: 12px; font-weight: 700; color: var(--blue); margin-bottom: 2px; }
+  .theory-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .theory-step { background: var(--yellow-light); border-radius: 14px; padding: 14px 16px; font-size: 13px; }
+  .theory-step .num { font-weight: 800; color: var(--coral); font-size: 13px; margin-bottom: 4px; }
+
+  /* コンセプトカード */
+  .concept {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 28px 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(74,74,90,0.06);
+    border-left: 6px solid var(--coral);
+  }
+  .concept.alt { border-left-color: var(--blue); }
+  .concept-head { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; flex-wrap: wrap; }
+  .concept-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--coral); color: var(--white);
+    font-weight: 800; font-size: 18px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .concept.alt .concept-num { background: var(--blue); }
+  .concept-title { font-size: 20px; font-weight: 800; }
+  .tag {
+    background: var(--yellow-light); color: #C9A227;
+    font-size: 12px; font-weight: 700;
+    padding: 4px 12px; border-radius: 999px;
+  }
+  .catch { color: var(--coral); font-weight: 700; font-size: 15px; margin: 6px 0 16px 52px; }
+  .concept.alt .catch { color: var(--blue); }
+  .row { margin-bottom: 12px; }
+  .row .label {
+    display: inline-block;
+    font-size: 12px; font-weight: 700; color: var(--white);
+    background: var(--ink-soft);
+    padding: 3px 12px; border-radius: 999px;
+    margin-bottom: 4px;
+  }
+  .row.grow .label { background: var(--coral); }
+  .row.share .label { background: var(--blue); }
+  .row.fit .label { background: #C9A227; }
+  .row p { font-size: 14px; }
+  .row.fit { background: var(--yellow-light); border-radius: 14px; padding: 12px 16px; }
+
+  /* フッター */
+  .next {
+    background: var(--coral-light);
+    border-radius: var(--radius);
+    padding: 32px;
+    text-align: center;
+  }
+  .next h2 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+  .next p { font-size: 14px; color: var(--ink); }
+  .next .big { font-size: 16px; font-weight: 700; color: var(--coral); margin-top: 12px; }
+
+  /* ジャンル候補カード用の追加 */
+  .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 14px; }
+  .meta-item { background: var(--blue-light); border-radius: 14px; padding: 10px 14px; font-size: 13px; }
+  .meta-item .label { font-size: 11px; font-weight: 700; color: var(--blue); margin-bottom: 2px; }
+  .row.voice { background: var(--coral-light); border-radius: 14px; padding: 12px 16px; }
+  .row.voice .label { background: var(--coral); }
+  .row.voice p { font-weight: 700; }
+  .row.near .label { background: var(--ink-soft); }
+  .row.near p { font-size: 13px; color: var(--ink-soft); }
+  .notice { background: var(--yellow-light); border-radius: 14px; padding: 16px 20px; font-size: 14px; margin-bottom: 24px; }
+  .notice strong { color: #C9A227; }
+</style>
+
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <div class="pill">発信ジャンル候補</div>
+    <h1>あなたにできそうな発信、10コ</h1>
+    <div class="sub">{{日付}}｜{{対象者名}}さん</div>
+  </div>
+
+  <div class="notice">
+    <strong>ここではまだ決めません。</strong>
+    「自分にはこんな発信ができそう」というイメージを持つための一覧です。
+    この中から気になるものを2〜3コ選んでもらって、次の工程で実際の数字を調べて1つに決めていきます。
+  </div>
+
+  <div class="card">
+    <h2><span class="dot"></span>あなたの素材（自己分析から）</h2>
+    <div class="summary-grid">
+      <div class="summary-item"><div class="label">毎日やっていること</div>{{生活導線}}</div>
+      <div class="summary-item"><div class="label">乗り越えた経験</div>{{原体験}}</div>
+      <div class="summary-item"><div class="label">数字の武器</div>{{数字の武器}}</div>
+      <div class="summary-item"><div class="label">人から相談されること</div>{{相談されること}}</div>
+    </div>
+  </div>
+
+  <!-- ジャンル候補カード：10個並べる。奇数は class="concept"、偶数は class="concept alt" で色を交互に -->
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-num">1</div>
+      <div class="concept-title">【{{ジャンル名}}】{{発信イメージの一言}}</div>
+      <div class="tag">{{王道 / 独自 / すき間}}</div>
+    </div>
+    <div class="row voice">
+      <span class="label">あなたのこの話から</span>
+      <p>「{{自己分析での本人の発言をそのまま引用}}」</p>
+    </div>
+    <div class="row">
+      <span class="label">こんな発信になりそう</span>
+      <p>{{この枠で発信するとどんな見え方になるか2〜3行。投稿1本のイメージが浮かぶ具体度で書く}}</p>
+    </div>
+    <div class="row near">
+      <span class="label">近い形の例</span>
+      <p>{{引き出し集から近い例を2つ。丸パクリ用ではなく「こんな形もある」の例示}}</p>
+    </div>
+    <div class="meta-grid">
+      <div class="meta-item"><div class="label">パイ（見ている人の数）</div>{{大きい / ふつう / 小さめ}}</div>
+      <div class="meta-item"><div class="label">収益化の道</div>{{代表的な収益化の形}}</div>
+      <div class="meta-item"><div class="label">続けやすさ</div>{{生活のついでに撮れるか}}</div>
+    </div>
+  </div>
+
+  <div class="next">
+    <h2>次のステップ</h2>
+    <p>この10コの中から「これならやれそう」「これは気になる」と思った番号を、<br>
+    <strong>2〜3コ</strong>チャットで教えてください。1つに絞らなくて大丈夫です。<br>
+    次の工程で、その候補が実際に伸びているジャンルかを数字で調べて確定します。</p>
+    <div class="big">例：「3番と7番が気になる」「1番は無理そうだけど5番はやれるかも」</div>
+  </div>
+
+</div>
+</body>
+</html>

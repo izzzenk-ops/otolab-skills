@@ -34,11 +34,17 @@ SKILLS = [
     "insta-concept-design", "daihon-copy-make", "daihon-kyaba-vlog",
     "concept-brush-up", "daihon-tensaku", "cut-silence", "genre-sentei",
     "buzz-kikaku-research", "concept-research", "tensaku-reel",
+    "stories-bunseki", "stories-days", "stories-launch", "stories-affiliate",
 ]
 
 # 受講生向けの一般化（before → after）。順序どおり適用。上ほど先。
 # ※短い語（desse等）より、それを含む長い語（desse-reel-script等）を必ず先に置く。
 REPLACEMENTS = [
+    # 受講生に配布していないスキルへの参照を落とす（ストーリーズ4スキル由来）。
+    # ※短い変種より先に、長い一文まるごとを先に消す
+    ("おとばな（THE OTOGIBANASHI SUPPLY）のBOX販売ストーリーズは happybox-story-plan を使う。", ""),
+    ("おとばな（THE OTOGIBANASHI SUPPLY）のBOX販売は happybox-story-plan を使う。", ""),
+    ("ThreadsのAmazonアフィリは threads-affiliate を使う。", ""),
     # 招待コード（値は載せない。講座内で配布）
     ("otolabo2026", "（招待コードは講座内で配布）"),
     # 運営者個人の"専用台本スキル"への参照（使い分けリスト等）→ 一般語
