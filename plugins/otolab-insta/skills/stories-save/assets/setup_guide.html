@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ストーリー自動保存 設定ガイド</title>
+<style>
+:root{--bg:#faf9f7;--ink:#262422;--sub:#7d7770;--line:#e7e1da;--coral:#f07864;
+      --coral-d:#d85e4a;--blue:#eaf2fb;--blue-l:#f4f9ff;--card:#fff;--warn:#fff6ed}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);line-height:1.85;
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:44px 20px 90px}
+h1{font-size:28px;margin:0 0 6px;letter-spacing:.02em}
+.lead{color:var(--sub);margin:0 0 34px;font-size:15px}
+h2{font-size:20px;margin:44px 0 14px;padding-left:14px;border-left:5px solid var(--coral);line-height:1.4}
+h3{font-size:16px;margin:26px 0 8px}
+p,li{font-size:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:16px 0}
+.step{background:var(--blue-l);border:1px solid #dbe8f5;border-radius:16px;padding:20px 22px;margin:16px 0}
+.step .no{display:inline-block;background:var(--coral);color:#fff;border-radius:999px;
+  padding:2px 14px;font-size:13px;font-weight:700;margin-bottom:8px}
+.warn{background:var(--warn);border:1px solid #f3d9c4;border-radius:16px;padding:20px 22px;margin:16px 0}
+.warn h3{margin-top:0;color:var(--coral-d)}
+.say{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0}
+.say .txt{flex:1 1 300px;background:#fff;border:2px dashed var(--coral);border-radius:12px;
+  padding:12px 16px;font-size:16px;font-weight:600}
+button{background:var(--coral);color:#fff;border:0;border-radius:999px;padding:11px 22px;
+  font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+button:hover{background:var(--coral-d)}
+button.done{background:#57a97f}
+.fallback{display:none;width:100%;margin-top:8px;padding:10px;border:1px solid var(--line);
+  border-radius:10px;font-family:inherit;font-size:14px}
+pre{background:#f3efe9;border-radius:12px;padding:14px 16px;overflow-x:auto;font-size:13px;line-height:1.7}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:#f3efe9;white-space:nowrap}
+.q{font-weight:700;margin:20px 0 2px}
+.q::before{content:"Q. ";color:var(--coral)}
+.a{margin:0 0 4px}
+ul{padding-left:22px}
+.small{font-size:13px;color:var(--sub)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>ストーリー自動保存 設定ガイド</h1>
+<p class="lead">見ておきたいアカウントのInstagramストーリーを、毎朝パソコンが勝手に保存してくれるようにします。設定は1回だけ。Macなら5分ほど、Windowsは初回の準備を入れて15〜20分みておいてください。</p>
+
+<h2>これができるようになります</h2>
+<div class="card">
+<ul>
+<li><b>1日分が1枚の画像にまとまります。</b>「26.9.4.jpg」を開けば、その朝に取れたストーリーが全部並んで見えます</li>
+<li><b>消えたあとも残ります。</b>ストーリーは24時間で消えますが、保存したものは残ります</li>
+<li>リンクスタンプのURL・アンケートの選択肢・質問箱の質問も、文字で残ります</li>
+</ul>
+</div>
+
+<h2>はじめる前に</h2>
+<div class="card">
+<ul>
+<li><b>ブラウザでInstagramにログインしておいてください。</b>ここが一番大事です。ログアウトすると止まります</li>
+<li>非公開アカウントを見たい場合は、<b>フォローして承認されている</b>必要があります</li>
+<li>パソコンにClaude Codeが入っていること（受講生のみなさんはもう入っています）</li>
+<li><b>Windowsの方は「Python（パイソン）」という無料ソフトが必要です。</b>入っていなければ <a href="https://www.python.org/downloads/" target="_blank">python.org</a> から入れてください。インストール画面の下にある <b>「Add python.exe to PATH」にチェックを入れてから</b>「Install Now」を押すのがコツです（ここを忘れると動きません）</li>
+<li>Macの方は、途中で「コマンドラインデベロッパツールをインストールしますか？」という画面が出ることがあります。<b>あやしいものではないので「インストール」を押してください</b>（5〜10分かかります）</li>
+<li><b>SafariでしかInstagramにログインしていない方は、ChromeかFirefoxでもログインしておいてください。</b>Safariのログイン情報を読むには、Macの「フルディスクアクセス」という設定を自分で変える必要があり、手間がかかります</li>
+</ul>
+</div>
+
+<div class="warn">
+<h3>Mac＋Chromeの方へ：途中でパスワードを聞かれます</h3>
+<p>設定の途中で「<b>Chrome Safe Storage</b> が…パスワードを入力してください」という小さな画面が出ることがあります。これはMacが「Chromeのログイン情報を渡していいか」を確認しているだけで、あやしいものではありません。<b>Macを開くときのパスワードを、ご自分で入力してください</b>（Claudeには入力できません）。</p>
+<p>ボタンは <b>「常に許可」</b> を押してください。「許可」だけだと毎回この画面が出て、<b>留守のあいだの自動保存が止まります。</b></p>
+</div>
+
+<div class="warn">
+<h3>Windowsで Chrome・Edge・Brave などを使っている方へ（Firefoxの方は読み飛ばしてOK）</h3>
+<p>WindowsのChrome系ブラウザ（<b>Chrome・Edge・Brave・Opera・Vivaldi</b>）は、2024年のアップデート以降、ログイン情報を他のソフトから読めない仕組みに変わりました。<b>ブラウザ側の仕様なので、こちらでは変えられません。</b>この中のどれかをお使いの方は、次のどちらかを選んでください。</p>
+<table>
+<tr><th>A案（おすすめ）</th><td><b>Firefox（無料のブラウザ）を入れて、そこでInstagramにログインする</b>だけ。ふだんのChromeはそのまま使えます。一度ログインすれば、あとはほったらかしでOKです</td></tr>
+<tr><th>B案</th><td>Chromeの拡張機能<b>「Get cookies.txt LOCALLY」</b>（ログイン中のしるしを1回だけ書き出す道具）を入れて、Instagramを開いた状態で書き出します。ファイルはたいてい<b>「ダウンロード」フォルダ</b>に <code>instagram.com_cookies.txt</code> という名前で入るので、Claudeには<b>「ダウンロードフォルダに入っています」</b>と伝えれば大丈夫です。ただし<b>数か月に一度、同じ作業をやり直す必要があります</b></td></tr>
+</table>
+<p><b>迷ったらA案にしてください。</b>決めたら、Claudeに「A案でお願いします」と伝えれば、あとは手順を出してくれます。</p>
+</div>
+
+<h2>設定のしかた</h2>
+
+<div class="step">
+<span class="no">STEP 1</span>
+<h3>Claudeに、この言葉を送ります</h3>
+<div class="say">
+  <div class="txt" id="t1">ストーリー保存を設定して</div>
+  <button onclick="copyTo('t1',this)">コピーする</button>
+</div>
+<textarea class="fallback" id="f1" rows="2" readonly></textarea>
+<p class="small">Claude Codeを開いて、フォルダを聞かれたら <b>書類（Documents）の中の「Claude」フォルダ</b>を選んでください。そのあと下の入力欄に貼り付けて送ります。</p>
+</div>
+
+<div class="step">
+<span class="no">STEP 2</span>
+<h3>聞かれたことに答えます</h3>
+<ul>
+<li><b>保存したいアカウント</b> … IDでも、プロフィールのURLをそのまま貼ってもOK。いくつでも登録できます</li>
+<li><b>使っているブラウザ</b>（インスタをパソコンで見るときに開くソフト）… 見た目で答えてもOKです。<br>丸くて赤青黄緑 → <b>Chrome</b>／青い方位磁石 → <b>Safari</b>（Mac）／青い波 → <b>Edge</b>／オレンジのキツネ → <b>Firefox</b><br>ふだんインスタにログインしている方を答えてください</li>
+</ul>
+<p>あとはClaudeが全部やります。準備 → アカウント登録 → お試しで1回保存 → 毎朝の自動実行を登録、まで進みます。</p>
+</div>
+
+<div class="step">
+<span class="no">STEP 3</span>
+<h3>できあがった画像を見て、終わりです</h3>
+<p>Claudeがその場で「26.9.4.jpg」を開いて見せてくれます。それが毎朝勝手に増えていく、というだけです。</p>
+<p>相手がその時間ストーリーを出していないと、<b>画像は作られません。「0枚でした」と出たら、それで正常です。</b>故障ではありません。翌朝から自動でたまっていきます。</p>
+</div>
+
+<h2>どこに保存されますか</h2>
+<pre>書類 / Documents
+└ Claude / Projects / ストーリー保存 /
+   └ アカウント名 / 2026年 / 9月 /
+      ├ 26.9.4.jpg   ← ★ふだん見るのはこれ（その日に取れた分が1枚に）
+      └ 26.9.4/      ← 1枚ずつの元データ（ふだんは開かなくてOK）</pre>
+<p>フォルダは月ごと、画像は日ごとです。見つからないときは、Claudeに <b>「ストーリー保存のフォルダを開いて」</b> と言えば開いてくれます。（Windowsの方は OneDrive の中の「ドキュメント」に入ることがあります）</p>
+
+<h2>毎朝どう動きますか</h2>
+<div class="card">
+<p><b>保存は1日1回だけです。</b>成功したらその日はもう動きません。パソコンが閉じていて失敗したときのために、<b>9:00 / 9:30 / 10:30 / 12:00 / 15:00 / 19:00</b> の6回、様子を見にいく設定になっています（成功済みならすぐ終わります）。</p>
+<p>朝9時にパソコンがスリープ（フタを閉じただけ）なら大丈夫です。開いたタイミングでその日ぶんがまとめて1回保存されます。</p><p><b>電源を切っていた場合は、その時刻の分は動きません。</b>次の時刻に持ち越しになるので、<b>夜19時までに一度パソコンを起動していれば取りこぼしません。</b>Windowsの場合は、起動してから10分ほど待ってから動きます。</p>
+<p><b>ファイル名は「保存した日」です。</b>9月4日の朝に保存すれば「26.9.4.jpg」になり、その中には<b>前の日の夜に出たストーリーも入ります</b>（画像の下に「9/3 21:27」のように投稿された日時が出ます）。中身は投稿された時間順に並びます。</p>
+<p class="small">Claude Codeを開いておく必要はありません。パソコン自身が動かします。</p>
+</div>
+
+<h2>ためたものを見返したいとき</h2>
+<div class="say">
+  <div class="txt" id="t2">先週のストーリーを見せて</div>
+  <button onclick="copyTo('t2',this)">コピーする</button>
+</div>
+<div class="say">
+  <div class="txt" id="t3">今月のストーリーをまとめて振り返りたい</div>
+  <button onclick="copyTo('t3',this)">コピーする</button>
+</div>
+<textarea class="fallback" id="f2" rows="2" readonly></textarea>
+<p>日付順に並べて、リンク先やアンケートの中身も一緒に見られるページを作って開きます。</p>
+
+<h2>アカウントを増やす・減らす</h2>
+<div class="say">
+  <div class="txt" id="t4">ストーリー保存に ○○○ を追加して</div>
+  <button onclick="copyTo('t4',this)">コピーする</button>
+</div>
+<div class="say">
+  <div class="txt" id="t6">ストーリー保存から ○○○ を外して</div>
+  <button onclick="copyTo('t6',this)">コピーする</button>
+</div>
+<p class="small">まずは3〜5アカウントくらいから始めるのがおすすめです。</p>
+<textarea class="fallback" id="f3" rows="2" readonly></textarea>
+
+<h2>よくある質問</h2>
+<p class="q">相手にバレませんか？</p>
+<p class="a"><b>「バレません」とは言えません。</b>この仕組みはストーリーをブラウザで開いて再生するのではなく、元のデータを取りに行くだけなので、閲覧者リストには載らない可能性が高いと考えています。ただし、<b>何をすると閲覧者リストに載るのかはInstagramが公表しておらず、私たちも「絶対に載らない」ことを確認できていません。</b>仕様が変われば変わります。</p><p class="a"><b>相手に知られたら困るアカウントには使わないでください。</b></p>
+
+<p class="q">動画は保存されますか？</p>
+<p class="a">動画そのもの（MP4）は保存しません。毎日ためると容量がすぐ重くなるためです。<b>動画は1コマ目の静止画と「▶ 12秒」という表示で残ります。</b></p>
+
+<p class="q">パソコンを何日か開かなかったら？</p>
+<p class="a">その間のストーリーは取れません。ストーリーは24時間で消えるためです。</p>
+
+<p class="q">止まっているか気になります</p>
+<div class="say">
+  <div class="txt" id="t5">ストーリー保存できてる？</div>
+  <button onclick="copyTo('t5',this)">コピーする</button>
+</div>
+<p class="a">この一言で、いつ何枚保存されたか・自動実行が生きているかを見てくれます。<b>失敗していたら、保存フォルダに「⚠_保存に失敗しました.txt」ができます。</b>失敗したとき、Macは通知が1回出ますが、<b>Windowsは何も出ません。</b>月に一度この一言で確かめてください。</p>
+<p class="a">一番多い原因は<b>インスタのログイン切れ</b>です。パスワードを変えたときや、スマホで「すべての端末からログアウト」をしたときも切れます。パソコンのブラウザでインスタにログインし直して、Claudeに「ストーリー保存をやり直して」と言えば戻ります。</p>
+
+<p class="q">ハイライトや、前に出ていたストーリーも保存されますか？</p>
+<p class="a">いいえ。<b>いま出ている24時間のストーリーだけ</b>です。ハイライトと、設定より前に消えたストーリーは取れません。</p>
+
+<p class="q">夜はパソコンを完全に切っています</p>
+<p class="a">Macは<b>電源を切っていると動きません</b>（フタを閉じるだけのスリープならOK）。1日1回、どこかでパソコンを開けば大丈夫です。</p>
+
+<p class="q">パソコンの容量は大丈夫？</p>
+<p class="a">画像だけなので軽いです。増えてきたら「1年より古い分は自動で消して」と言えば設定できます。</p>
+
+<p class="q">やめたくなったら？</p>
+<p class="a">「ストーリーの自動保存を止めて」と言えば解除できます。保存済みのものは残ります。保存フォルダごと捨ててしまっても大丈夫です。</p>
+
+<h2>使う前に、必ず読んでください</h2>
+<div class="warn">
+<h3>1. アカウントが制限される可能性があります</h3>
+<p>Instagramは「自動でアクセスして情報を集めること」を規約違反としていて、検知されるとアカウントが一時的に使えなくなることがあります（<a href="https://help.instagram.com/740480200552298/" target="_blank">Instagramヘルプ</a>）。このツールはInstagramの公式な連携機能ではなく、ログイン中のブラウザの情報を借りて動きます。<b>その前提を理解したうえで、自己責任で使ってください。</b></p>
+<p><b>仕事で使っているメインのアカウントではなく、サブのアカウントでログインした状態で使うことを強くおすすめします。</b>心配な場合は、無理に使わなくて大丈夫です。手で保存する運用でも分析はできます。</p>
+</div>
+<div class="card">
+<h3>2. 取りに行く回数を増やさないでください</h3>
+<p>1日1回だけ動くように作ってあります。「もっと頻繁に」「もっとたくさんのアカウントを」と増やすほど、制限される確率が上がります。登録するのは本当に見たいアカウントだけにしてください。</p>
+<h3>3. B案（ファイルの書き出し）を選んだ方へ</h3>
+<p>書き出したファイルは、<b>あなたのInstagramにログインできてしまう鍵そのもの</b>です。人に送らない・クラウドの共有フォルダに置かない・使い終わったら消す。この3つを守ってください。<b>運営に送る必要は絶対にありません。</b></p>
+<h3>4. 保存したものの扱い</h3>
+<p>他の人が作ったストーリーは、その人の作品です。<b>自分の研究・分析のためだけに使ってください。</b>人に配る・SNSに載せる・自分の投稿に使う、はしないでください。非公開アカウントの内容は特に注意してください。</p>
+</div>
+
+<textarea class="fallback" id="fb" rows="2" readonly></textarea>
+
+<script>
+function copyTo(id, btn){
+  var text = document.getElementById(id).innerText.trim();
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position='fixed'; ta.style.left='-9999px'; ta.style.top='0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select(); ta.setSelectionRange(0, text.length);
+  var ok = false;
+  try { ok = document.execCommand('copy') && ta.selectionEnd === text.length; } catch(e) { ok = false; }
+  document.body.removeChild(ta);
+  if (ok) { done(btn); return; }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function(){ done(btn); }, function(){ manual(text, btn); });
+  } else { manual(text, btn); }
+}
+function done(btn){
+  var old = btn.textContent;
+  btn.textContent = 'コピーしました'; btn.classList.add('done');
+  setTimeout(function(){ btn.textContent = old; btn.classList.remove('done'); }, 1800);
+}
+function manual(text, btn){
+  var fb = document.getElementById('fb');
+  fb.style.display = 'block'; fb.value = text; fb.focus(); fb.select();
+  btn.textContent = '下の枠から手でコピーしてください';
+}
+</script>
+</div>
+</body>
+</html>
