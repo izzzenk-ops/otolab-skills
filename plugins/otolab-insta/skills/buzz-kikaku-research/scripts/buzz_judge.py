@@ -2,7 +2,7 @@
 """バズ判定エンジン（けんじ式S級ランク・バズリサーチの定石ベース）。
 
 リール一覧JSON（Chromeで収集）とフォロワー数から、
-  - 各投稿のバズ判定（フォロワー×10以上 or 100万再生以上）
+  - 各投稿のバズ判定（フォロワー×10以上 or 30万回再生以上）
   - アカウントランク（S級 / 通常 / 影響力型 / バズなし）
   - 分析対象の選定（伸びてる群=バズ全部・上限つき／伸びてない群=下位の対照群）
   - 提出リールの合否（--submitted）
@@ -17,11 +17,11 @@ reels.json の形式（bunseki-competitor-account と同じ）:
   ※キーの挿入順 = グリッドの表示順（≒新しい順、ピン留めが先頭）
 
 判定基準（出典: バズリサーチの定石＋けんじ式ランク）:
-  - バズ認定: 再生数 >= フォロワー数×10、または >= 100万
+  - バズ認定: 再生数 >= フォロワー数×10、または >= 30万
   - S級ランク: バズ投稿5本以上 かつ バズ率20%以上（少ない投稿で量産＝再現性が高い）
   - 影響力型: 大きめのアカウント（フォロワー10万+）で全投稿が安定して高く
     （中央値 >= フォロワー×2）、アカウント内で突出した投稿がない（最高 <= 中央値×3）
-    → 100万超えが並んでいても「本人の人気で回っている」ので企画・フックの参考にしない
+    → 30万超えが並んでいても「本人の人気で回っている」ので企画・フックの参考にしない
     （教材の見極め:「すべての投稿が安定して伸びている → 個人の影響力」）
 """
 import json
@@ -30,7 +30,7 @@ import statistics
 import sys
 from pathlib import Path
 
-MILLION = 1_000_000
+ABS_LINE = 300_000  # 30万回再生（2026-09-08に運営者決定。旧100万は探すと見つからなくなるため）
 SKYU_MIN_BUZZ = 5          # S級ランク: バズ本数の下限
 SKYU_MIN_RATE = 0.20       # S級ランク: バズ率の下限
 INFLUENCE_MIN_FOLLOWERS = 100_000  # 影響力型を疑い始めるフォロワー数
@@ -98,7 +98,7 @@ def main():
     items = []
     for i, (url, meta) in enumerate(data.items()):
         v = parse_views(meta.get("views"))
-        is_buzz = v is not None and (v >= buzz_line or v >= MILLION)
+        is_buzz = v is not None and (v >= buzz_line or v >= ABS_LINE)
         items.append({
             "url": url.split("?")[0],
             "id": reel_id(url),
@@ -137,7 +137,7 @@ def main():
                        "企画・フックの参考にしない（アカウント全体の伸び方から見極め）")
     elif not buzz:
         rank = "バズなし"
-        rank_reason = (f"バズ認定ライン({fmt(buzz_line)} or 100万)を超える投稿が0本。"
+        rank_reason = (f"バズ認定ライン({fmt(buzz_line)} or 30万)を超える投稿が0本。"
                        "このアカウントからは仮説を立てられない")
     elif len(buzz) >= SKYU_MIN_BUZZ and buzz_rate >= SKYU_MIN_RATE:
         rank = "S級"
@@ -180,8 +180,8 @@ def main():
                     "passed": passed,
                     "reason": (f"再生{fmt(v)}＝フォロワー{fmt(followers)}の"
                                f"{hit['x_followers']}倍"
-                               + ("（100万超え）" if v >= MILLION else "")
-                               + f" → 基準（10倍 or 100万）を"
+                               + ("（30万超え）" if v >= ABS_LINE else "")
+                               + f" → 基準（10倍 or 30万）を"
                                + ("満たす ✅" if passed else "満たさない ❌")),
                 }
         else:
@@ -209,7 +209,7 @@ def main():
 
     # ---- サマリー ------------------------------------------------------------
     print(f"フォロワー: {fmt(followers)} / バズ認定ライン: {fmt(buzz_line)}"
-          f"（フォロワー×10）or 100万")
+          f"（フォロワー×10）or 30万")
     print(f"収集: {len(items)}本（再生数あり {n}本）"
           f" / 中央値 {fmt(median)} / 最高 {fmt(vmax)}")
     print(f"バズ投稿: {len(buzz)}本（バズ率 {buzz_rate*100:.0f}%）")
