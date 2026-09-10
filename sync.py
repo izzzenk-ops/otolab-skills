@@ -35,7 +35,7 @@ SKILLS = [
     "concept-brush-up", "daihon-tensaku", "cut-silence", "genre-sentei",
     "buzz-kikaku-research", "concept-research", "tensaku-reel",
     "stories-bunseki", "stories-days", "stories-launch", "stories-affiliate",
-    "stories-save", "skill-sekkei",
+    "stories-save", "skill-sekkei", "koetype-setup",
 ]
 
 # 受講生向けの一般化（before → after）。順序どおり適用。上ほど先。
