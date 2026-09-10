@@ -41,7 +41,13 @@ def say(*a):
 # ---------------------------------------------------------------- 調べる
 
 def app_running():
-    r = subprocess.run(["pgrep", "-f", "MacOS/koetype"], capture_output=True)
+    # pgrep は macOS の道具。Windowsには無いので、呼ぶ前に打ち切る
+    if sys.platform != "darwin":
+        return False
+    try:
+        r = subprocess.run(["pgrep", "-f", "MacOS/koetype"], capture_output=True)
+    except OSError:
+        return False
     return r.returncode == 0
 
 
@@ -84,11 +90,20 @@ def load_cfg():
 
 def cmd_status():
     say("=== こえタイプ 導入状況 ===")
+    if sys.platform != "darwin":
+        say("⚠ こえタイプは Mac 専用です。このパソコン（Windows）では動きません。")
+        say("総合: このパソコンでは使えません")
+        return
     mac = platform.mac_ver()[0]
     arch = platform.machine()
     say(f"macOS: {mac} / CPU: {arch}")
     if arch != "arm64":
-        say("⚠ このアプリは Apple Silicon 専用です。Intel Macでは動きません。")
+        # 続けても入れられない。「まだ設定が残っています」と出して
+        # 先へ進ませないよう、ここで打ち切る
+        say("⚠ このアプリは Apple Silicon（M1以降）専用です。"
+            "このMacはIntel製なので動きません。")
+        say("総合: このMacでは使えません")
+        return
     major = int(mac.split(".")[0]) if mac else 0
     if major and major < 13:
         say("⚠ macOS 13 以降が必要です。")
@@ -113,6 +128,9 @@ def cmd_status():
 # ---------------------------------------------------------------- 入れる
 
 def cmd_install(url=None):
+    if sys.platform != "darwin":
+        say("NG こえタイプは Mac 専用です。このパソコンには入れられません。")
+        return 1
     url = url or DOWNLOAD_URL
     zip_path = Path("/tmp/koetype_dl.zip")
     say(f"ダウンロード中… {url}")
