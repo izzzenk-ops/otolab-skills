@@ -85,7 +85,14 @@ brew --version
 ls ~/reel-henshu-afreco/scripts/build_shorts.py
 ```
 
-**存在する場合** → セットアップ済み。STEP 1 へ進む。
+**存在する場合** → セットアップ済み。**最新版に更新してから** STEP 1 へ進む（バグ修正や機能追加が自動で届くように、毎回実行する。ネットが無い・失敗したときは無視して進んでよい）：
+
+```bash
+cd ~/reel-henshu-afreco && git pull --ff-only
+```
+
+Windowsは PowerShell で `cd $env:USERPROFILE\reel-henshu-afreco; git pull --ff-only`。
+`requirements.txt` が更新されていた場合だけ、Macは `./install.sh`、Windowsは `powershell -ExecutionPolicy Bypass -File .\install.ps1` をもう一度実行する（git pull の出力に `requirements.txt` が出たら）。
 
 **存在しない場合** → **OSに応じて**セットアップする。
 
