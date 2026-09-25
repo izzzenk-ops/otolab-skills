@@ -7,6 +7,8 @@
   python3 setup.py status        いまどこまで進んでいるかを報告する
   python3 setup.py install       アプリを取ってきて /Applications に置き、起動する
   python3 setup.py setkey <KEY>  GeminiのAPIキーを設定して、本当に使えるか確かめる
+  python3 setup.py update        最新の版に入れ替えて、許可が生きているか確かめる
+  python3 setup.py fixperm       入れ替えで外れた許可を入れ直せる状態にする
   python3 setup.py restart       アプリを再起動する
   python3 setup.py lastresult    直前に喋った結果がどうなったかを報告する
 """
@@ -26,6 +28,21 @@ from pathlib import Path
 # 配布物の置き場（GitHubのReleases）。curl/urllibで取るので隔離の印が付かず、
 # 「開発元を検証できません」の警告は出ない。
 DOWNLOAD_URL = "https://github.com/izzzenk-ops/koetype/releases/latest/download/koetype.zip"
+LATEST_API = "https://api.github.com/repos/izzzenk-ops/koetype/releases/latest"
+
+# 配布用は ad-hoc 署名なので、macOSはアプリを「中身のハッシュ」で見分ける。
+# 新しい版に入れ替えるとハッシュが変わり、3つの許可が効かなくなることがある。
+# しかもシステム設定のスイッチはオンのまま見えるので、必ずログで確かめること。
+TCC_SERVICES = {
+    "マイク": "Microphone",
+    "入力監視": "ListenEvent",
+    "アクセシビリティ": "Accessibility",
+}
+SETTINGS_URL = {
+    "マイク": "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone",
+    "入力監視": "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent",
+    "アクセシビリティ": "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility",
+}
 
 APP = Path("/Applications/こえタイプ.app")
 SUPPORT = Path.home() / "Library/Application Support/KoeType"
@@ -39,6 +56,28 @@ def say(*a):
 
 
 # ---------------------------------------------------------------- 調べる
+
+def installed_version():
+    """入っているアプリの版。分からなければ None。"""
+    plist = APP / "Contents/Info.plist"
+    if not plist.exists():
+        return None
+    r = subprocess.run(
+        ["/usr/libexec/PlistBuddy", "-c", "Print :CFBundleShortVersionString", str(plist)],
+        capture_output=True, text=True)
+    return r.stdout.strip() or None if r.returncode == 0 else None
+
+
+def latest_version():
+    """配布されている最新の版。ネットに出られなければ None（調べられないだけ）。"""
+    try:
+        ctx = ssl.create_default_context()
+        with urllib.request.urlopen(LATEST_API, context=ctx, timeout=15) as r:
+            tag = json.load(r).get("tag_name") or ""
+        return tag.lstrip("v") or None
+    except Exception:
+        return None
+
 
 def app_running():
     # pgrep は macOS の道具。Windowsには無いので、呼ぶ前に打ち切る
@@ -111,7 +150,11 @@ def cmd_status():
     say(f"アプリ: {'あり' if APP.exists() else 'なし'}"
         f"{' / 起動中' if app_running() else ' / 停止中' if APP.exists() else ''}")
 
+    here, there = installed_version(), latest_version()
+    newer = bool(here and there and here != there)
     if APP.exists():
+        say(f"版: {here or '不明'} / 配布中の最新: {there or '調べられませんでした'}"
+            f"{'  ← 新しい版があります' if newer else ''}")
         for name, state in permission_state().items():
             say(f"許可 {name}: {state}")
 
@@ -122,14 +165,29 @@ def cmd_status():
 
     done = (APP.exists() and key
             and all(v == "OK" for v in permission_state().values()))
-    say(f"総合: {'すぐ使えます' if done else 'まだ設定が残っています'}")
+    if done and newer:
+        say("総合: 使えますが、新しい版が出ています（update を実行する）")
+    else:
+        say(f"総合: {'すぐ使えます' if done else 'まだ設定が残っています'}")
 
 
 # ---------------------------------------------------------------- 入れる
 
-def cmd_install(url=None):
+def not_supported():
+    """このパソコンでは動かないときだけ、日本語の一文を返す。動くなら None。
+    Pythonのエラーをそのまま受講生に見せないための入口。"""
     if sys.platform != "darwin":
-        say("NG こえタイプは Mac 専用です。このパソコンには入れられません。")
+        return "NG こえタイプは Mac 専用です。このパソコンでは使えません。"
+    if platform.machine() != "arm64":
+        return ("NG このアプリは Apple Silicon（M1以降）専用です。"
+                "このMacはIntel製なので動きません。")
+    return None
+
+
+def cmd_install(url=None):
+    stop = not_supported()
+    if stop:
+        say(stop)
         return 1
     url = url or DOWNLOAD_URL
     zip_path = Path("/tmp/koetype_dl.zip")
@@ -178,7 +236,62 @@ def cmd_install(url=None):
     return 0
 
 
+def cmd_update():
+    """最新の版に入れ替えて、許可が生きているかまで確かめる。
+    入れられないパソコンかどうかは cmd_install の入口で打ち切られる。
+    入れ替えるとアプリの中身のハッシュが変わるので、許可が黙って外れることがある。
+    「入れ替えました」で終わらせず、必ずここで確かめる。"""
+    before = installed_version()
+    say(f"いまの版: {before or '不明'}")
+    if cmd_install() != 0:
+        return 1
+    say(f"新しい版: {installed_version() or '不明'}")
+    state = permission_state()
+    for name, value in state.items():
+        say(f"許可 {name}: {value}")
+    ng = [name for name, value in state.items() if value != "OK"]
+    if not ng:
+        say("許可は3つとも生きています。入れ替え完了です。")
+        return 0
+    say("")
+    say(f"NG 入れ替えで許可が外れました: {'・'.join(ng)}")
+    say("システム設定のスイッチはオンのまま見えるので、一度外して入れ直す必要があります。")
+    say("→ python3 ~/.claude/skills/koetype-setup/setup.py fixperm を実行してください。")
+    return 1
+
+
+def cmd_fixperm():
+    """外れた許可を入れ直せる状態にする。古い記録を消してから設定画面を開く。
+    スイッチを入れ直すだけでは直らない（古い記録に適用されるだけ）。"""
+    stop = not_supported()
+    if stop:
+        say(stop)
+        return 1
+    for name, service in TCC_SERVICES.items():
+        r = subprocess.run(["tccutil", "reset", service, "com.otolab.koetype"],
+                           capture_output=True, text=True)
+        say(f"{name}: 古い許可の記録を{'消しました' if r.returncode == 0 else '消せませんでした'}")
+    subprocess.run(["pkill", "-f", "MacOS/koetype"], capture_output=True)
+    time.sleep(1)
+    subprocess.run(["open", str(APP)])
+    time.sleep(4)
+    say("")
+    say("アプリを起動し直しました。次の3つを1つずつオンにしてください。")
+    say("（Macのパスワードか Touch ID を聞かれます）")
+    for name in TCC_SERVICES:
+        say(f"  ・{name}")
+    say("")
+    say("画面はこの順に開きます。1つ入れたら次を開いてください。")
+    for name, url in SETTINGS_URL.items():
+        say(f"  {name}: open \"{url}\"")
+    return 0
+
+
 def cmd_restart():
+    stop = not_supported()
+    if stop:
+        say(stop)
+        return 1
     subprocess.run(["pkill", "-f", "MacOS/koetype"], capture_output=True)
     time.sleep(2)
     subprocess.run(["open", str(APP)])
@@ -290,6 +403,10 @@ if __name__ == "__main__":
         cmd_status()
     elif cmd == "install":
         sys.exit(cmd_install(args[1] if len(args) > 1 else None))
+    elif cmd == "update":
+        sys.exit(cmd_update())
+    elif cmd == "fixperm":
+        sys.exit(cmd_fixperm())
     elif cmd == "setkey":
         if len(args) < 2:
             say("使い方: setup.py setkey <APIキー>")
