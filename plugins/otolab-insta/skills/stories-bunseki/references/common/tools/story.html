@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<!-- 投稿用のストーリー画像（1080×1920）。インスタの画面部品（進行バー・アイコン・返信欄）は描かない。
+     質問スタンプ・アンケート・リンク・カウントダウン等はアプリの機能なので描かない（文面.mdに指示として残す）。
+     使い方: story.html?set=<frames.jsの file:// URL>&f=<枚目>   f=0 のときは枚数を <title> に書く（render.py用） -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200;400;500;700;900&family=Zen+Maru+Gothic:wght@400;500;700;900&family=M+PLUS+Rounded+1c:wght@300;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:#3a2e28; --chip:#fff; --chipink:#1e1b1a; --round:40px; --accent:#e8834a; --marker:rgba(255,110,150,.75); --red:#e8505b; --dark:#4a3428; --light:#f3ece0;
+    --font:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;
+    --emoji:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji";
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:1080px; height:1920px; overflow:hidden; background:#000; }
+  body { font-family:var(--font), var(--emoji); -webkit-font-smoothing:antialiased; }
+  .frame { position:relative; width:1080px; height:1920px; overflow:hidden; background:linear-gradient(#5b524c,#2f2a27); }
+  .bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .dim { position:absolute; inset:0; background:rgba(0,0,0,var(--dim,.25)); }
+  /* 文字は真ん中の帯に置く：上約250px（名前・時間）と下約340px（返信欄・指）は空ける */
+  .body { position:absolute; left:56px; right:56px; top:var(--top,560px); max-height:calc(1580px - var(--top,560px)); display:flex; flex-direction:column; align-items:center; text-align:center; color:#fff; --fs:40px; }
+  .body.left { align-items:flex-start; text-align:left; }
+  .h { font-size:92px; font-weight:800; line-height:1.25; letter-spacing:.02em; text-shadow:0 3px 14px rgba(0,0,0,.45); margin:6px 0 22px; }
+  .h.hb { background:#111; padding:4px 34px 12px; transform:rotate(-1.5deg); text-shadow:none; }
+  .thin { font-size:104px; font-weight:200; line-height:1.2; letter-spacing:.04em; text-shadow:0 2px 12px rgba(0,0,0,.4); margin:6px 0 24px; }
+  .p { font-size:var(--fs); font-weight:500; line-height:1.62; text-shadow:0 1px 6px rgba(0,0,0,.55); margin:8px 0; }
+  .s { font-size:29px; font-weight:500; line-height:1.5; opacity:.9; text-shadow:0 1px 5px rgba(0,0,0,.5); margin:6px 0 10px; }
+  .frame.light .p, .frame.light .s, .frame.light .h, .frame.light .thin { color:var(--ink); text-shadow:none; }
+  .frame.light .h.hb { color:#fff; }
+  .frame.inkl .p, .frame.inkl .s, .frame.inkl .h, .frame.inkl .thin { color:var(--light); text-shadow:none; }
+  .lab { display:flex; flex-direction:column; align-items:center; gap:6px; margin:12px 0; }
+  .body.left .lab, .body.left .ws { align-items:flex-start; }
+  .lab span { display:inline-block; font-size:calc(var(--fs) + 2px); font-weight:500; line-height:1.45; padding:4px 16px 6px; border-radius:6px; }
+  .w span { background:var(--chip); color:var(--chipink); font-weight:700; font-size:calc(var(--fs) + 4px); padding:8px 26px 10px; border-radius:var(--round); }
+  .wl span { background:rgba(255,255,255,.93); color:#1e1b1a; }
+  .d span { background:rgba(20,18,17,.62); color:#fff; }
+  .r span { background:var(--red); color:#fff; font-weight:700; font-size:calc(var(--fs) + 4px); padding:8px 26px 10px; border-radius:var(--round); }
+  .o span { background:var(--accent); color:#fff; font-weight:700; padding:6px 22px 8px; border-radius:8px; }
+  .ws { display:flex; flex-direction:column; align-items:center; gap:8px; margin:10px 0; }
+  .ws span { display:inline-block; background:rgba(255,255,255,.95); color:#1e1b1a; font-size:34px; font-weight:600; line-height:1.4; padding:5px 14px 7px; border-radius:3px; }
+  .band { margin:18px -56px; width:calc(100% + 112px); padding:34px 60px; text-align:center; }
+  .band.k { background:rgba(15,13,12,.62); color:#fff; }
+  .band.wt { background:rgba(255,255,255,.78); color:#1e1b1a; }
+  .band div { font-size:38px; font-weight:500; line-height:1.65; }
+  .m { background:linear-gradient(transparent 62%, var(--marker) 62%); padding:0 4px; }
+  .card { margin:18px 0 26px; width:var(--cw,560px); border-radius:22px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.4); border:6px solid #fff; transform:rotate(var(--rot,-3deg)); }
+  .card img { display:block; width:100%; }
+  .arrow { width:var(--aw,220px); margin:4px 0 -10px; }
+  .ph { margin:26px 0 0; width:100%; border:3px dashed rgba(120,120,120,.8); border-radius:20px; padding:18px; color:#fff; font-size:26px; text-align:center; background:rgba(0,0,0,.3); }
+</style>
+</head>
+<body>
+<div class="frame" id="f"></div>
+<script>
+const Q = new URLSearchParams(location.search);
+document.write(`<script src="${Q.get('set')}"><\/script>`);
+</script>
+<script>
+// ===== frames.js の書き方 =====
+// window.THEME = {ink, accent, marker, red, light, chip, chipink, round, font}   …… 色とフォント（省略可・ユーザーのデザインに合わせる）
+//   丸いフォント: font:'"Zen Maru Gothic",sans-serif' か font:'"M PLUS Rounded 1c",sans-serif'（ネット接続時に自動で読み込む）
+// window.F = [ {枚の指定}, ... ]
+//  枚の指定: photo:'写真の場所（frames.js からの相対パス可）' / solid:'#色'（一色背景）/ light:1（明るい背景：文字を ink の色に）/ inkl:1（濃い背景：文字を light の色に）
+//            dim:0.12〜0.45（写真の暗さ）/ top:文字の始まりの高さpx（250〜1100）/ fs:本文の文字サイズ / left:1（左寄せ）
+//            sticker:'質問スタンプ「◯◯」' …… 画像には描かない。この位置に置く目印だけ出す（投稿前に消える下書き用）
+//  部品 b: ['h',文] 見出し / ['hb',文] 黒帯の見出し / ['thin',文] 特大の細字 / ['p',文] 本文 / ['s',文] 小さい補足
+//          ['w',[行]] 白い丸札 / ['wl',[行]] 白い角札 / ['d',[行]] 黒い半透明の札 / ['r',[行]] 赤い丸札 / ['o',[行]] アクセント色の札
+//          ['ws',[行]] 1行ずつ積む白い札 / ['band',[行],'k'|'wt'] 横いっぱいの帯 / ['card',写真,幅,角度] 傾けた写真カード
+//          ['arrow',色,幅] 手描きの矢印 / 文中の <m>…</m> はマーカー
+const n = +(Q.get('f') || 1);
+const F = window.F || [];
+if (n === 0) { document.title = String(F.length); }
+else {
+  const T = window.THEME || {};
+  for (const [k,v] of Object.entries(T)) document.documentElement.style.setProperty('--'+k, v);
+  const base = Q.get('set').replace(/[^/]*$/, '');
+  const src = p => { p = String(p).replace(/\\/g,'/');
+    if (/^[A-Za-z]:\//.test(p)) return 'file:///' + encodeURI(p).replace(/#/g,'%23');
+    if (p.startsWith('/')) return 'file://' + encodeURI(p).replace(/#/g,'%23');
+    if (/^(file:|https?:)/.test(p)) return p;
+    return base + encodeURI(p).replace(/#/g,'%23'); };
+  const fmt = s => String(s).replace(/<m>/g,'<span class="m">').replace(/<\/m>/g,'</span>');
+  const part = ([t,a,b,c]) => {
+    if (t==='h') return `<div class="h">${fmt(a)}</div>`;
+    if (t==='hb') return `<div class="h hb">${fmt(a)}</div>`;
+    if (t==='thin') return `<div class="thin">${fmt(a)}</div>`;
+    if (t==='p') return `<div class="p">${fmt(a)}</div>`;
+    if (t==='s') return `<div class="s">${fmt(a)}</div>`;
+    if (t==='ws') return `<div class="ws">${a.map(x=>`<span>${fmt(x)}</span>`).join('')}</div>`;
+    if (t==='band') return `<div class="band ${b||'k'}">${a.map(x=>`<div>${fmt(x)}</div>`).join('')}</div>`;
+    if (t==='card') return `<div class="card" style="--cw:${b||560}px;--rot:${c??-3}deg"><img src="${src(a)}"></div>`;
+    if (t==='arrow') return `<svg class="arrow" style="--aw:${b||220}px" viewBox="0 0 200 120" fill="none" stroke="${a||'#fff'}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20 C 70 10, 150 20, 120 95"/><path d="M95 78 L120 100 L140 72"/></svg>`;
+    return `<div class="lab ${t}">${a.map(x=>`<span>${fmt(x)}</span>`).join('')}</div>`;
+  };
+  const d = F[n-1] || {b:[]};
+  const el = document.getElementById('f');
+  if (d.solid) { el.style.background = d.solid; if (d.light) el.classList.add('light'); }
+  if (d.inkl) el.classList.add('inkl');
+  el.innerHTML =
+    (d.photo ? `<img class="bg" src="${src(d.photo)}"><div class="dim" style="--dim:${d.dim ?? .25}"></div>` : '') +
+    `<div class="body ${d.left?'left':''}" style="--top:${d.top||560}px;${d.fs?`--fs:${d.fs}px`:''}">${(d.b||[]).map(part).join('')}${d.sticker && Q.get('draft') ? `<div class="ph">ここに置く：${d.sticker}</div>` : ''}</div>`;
+  // 点検用（render.py が --dump-dom で読む）：文字が下の空き（1580px）を越えたか／読めなかった写真
+  if (Q.get('check')) {
+    const imgs = [...el.querySelectorAll('img')];
+    Promise.all(imgs.map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; }))).then(() => {
+      const bd = el.querySelector('.body'); const b = {bottom: bd.getBoundingClientRect().top + bd.scrollHeight};
+      const bad = imgs.filter(i => !i.naturalWidth).length;
+      document.title = `CHECK over=${Math.max(0, Math.round(b.bottom - 1580))} badimg=${bad}`;
+    });
+  }
+}
+</script>
+</body>
+</html>

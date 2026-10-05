@@ -108,7 +108,7 @@ REVIEW_TERMS = [
     "obami30", "オバ美",
 ]
 
-TEXT_EXTS = {".md", ".html", ".json", ".py", ".sh", ".txt", ".ps1"}
+TEXT_EXTS = {".md", ".html", ".json", ".py", ".sh", ".txt", ".ps1", ".js"}
 
 
 def sh(*args, **kw):
