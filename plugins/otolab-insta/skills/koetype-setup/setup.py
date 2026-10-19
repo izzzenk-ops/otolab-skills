@@ -262,6 +262,13 @@ def cmd_update():
     「入れ替えました」で終わらせず、必ずここで確かめる。"""
     before = installed_version()
     say(f"いまの版: {before or '不明'}")
+    latest = latest_version()
+    if before and latest and version_tuple(before) >= version_tuple(latest):
+        # 入れ替えると許可が外れることがある。最新なら触らない
+        say(f"すでに最新です（{before}）。入れ替えはしません。")
+        for name, value in permission_state().items():
+            say(f"許可 {name}: {value}")
+        return 0
     mark = log_size()
     if cmd_install() != 0:
         return 1
