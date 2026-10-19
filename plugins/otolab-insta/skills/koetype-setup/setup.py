@@ -79,6 +79,14 @@ def latest_version():
         return None
 
 
+def version_tuple(v):
+    """"1.10.0" と "1.9.0" を数字として比べる（文字列のままだと逆になる）。"""
+    try:
+        return tuple(int(x) for x in v.split("."))
+    except ValueError:
+        return (0,)
+
+
 def app_running():
     # pgrep は macOS の道具。Windowsには無いので、呼ぶ前に打ち切る
     if sys.platform != "darwin":
@@ -90,11 +98,22 @@ def app_running():
     return r.returncode == 0
 
 
-def read_startup_lines():
-    """アプリが起動時に書く「権限」「マイクの許可」の行を新しい順に探す。"""
+def log_size():
+    try:
+        return LOG.stat().st_size
+    except OSError:
+        return 0
+
+
+def read_startup_lines(since=0):
+    """アプリが起動時に書く「権限」「マイクの許可」の行を新しい順に探す。
+    since を渡すと、そのバイト位置より後に書かれた行だけを見る
+    （入れ替え前の古い版の「OK」を拾わないため）。"""
     if not LOG.exists():
         return {}
-    lines = LOG.read_text(errors="replace").splitlines()
+    with open(LOG, "rb") as f:
+        f.seek(since)
+        lines = f.read().decode("utf-8", errors="replace").splitlines()
     found = {}
     for line in reversed(lines):
         if "権限 →" in line and "perm" not in found:
@@ -106,9 +125,9 @@ def read_startup_lines():
     return found
 
 
-def permission_state():
+def permission_state(since=0):
     """入力監視・アクセシビリティ・マイクの状態を返す。"""
-    s = read_startup_lines()
+    s = read_startup_lines(since)
     perm = s.get("perm", "")
     mic = s.get("mic", "")
     return {
@@ -151,7 +170,7 @@ def cmd_status():
         f"{' / 起動中' if app_running() else ' / 停止中' if APP.exists() else ''}")
 
     here, there = installed_version(), latest_version()
-    newer = bool(here and there and here != there)
+    newer = bool(here and there and version_tuple(there) > version_tuple(here))
     if APP.exists():
         say(f"版: {here or '不明'} / 配布中の最新: {there or '調べられませんでした'}"
             f"{'  ← 新しい版があります' if newer else ''}")
@@ -243,10 +262,16 @@ def cmd_update():
     「入れ替えました」で終わらせず、必ずここで確かめる。"""
     before = installed_version()
     say(f"いまの版: {before or '不明'}")
+    mark = log_size()
     if cmd_install() != 0:
         return 1
     say(f"新しい版: {installed_version() or '不明'}")
-    state = permission_state()
+    # 新しい版が起動時の行を書くまで待つ。書かれる前に読むと判定できない
+    for _ in range(15):
+        if len(read_startup_lines(mark)) == 2:
+            break
+        time.sleep(1)
+    state = permission_state(mark)
     for name, value in state.items():
         say(f"許可 {name}: {value}")
     ng = [name for name, value in state.items() if value != "OK"]
