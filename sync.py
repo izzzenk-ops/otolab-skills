@@ -7,10 +7,12 @@
 やること:
   1. 対象スキルを ~/.claude/skills/<name> から plugins/otolab-insta/skills/<name> へ
      まるごと上書きコピー（__pycache__ / *.pyc は除外）
-  2. 受講生向けの一般化ルール（REPLACEMENTS）を全テキストに適用
-  3. 危険語チェック（REVIEW_TERMS）: 人の判断が要る個人名・ブランド名・招待コード等が
+  2. SKILL.md の「## 出す前の書き癖チェック」節（次の「## 」まで）を、
+     templates/kakikuse_jukousei.md の受講生向けの中身に置き換える（原本は触らない）
+  3. 受講生向けの一般化ルール（REPLACEMENTS）を全テキストに適用
+  4. 危険語チェック（REVIEW_TERMS）: 人の判断が要る個人名・ブランド名・招待コード等が
      残っていないか走査。1つでも残っていたら **commitせず停止** して場所を表示する
-  4. 問題なければ git add。 --commit でコミット、--push でコミット＋push
+  5. 問題なければ git add。 --commit でコミット、--push でコミット＋push
 
 使い方:
   python3 sync.py            # コピー＋一般化＋チェック＋stageまで（差分を目視できる）
@@ -106,7 +108,16 @@ REVIEW_TERMS = [
     "なるさん", "naruwork", "ショート動画の教科書",
     # 添削の実例アンカーに出る第三者アカウント（実在の個人。変種が増えたら検知して止める）
     "obami30", "オバ美",
+    # 運営者のパソコンにしか無い書き癖チェック一式（受講生の手元では動かない。
+    # 節の置き換え漏れ・節の外に書き足された参照を検知して止める）
+    "kakikuse", "~/.claude/tools", ".claude/tools", "catalog/",
 ]
+
+# 「## 出す前の書き癖チェック」節の受講生向け正本
+KAKIKUSE_TEMPLATE = REPO / "templates" / "kakikuse_jukousei.md"
+KAKIKUSE_HEADING = "## 出す前の書き癖チェック"
+KAKIKUSE_SLOT = "{{点検する文}}"
+KAKIKUSE_DEFAULT_TARGET = "このスキルが作って渡す文章"
 
 TEXT_EXTS = {".md", ".html", ".json", ".py", ".sh", ".txt", ".ps1", ".js"}
 
@@ -127,6 +138,57 @@ def copy_skill(name):
         # 他社記事（SAKIYOMI 50コンセプト）の要約は公開リポジトリに含めない
         "50-concepts-list.md", "evals"))
     return True
+
+
+def load_kakikuse_template():
+    """正本を読み、(節の本文, {スキル名: 点検する文}) を返す。
+    正本の下の <!-- ===== ... --> 以降はスキルごとの対応表で、配布版には写さない。"""
+    if not KAKIKUSE_TEMPLATE.is_file():
+        print(f"⛔ 書き癖チェックの正本が無い: {KAKIKUSE_TEMPLATE}")
+        sys.exit(1)
+    text = KAKIKUSE_TEMPLATE.read_text(encoding="utf-8")
+    marker = "<!-- ====="
+    body, _, table = text.partition(marker)
+    body = body.strip() + "\n"
+    if not body.startswith(KAKIKUSE_HEADING) or KAKIKUSE_SLOT not in body:
+        print(f"⛔ 正本の形が違う（先頭が「{KAKIKUSE_HEADING}」で、{KAKIKUSE_SLOT} を含むこと）")
+        sys.exit(1)
+    targets = {}
+    for line in table.splitlines():
+        name, sep, target = line.partition(":")
+        if sep and name.strip() and " " not in name.strip() and target.strip():
+            targets[name.strip()] = target.strip()
+    return body, targets
+
+
+def replace_kakikuse_section(name, body, targets):
+    """配布版 SKILL.md の書き癖チェック節を正本に置き換える。置き換えた数を返す。"""
+    f = DEST / name / "SKILL.md"
+    if not f.is_file():
+        return 0
+    lines = f.read_text(encoding="utf-8").split("\n")
+    out, count, i = [], 0, 0
+    while i < len(lines):
+        if lines[i].startswith(KAKIKUSE_HEADING):
+            j = i + 1
+            while j < len(lines) and not lines[j].startswith("## "):
+                j += 1
+            target = targets.get(name)
+            if target is None:
+                print(f"     （{name} の点検する文が正本に無いので共通の文を入れました）")
+                target = KAKIKUSE_DEFAULT_TARGET
+            section = body.replace(KAKIKUSE_SLOT, target)
+            while out and out[-1] == "":
+                out.pop()
+            out += ["", *section.rstrip("\n").split("\n"), ""]
+            count += 1
+            i = j
+        else:
+            out.append(lines[i])
+            i += 1
+    if count:
+        f.write_text("\n".join(out).rstrip("\n") + "\n", encoding="utf-8")
+    return count
 
 
 def genericize(name):
@@ -163,11 +225,13 @@ def main():
     do_commit = "--commit" in args or "--push" in args
     do_push = "--push" in args
 
+    kakikuse_body, kakikuse_targets = load_kakikuse_template()
     print(f"同期: {SKILLS_SRC} → {DEST}")
     for name in SKILLS:
         if copy_skill(name):
+            n = replace_kakikuse_section(name, kakikuse_body, kakikuse_targets)
             genericize(name)
-            print(f"  ✓ {name}")
+            print(f"  ✓ {name}" + ("（書き癖チェックを受講生向けに置き換え）" if n else ""))
 
     print("\n危険語チェック（人の確認が要る語が残っていないか）...")
     hits = scan_review()
