@@ -151,6 +151,20 @@
   }
   .yoso.win { background: var(--coral); color: var(--white); }
   .stats { font-size: 13px; color: var(--ink-soft); margin-bottom: 12px; }
+
+  /* 6項目の表（パターンカード内・並べ表） */
+  .six { width: 100%; border-collapse: separate; border-spacing: 0 6px; font-size: 13px; margin: 4px 0 12px; }
+  .six th { text-align: left; font-weight: 700; color: var(--blue); padding: 6px 10px 6px 0; vertical-align: top; width: 8.5em; }
+  .six td { background: var(--blue-light); border-radius: 10px; padding: 6px 12px; vertical-align: top; }
+  .six .mirai td { background: var(--yellow-light); }
+  .six .kata { display: inline-block; font-size: 12px; font-weight: 700; color: #8A6D0B; background: var(--white); border-radius: 999px; padding: 1px 10px; margin-right: 6px; }
+  .narabe-wrap { overflow-x: auto; }
+  .narabe { width: 100%; min-width: 640px; border-collapse: collapse; font-size: 13px; }
+  .narabe th, .narabe td { border-bottom: 1px solid #EEEEF2; padding: 8px 10px; text-align: left; vertical-align: top; }
+  .narabe thead th { color: var(--ink-soft); font-size: 12px; }
+  .narabe td.me { background: var(--coral-light); font-weight: 700; }
+  .hantei { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 2px 10px; background: #F5F5F7; color: var(--ink-soft); white-space: nowrap; }
+  .hantei.only { background: var(--coral); color: var(--white); }
   .stats b { color: var(--coral); font-size: 15px; }
 
   /* 独自性素材 */
@@ -173,6 +187,9 @@
 
   @media (max-width: 640px) {
     .pattern-body { grid-template-columns: 1fr; }
+    .pattern-body > div { min-width: 0; }
+    .six, .six tbody, .six tr, .six th, .six td { display: block; width: auto; }
+    .six th { padding: 6px 0 2px; }
   }
 </style>
 </head>
@@ -245,7 +262,17 @@
         <div class="caption">プロフィール一覧の世界観</div>
       </div>
       <div>
-        <div class="row concept"><span class="label">コンセプト</span><p>{{誰に×何を×どう届けているか}}</p></div>
+        <div class="row concept"><span class="label">コンセプト</span><p>{{誰が×誰に×どのように届けているか}}</p></div>
+        <div class="row"><span class="label">6つで分けると</span>
+          <table class="six">
+            <tr><th>① 誰が（属性）</th><td>{{年齢・仕事・家族など、いまの立場}}</td></tr>
+            <tr><th>② 誰が（生い立ち・経験）</th><td>{{本人が公開している範囲だけ。出ていなければ「投稿からは読み取れず」}}</td></tr>
+            <tr><th>③ どんなことを</th><td>{{届けている中身}}</td></tr>
+            <tr><th>④ どのように</th><td>{{企画・見せ方・ビジュアル・世界観}}</td></tr>
+            <tr><th>⑤ 何が解決できるか</th><td>{{誰の、どんな困りごとを解決して、何が手に入るか}}</td></tr>
+            <tr class="mirai"><th>⑥ どんな未来へ</th><td><span class="kata">{{期限＋理由／期限だけ／期限なし／読み取れず}}</span>{{進もうとしている未来。期限と期限の理由があれば分けて書く。推定なら「（投稿からの推定）」}}</td></tr>
+          </table>
+        </div>
         <div class="row"><span class="label">冒頭に映っているもの</span><p>{{第1カットの言語化}}</p></div>
         <div class="row kakezan"><span class="label">この人の掛け算式</span>
           <div class="formula">{{特徴1}}({{n}}人に1人) × {{特徴2}}({{n}}人に1人) × {{特徴3}}({{n}}人に1人) ＝ {{n}}万人に1人</div>
@@ -254,6 +281,26 @@
         <div class="row apply"><span class="label">あなたに応用するなら</span><p>{{借りられる要素と、自分ならどの掛け算で同じ構造を作れるか}}</p></div>
       </div>
     </div>
+  </div>
+
+  <!-- お手本3人と自分の6項目：判定が「自分だけ」の欄は class="hantei only" -->
+  <div class="card">
+    <h2><span class="dot"></span>お手本3人と、あなたを6項目で並べると</h2>
+    <p style="font-size:14px; margin-bottom:12px;">同じ欄は「見たい人がいる」証拠、違う欄があなたの立ち位置です。いちばん右の列が、あなたのコンセプトの下書きになります。</p>
+    <div class="narabe-wrap">
+      <table class="narabe">
+        <thead><tr><th>6項目</th><th>{{お手本A}}</th><th>{{お手本B}}</th><th>{{お手本C}}</th><th>あなた</th><th>判定</th></tr></thead>
+        <tbody>
+          <tr><th>① 誰が（属性）</th><td>{{お手本Aの①}}</td><td>{{お手本Bの①}}</td><td>{{お手本Cの①}}</td><td class="me">{{あなたの①}}</td><td><span class="hantei">{{同じ／自分だけ}}</span></td></tr>
+          <tr><th>② 誰が（生い立ち・経験）</th><td>{{お手本Aの②}}</td><td>{{お手本Bの②}}</td><td>{{お手本Cの②}}</td><td class="me">{{本人が飛ばした所は「本人の希望で未記入」}}</td><td><span class="hantei">{{同じ／自分だけ}}</span></td></tr>
+          <tr><th>③ どんなことを</th><td>{{お手本Aの③}}</td><td>{{お手本Bの③}}</td><td>{{お手本Cの③}}</td><td class="me">{{あなたの③}}</td><td><span class="hantei">{{同じ／自分だけ}}</span></td></tr>
+          <tr><th>④ どのように</th><td>{{お手本Aの④}}</td><td>{{お手本Bの④}}</td><td>{{お手本Cの④}}</td><td class="me">{{あなたの④}}</td><td><span class="hantei">{{同じ／自分だけ}}</span></td></tr>
+          <tr><th>⑤ 何が解決できるか</th><td>{{お手本Aの⑤}}</td><td>{{お手本Bの⑤}}</td><td>{{お手本Cの⑤}}</td><td class="me">{{あなたの⑤}}</td><td><span class="hantei">{{同じ／自分だけ}}</span></td></tr>
+          <tr><th>⑥ どんな未来へ</th><td>{{お手本Aの⑥}}</td><td>{{お手本Bの⑥}}</td><td>{{お手本Cの⑥}}</td><td class="me">{{まだ決めていなければ「コンセプト磨き上げで決める」}}</td><td><span class="hantei">{{同じ／自分だけ}}</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:14px; margin-top:12px;"><b>まとめ：</b>{{「自分だけ」の欄＝あなたの立ち位置を1行。6つとも「同じ」なら劣化版になるので、①②か⑤⑥のどこを自分の物に差し替えるかを書く}}</p>
   </div>
 
   <!-- 見せ方・世界観の方針 -->

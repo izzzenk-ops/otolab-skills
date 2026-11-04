@@ -135,6 +135,7 @@
   <div class="card">
     <h2><span class="dot"></span>あなたの土台（初期設計から引き継ぎ）</h2>
     <div class="summary-grid">
+      <div class="summary-item"><div class="label">誰が</div>{{属性×生い立ち・経験を一言で}}</div>
       <div class="summary-item"><div class="label">誰の</div>{{誰の}}</div>
       <div class="summary-item"><div class="label">どんな悩みを</div>{{どんな悩み}}</div>
       <div class="summary-item"><div class="label">どう解決するか</div>{{どう解決}}</div>
@@ -161,6 +162,10 @@
     </div>
     <div class="catch">「{{キャッチコピー}}」</div>
     <div class="row">
+      <span class="label">誰が</span>
+      <p>{{属性×生い立ち・経験を、言い方を変えた一言。例の型：可愛いのに29年彼氏がいない→「29年間1人で強く生きてる女」}}</p>
+    </div>
+    <div class="row">
       <span class="label">どんなアカウントか</span>
       <p>{{アカウントの説明}}</p>
     </div>
@@ -175,6 +180,11 @@
     <div class="row share">
       <span class="label">人に教えたくなる理由</span>
       <p>{{共有される理由}}</p>
+    </div>
+    <!-- 「どんな未来へ」は期限と理由が組める案だけ出す。合わない案はこのrowごと消すか、進みたい暮らしだけ書く -->
+    <div class="row">
+      <span class="label">どんな未来へ</span>
+      <p>{{期限：◯ヶ月後に◯◯／理由：◯◯までに（本人の言葉。無ければ「磨き上げで聞く」）。期限が合わない案は進みたい暮らしを1行}}</p>
     </div>
     <div class="row">
       <span class="label">フォロワー0の初日にやること</span>
